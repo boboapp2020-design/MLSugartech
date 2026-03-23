@@ -117,7 +117,6 @@ body {
 .topbar h1 {
   font-size: 15.5px; font-weight: 600; color: #F1F5F9;
   white-space: nowrap; letter-spacing: -.2px;
-  margin-left: 80px;
 }
 .topbar h1 span {
   color: #34D399; font-weight: 800;
@@ -1394,8 +1393,1076 @@ body {
   position: absolute; bottom: 24px; color: #475569;
   font-size: 12px; z-index: 2; text-align: center;
 }
+
+/* ═══ RESPONSIVE IMPROVEMENTS ═══ */
+html { scroll-behavior: smooth; }
+* { box-sizing: border-box; }
+img, svg, video { max-width: 100%; height: auto; }
+.topbar h1 { overflow: hidden; text-overflow: ellipsis; margin-left: 80px; }
+.tabs-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+.tabs-wrap::-webkit-scrollbar { display: none; }
+table { table-layout: auto; }
+.dt { width: 100%; overflow-x: auto; display: block; }
+.dt thead, .dt tbody, .dt tr, .dt th, .dt td { display: revert; }
+
+@media (max-width: 1024px) {
+  .topbar { padding: 0 16px; }
+  .topbar h1 { font-size: 13px; margin-left: 60px; }
+  .topbar-ref { font-size: 10px; }
+  .tp { padding: 16px; }
+}
+@media (max-width: 768px) {
+  .topbar { height: 50px; padding: 0 10px; }
+  .topbar h1 { font-size: 11px; margin-left: 55px; }
+  .topbar-ref { display: none; }
+  .topbar-home { padding: 4px 10px; font-size: 12px; left: 10px; }
+  .tabs-wrap { padding: 0 8px; margin-top: 50px; }
+  .tab-btn { font-size: 12px; padding: 8px 12px; white-space: nowrap; }
+  .tp { padding: 12px; margin-top: 0; }
+  .c { padding: 16px; }
+  .calc { padding: 16px; }
+  .cr { flex-direction: column; align-items: flex-start; }
+  .cr label { min-width: auto; }
+  .cr input { width: 100%; }
+  .cr-hint { margin-left: 0; margin-top: 2px; }
+  .zones { flex-direction: column; }
+  .zone { min-width: auto; width: 100%; }
+  /* Landing page */
+  .lp-title { font-size: 28px !important; }
+  .lp-subtitle { font-size: 18px !important; }
+  .lp-buttons { flex-direction: column; align-items: center; }
+  .lp-btn { width: 80%; justify-content: center; }
+  /* E2E grid */
+  #calculator .th[style*="grid-template-columns:1fr 1fr"] { grid-template-columns: 1fr !important; }
+
+}
+@media (max-width: 480px) {
+  .topbar h1 { font-size: 10px; margin-left: 50px; }
+  .tab-btn { font-size: 11px; padding: 6px 8px; }
+  .calc .ct { font-size: 13px; }
+  .c .ct { font-size: 13px; }
+  .btn-calc { font-size: 13px; padding: 10px 24px; }
+  .theme-toggle { transform: scale(0.85); }
+}
+
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+function fmt(n){if(isNaN(n)||n===null)return'—';var s=Math.abs(n)<0.01&&n!==0?n.toFixed(2):parseFloat(n.toFixed(2));return Number(s).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:2});}
+function openTab(id){
+  // Hide all tab pages (both tab-page and tp class systems)
+  document.querySelectorAll('.tab-page').forEach(function(p){ p.classList.remove('active'); p.style.display='none'; });
+  document.querySelectorAll('.tp').forEach(function(p){ p.style.display='none'; });
+  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+
+  // Try tab-XX ID first, then direct ID
+  var el = document.getElementById('tab-'+id) || document.getElementById(id);
+  if(el){
+    if(el.classList.contains('tab-page')) { el.classList.add('active'); el.style.display=''; }
+    else { el.style.display=''; }
+  }
+
+  // Activate the clicked button
+  var btns = document.querySelectorAll('.tab-btn');
+  btns.forEach(function(b){ if(b.getAttribute('onclick') && b.getAttribute('onclick').indexOf("'"+id+"'") > -1) b.classList.add('active'); });
+  window.scrollTo(0,0);
+}
+function goTab(id){
+  document.querySelectorAll('.tab-page').forEach(function(p){ p.classList.remove('active'); p.style.display='none'; });
+  document.querySelectorAll('.tp').forEach(function(p){ p.style.display='none'; });
+  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+  var el = document.getElementById('tab-'+id) || document.getElementById(id);
+  if(el){
+    if(el.classList.contains('tab-page')) { el.classList.add('active'); el.style.display=''; }
+    else { el.style.display=''; }
+  }
+  var btns=document.querySelectorAll('.tab-btn');
+  var tabNames={cane:'คุณภาพอ้อย',milling:'ลูกหีบ',clarification:'การทำใส',evaporation:'หม้อต้ม',crystallization:'หม้อเคี่ยว',centrifugal:'หม้อปั่น',sugar:'น้ำตาล'};
+  btns.forEach(function(b){if(b.textContent.trim()===(tabNames[id]||''))b.classList.add('active');});
+  window.scrollTo(0,0);
+}
+function openSub(btn,id){
+  var parent=btn.closest('.tab-page');
+  if(!parent) parent=btn.parentElement.parentElement;
+  parent.querySelectorAll('.spage').forEach(function(p){p.classList.remove('active');});
+  parent.querySelectorAll('.stab').forEach(function(b){b.classList.remove('active');});
+  var el=document.getElementById('sp-'+id);
+  if(el) el.classList.add('active');
+  btn.classList.add('active');
+}
+
+// Calc: CCS Multi-Formula Calculator
+function ccsCalc(){
+  const pol=+document.getElementById('ccs_pol').value;
+  const brix=+document.getElementById('ccs_brix').value;
+  const fiber=+document.getElementById('ccs_fiber').value;
+  const suc=+document.getElementById('ccs_suc').value;
+  const ns=+document.getElementById('ccs_ns').value;
+  const price=+document.getElementById('ccs_price').value;
+  const pur=brix>0?(pol/brix*100):0;
+  // 1. CCS Australia/Thai (BSES formula)
+  var ccs=(pol-(brix-pol)*0.4)*0.74;
+  // 2. RV South Africa
+  var rv=suc-0.35*ns-0.02*fiber;
+  // 3. Winter/Carp RS
+  var wrs=suc-0.4*(ns-fiber/2);
+  // 4. ERS (USA) - Chen & Chou
+  var rfactor=pur>60?(0.4+0.006*pur):0.75;
+  var ers=pol*rfactor-0.05;
+  // 5. TRS Brazil (CONSECANA simplified)
+  var rs_est=brix-pol; // approx reducing sugars proxy
+  var trs=10*pol*(1-0.01*fiber)*(1.0313-0.00575*fiber)-Math.max(0,rs_est)*(5.18-0.0054*pur);
+  trs=trs/10; // back to % cane
+  // 6. Simple Hugot
+  var hugot=pol*0.75*0.90;
+  // 7. SJM proxy
+  var sjm=pur>0?(pol/pol*0.88*100):0; // simplified — actual needs MJ data
+  // Build results table
+  var rows=[
+    {n:'CCS ออสเตรเลีย/ไทย',v:ccs,c:'var(--amber)',f:'(Pol−(Brix−Pol)×0.4)×0.74',flag:'🇦🇺🇹🇭🇱🇦'},
+    {n:'RV แอฟริกาใต้',v:rv,c:'var(--green)',f:'S−0.35×NS−0.02×F',flag:'🇿🇦'},
+    {n:'Winter/Carp RS',v:wrs,c:'var(--blue)',f:'S−0.4×(NS−F/2)',flag:'📖'},
+    {n:'ERS สหรัฐ',v:ers,c:'var(--purple)',f:'Pol×R(Pur)−0.05',flag:'🇺🇸'},
+    {n:'TRS บราซิล',v:trs,c:'var(--orange)',f:'CONSECANA formula',flag:'🇧🇷'},
+    {n:'Hugot Simple',v:hugot,c:'var(--cyan)',f:'Pol×0.75×0.90',flag:'📘'},
+  ];
+  var tb='';
+  var best=0,worst=999;
+  for(var i=0;i<rows.length;i++){
+    var r=rows[i];
+    var kg=r.v*10;
+    var money=r.v*10*price/1000;
+    tb+='<tr><td>'+(i+1)+'</td><td><b style="color:'+r.c+'">'+r.flag+' '+r.n+'</b></td><td style="font-size:16px;font-weight:800;color:'+r.c+'">'+fmt(r.v)+'%</td><td>'+fmt(kg)+'</td><td>'+fmt(money)+'</td><td style="font-size:11px;color:var(--txt3)">'+r.f+'</td></tr>';
+    if(r.v>best)best=r.v;
+    if(r.v<worst&&r.v>0)worst=r.v;
+  }
+  document.getElementById('ccsTbody').innerHTML=tb;
+  // KPI cards
+  var kpiHtml='';
+  kpiHtml+='<div class="ee2-kpi-card amber" style="text-align:center"><div class="ct">Purity</div><div class="cv ha" style="font-size:28px">'+fmt(pur)+'%</div><div class="cu">'+(pur>=85?'✅ ดี':'⚠ ต่ำ')+'</div></div>';
+  kpiHtml+='<div class="ee2-kpi-card green" style="text-align:center"><div class="ct">CCS สูงสุด</div><div class="cv hg" style="font-size:28px">'+fmt(best)+'%</div><div class="cu">'+fmt(best*10)+' kg/t cane</div></div>';
+  kpiHtml+='<div class="ee2-kpi-card blue" style="text-align:center"><div class="ct">CCS ต่ำสุด</div><div class="cv hb" style="font-size:28px">'+fmt(worst)+'%</div><div class="cu">'+fmt(worst*10)+' kg/t cane</div></div>';
+  kpiHtml+='<div class="ee2-kpi-card amber" style="text-align:center"><div class="ct">มูลค่า/ตัน (CCS)</div><div class="cv ha" style="font-size:28px">'+fmt(ccs*10*price/1000)+'</div><div class="cu">฿/ตันอ้อย</div></div>';
+  document.getElementById('ccsKPI').innerHTML=kpiHtml;
+  // Interpretation
+  var interp='';
+  if(ccs>=13) interp+='<div style="padding:10px;border-radius:8px;background:var(--green-bg);border-left:4px solid var(--green);margin-bottom:8px">✅ <b>CCS '+fmt(ccs)+'% ดีเยี่ยม!</b> (≥13) อ้อยคุณภาพสูงมาก — ราคาอ้อยจะสูงตาม สร้างรายได้ ~'+fmt(ccs*10*price/1000)+' ฿/ตัน</div>';
+  else if(ccs>=11) interp+='<div style="padding:10px;border-radius:8px;background:var(--blue-bg);border-left:4px solid var(--blue);margin-bottom:8px">✓ <b>CCS '+fmt(ccs)+'%</b> (11-13) อยู่ในเกณฑ์ดี</div>';
+  else if(ccs>=9) interp+='<div style="padding:10px;border-radius:8px;background:var(--amber-bg);border-left:4px solid var(--amber);margin-bottom:8px">⚠ <b>CCS '+fmt(ccs)+'%</b> (9-11) ต่ำกว่ามาตรฐาน ตรวจ: อ้อยอ่อน? อ้อยค้าง? Purity '+fmt(pur)+'%</div>';
+  else interp+='<div style="padding:10px;border-radius:8px;background:var(--red-bg);border-left:4px solid var(--red);margin-bottom:8px">🔴 <b>CCS '+fmt(ccs)+'% ต่ำมาก!</b> (<9) สูญเสียรายได้มหาศาล</div>';
+  if(pur<82) interp+='<div style="padding:10px;border-radius:8px;background:var(--red-bg);border-left:4px solid var(--red);margin-bottom:8px">⚠ <b>Purity '+fmt(pur)+'% ต่ำ</b> (<82%) — Non-sucrose สูง ทำให้ Recovery แย่ ไม่ว่าจะใช้สูตรไหนก็ได้ CCS ต่ำ</div>';
+  var spread=best-worst;
+  interp+='<div style="padding:10px;border-radius:8px;background:var(--purple-bg);border-left:4px solid var(--purple);margin-bottom:8px">📊 <b>ความแตกต่างระหว่างสูตร: '+fmt(spread)+'%</b> — ค่านี้แสดงว่าการเลือกสูตรมีผลต่อราคาอ้อย ±'+fmt(spread*10*price/1000)+' ฿/ตัน | CCS ออสเตรเลีย/ไทยเป็นสูตรที่ MITR LAO ใช้</div>';
+  document.getElementById('ccsInterpret').innerHTML=interp;
+  // === CANE QUALITY ASSESSMENT ===
+  var qhtml='';
+  qhtml+='<div style="margin-top:20px;padding:20px;border-radius:14px;background:var(--amber-bg);border:1px solid rgba(217,119,6,.15)">';
+  qhtml+='<h3 style="color:var(--amber);margin:0 0 14px;font-size:16px">🌾 รายงานคุณภาพอ้อย (Cane Quality Assessment)</h3>';
+  // Quality scoring
+  var score=0;var maxScore=100;var details=[];
+  // 1. Pol%Cane
+  if(pol>=15){score+=20;details.push({p:'Pol%Cane',v:fmt(pol)+'%',s:'✅ ดีเยี่ยม (≥15%)',c:'var(--green)',pt:20});}
+  else if(pol>=13){score+=15;details.push({p:'Pol%Cane',v:fmt(pol)+'%',s:'✓ ดี (13-15%)',c:'var(--green)',pt:15});}
+  else if(pol>=11){score+=8;details.push({p:'Pol%Cane',v:fmt(pol)+'%',s:'⚠ ปานกลาง (11-13%) — อ้อยอาจยังไม่สุก หรือมี Trash มาก',c:'var(--amber)',pt:8});}
+  else{score+=3;details.push({p:'Pol%Cane',v:fmt(pol)+'%',s:'🔴 ต่ำ (<11%) — อ้อยอ่อน/ค้าง/Trash เยอะ — สูญเสียรายได้!',c:'var(--red)',pt:3});}
+  // 2. Brix
+  if(brix>=20){score+=15;details.push({p:'Brix%Cane',v:fmt(brix)+'%',s:'✅ สุกสมบูรณ์ (≥20%)',c:'var(--green)',pt:15});}
+  else if(brix>=17){score+=10;details.push({p:'Brix%Cane',v:fmt(brix)+'%',s:'✓ ดี (17-20%)',c:'var(--green)',pt:10});}
+  else if(brix>=14){score+=5;details.push({p:'Brix%Cane',v:fmt(brix)+'%',s:'⚠ ยังไม่สุกเต็มที่ (14-17%)',c:'var(--amber)',pt:5});}
+  else{score+=2;details.push({p:'Brix%Cane',v:fmt(brix)+'%',s:'🔴 อ้อยอ่อนมาก (<14%)',c:'var(--red)',pt:2});}
+  // 3. Purity
+  if(pur>=88){score+=20;details.push({p:'Purity',v:fmt(pur)+'%',s:'✅ ดีเยี่ยม (≥88%) — Non-sucrose น้อย, Recovery สูง',c:'var(--green)',pt:20});}
+  else if(pur>=85){score+=15;details.push({p:'Purity',v:fmt(pur)+'%',s:'✓ ดี (85-88%)',c:'var(--green)',pt:15});}
+  else if(pur>=80){score+=8;details.push({p:'Purity',v:fmt(pur)+'%',s:'⚠ ปานกลาง (80-85%) — Non-sucrose สูง จะทำให้ Molasses มาก Recovery ต่ำ',c:'var(--amber)',pt:8});}
+  else{score+=3;details.push({p:'Purity',v:fmt(pur)+'%',s:'🔴 ต่ำ (<80%) — อ้อยเน่า/ค้าง/มี Trash มาก → Recovery แย่มาก',c:'var(--red)',pt:3});}
+  // 4. Fiber
+  if(fiber>=11&&fiber<=13){score+=15;details.push({p:'Fiber%Cane',v:fmt(fiber)+'%',s:'✅ เหมาะสม (11-13%) — พลังงาน Bagasse พอดี',c:'var(--green)',pt:15});}
+  else if(fiber>=13&&fiber<=15){score+=10;details.push({p:'Fiber%Cane',v:fmt(fiber)+'%',s:'✓ ค่อนข้างสูง (13-15%) — Extraction ยากขึ้น แต่ Bagasse เหลือเยอะ',c:'var(--blue)',pt:10});}
+  else if(fiber>15){score+=5;details.push({p:'Fiber%Cane',v:fmt(fiber)+'%',s:'⚠ สูง (>15%) — หีบยาก ต้องเพิ่ม Imbibition | Pol/Cane ลดลง | แต่ Bagasse surplus ขายได้',c:'var(--amber)',pt:5});}
+  else{score+=4;details.push({p:'Fiber%Cane',v:fmt(fiber)+'%',s:'⚠ ต่ำ (<11%) — อ้อยนิ่ม Bagasse อาจไม่พอเผา',c:'var(--amber)',pt:4});}
+  // 5. CCS
+  if(ccs>=14){score+=30;details.push({p:'CCS',v:fmt(ccs)+'%',s:'✅ ดีเยี่ยม (≥14%) — อ้อยเกรดพรีเมียม!',c:'var(--green)',pt:30});}
+  else if(ccs>=12){score+=22;details.push({p:'CCS',v:fmt(ccs)+'%',s:'✓ ดี (12-14%)',c:'var(--green)',pt:22});}
+  else if(ccs>=10){score+=12;details.push({p:'CCS',v:fmt(ccs)+'%',s:'⚠ ปานกลาง (10-12%) — ควรตรวจสาเหตุ',c:'var(--amber)',pt:12});}
+  else{score+=4;details.push({p:'CCS',v:fmt(ccs)+'%',s:'🔴 ต่ำมาก (<10%) — สูญเสียรายได้!',c:'var(--red)',pt:4});}
+
+  // Grade
+  var grade,gradeColor,gradeIcon,gradeMsg;
+  if(score>=85){grade='A';gradeColor='var(--green)';gradeIcon='🏆';gradeMsg='อ้อยคุณภาพพรีเมียม — สมบูรณ์ทุกด้าน ราคาสูง Recovery ดีเยี่ยม';}
+  else if(score>=70){grade='B';gradeColor='var(--blue)';gradeIcon='👍';gradeMsg='อ้อยคุณภาพดี — โรงงานทำงานได้ปกติ ผลผลิตน่าพอใจ';}
+  else if(score>=50){grade='C';gradeColor='var(--amber)';gradeIcon='⚠';gradeMsg='อ้อยคุณภาพปานกลาง — ควรตรวจสอบปัจจัยที่ทำให้คะแนนต่ำ';}
+  else{grade='D';gradeColor='var(--red)';gradeIcon='🔴';gradeMsg='อ้อยคุณภาพต่ำ — สูญเสียรายได้มาก ต้องแก้ไขเร่งด่วน';}
+
+  // Grade display
+  qhtml+='<div style="display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:center;margin-bottom:16px">';
+  qhtml+='<div style="text-align:center;min-width:140px"><div style="font-size:60px;line-height:1">'+gradeIcon+'</div><div style="font-size:48px;font-weight:900;color:'+gradeColor+'">Grade '+grade+'</div><div style="font-size:20px;font-weight:700;color:'+gradeColor+'">'+score+'/100 คะแนน</div></div>';
+  qhtml+='<div><div style="font-size:15px;color:'+gradeColor+';font-weight:700;margin-bottom:8px">'+gradeMsg+'</div>';
+  // Score bar
+  qhtml+='<div style="background:var(--s3);border-radius:10px;height:18px;overflow:hidden;margin-bottom:12px"><div style="width:'+score+'%;height:100%;background:linear-gradient(90deg,'+gradeColor+',rgba(255,255,255,.3));border-radius:10px;transition:width .5s"></div></div>';
+  // Detail items
+  for(var d=0;d<details.length;d++){
+    qhtml+='<div style="display:flex;justify-content:space-between;padding:6px 10px;border-bottom:1px solid var(--bdr2);font-size:13px"><span style="color:var(--txt2);font-weight:600">'+details[d].p+' = <b style="color:'+details[d].c+'">'+details[d].v+'</b></span><span style="color:'+details[d].c+'">'+details[d].s+' ('+details[d].pt+' คะแนน)</span></div>';
+  }
+  qhtml+='</div></div>';
+
+  // Recommendations
+  qhtml+='<div style="margin-top:14px;padding:14px;border-radius:10px;background:var(--blue-bg);border:1px solid rgba(37,99,235,.12)">';
+  qhtml+='<h4 style="color:var(--blue);margin:0 0 8px;font-size:14px">💡 คำแนะนำเพื่อเพิ่มคุณภาพอ้อย</h4>';
+  var recs=[];
+  if(pol<13) recs.push('เพิ่ม Pol โดย: ตัดอ้อยเมื่อสุกเต็มที่ (อายุ 11-14 เดือน), หยุดให้น้ำก่อนตัด 30 วัน, ลดยอดอ้อยและใบ');
+  if(pur<85) recs.push('เพิ่ม Purity โดย: ตัดอ้อยสด (ไม่เผา), ส่งโรงงานภายใน 24 ชม., ลด Trash/ดิน/ยอดอ้อย');
+  if(fiber>15) recs.push('Fiber สูง: ตรวจสอบพันธุ์อ้อย (อาจเป็นพันธุ์ Fiber สูง), เพิ่ม Imbibition%Fiber ≥280%, ตรวจ Shredder/PI');
+  if(fiber<11) recs.push('Fiber ต่ำ: อ้อยอาจมีน้ำมาก (ฝนตก), ตรวจ Moisture, Bagasse อาจไม่พอเผา — อาจต้องลด Imbibition');
+  if(ccs<12) recs.push('CCS ต่ำ: สาเหตุหลัก = Pol ต่ำ + Purity ต่ำ → ดูแลคุณภาพวัตถุดิบ, ลดเวลาค้าง, ตัดอ้อยสด');
+  if(brix<17) recs.push('Brix ต่ำ: อ้อยอาจยังไม่สุก, ตรวจอายุอ้อย, พิจารณาเลื่อนการตัด');
+  if(recs.length===0) recs.push('คุณภาพอ้อยดีทุกด้าน! รักษามาตรฐานนี้ไว้ ตัดสดส่งเร็ว');
+  for(var r=0;r<recs.length;r++){
+    qhtml+='<div style="padding:4px 0;font-size:13px;color:var(--txt);line-height:1.6">• '+recs[r]+'</div>';
+  }
+  qhtml+='</div>';
+
+  // Money impact
+  var tonsPerDay=8000; // 8000 TCD
+  var potentialSugar=ccs/100*tonsPerDay*10; // kg
+  var tonsSugar=potentialSugar/1000;
+  var moneyPerDay=tonsSugar*price;
+  qhtml+='<div style="margin-top:14px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px">';
+  qhtml+='<div class="ee2-kpi-card amber" style="text-align:center"><div class="ct">น้ำตาลที่ควรได้/วัน</div><div class="cv ha" style="font-size:22px">'+fmt(tonsSugar)+' ตัน</div><div class="cu">ที่ 8,000 TCD</div></div>';
+  qhtml+='<div class="ee2-kpi-card green" style="text-align:center"><div class="ct">มูลค่า/วัน</div><div class="cv hg" style="font-size:22px">'+fmt(moneyPerDay/1e6)+' ล้าน฿</div><div class="cu">@ '+fmt(price)+' ฿/t</div></div>';
+  qhtml+='<div class="ee2-kpi-card blue" style="text-align:center"><div class="ct">มูลค่า/ปี (120 วัน)</div><div class="cv hb" style="font-size:22px">'+fmt(moneyPerDay*120/1e6)+' ล้าน฿</div><div class="cu">Crop 120 วัน</div></div>';
+  qhtml+='</div>';
+
+  qhtml+='</div>';
+  document.getElementById('ccsInterpret').innerHTML+=qhtml;
+  document.getElementById('ccsResults').style.display='block';
+}
+// Keep old c1() as alias
+function c1(){ccsCalc();}
+
+
+// Calc: Milling
+function m1(){
+  const r=+document.getElementById('m1r').value,f=+document.getElementById('m1f').value/100,
+  i=+document.getElementById('m1i').value/100,s=+document.getElementById('m1s').value/100,e=+document.getElementById('m1e').value/100;
+  const fiber=r*f, water=fiber*i, juice=r*(1-f)+water*0.75;
+  const sucJ=r*s*e, sucB=r*s*(1-e);
+  document.getElementById('m1r1').textContent=fmt(fiber);
+  document.getElementById('m1r2').textContent=fmt(water);
+  document.getElementById('m1r3').textContent=fmt(juice);
+  document.getElementById('m1r4').textContent=fmt(sucJ);
+  document.getElementById('m1r5').textContent=fmt(sucB);
+  const lossDay=sucB*24, lossB=lossDay*16000, lossY=lossB*120/1e6;
+  const tgtE=0.975, tgtLoss=r*s*(1-tgtE), gap=(sucB-tgtLoss)*24;
+  var mi='';
+  if(e>=0.97) mi='<div style="margin-top:8px;padding:8px;border-radius:6px;background:var(--green-bg);border-left:3px solid var(--green)">✅ <b>Extraction ≥97%</b> — ดีมาก! ประสิทธิภาพหีบอยู่ระดับสากล</div>';
+  else if(e>=0.95) mi='<div style="margin-top:8px;padding:8px;border-radius:6px;background:rgba(245,158,11,.1);border-left:3px solid var(--amber)">⚠ <b>Extraction 95-97%</b> — พอใช้ ควรตรวจ Imbibition rate, PI, สภาพลูกกลิ้ง</div>';
+  else mi='<div style="margin-top:8px;padding:8px;border-radius:6px;background:var(--red-bg);border-left:3px solid var(--red)">🔴 <b>Extraction <95%</b> — ต่ำมาก! น้ำตาลสูญเสียหนัก ตรวจ Hydraulic, ลูกกลิ้งสึก, Imbibition</div>';
+  if(i<2.5) mi+='<div style="margin-top:4px;padding:8px;border-radius:6px;background:var(--blue-bg);border-left:3px solid var(--blue)">💡 Imbibition '+fmt(i*100)+'%/fiber ต่ำกว่ามาตรฐาน 280% → เพิ่ม Imb จะช่วย Extraction เพิ่ม 0.2-0.4% ต่อ 10% Imb</div>';
+  document.getElementById('m1ex').innerHTML='Sucrose ในอ้อย: '+fmt(r*s)+' t/h | สกัดได้ '+fmt(sucJ)+' t/h | <b style="color:var(--red)">สูญเสียใน Bagasse '+fmt(sucB)+' t/h = '+fmt(lossDay)+' t/d = '+fmt(lossB/1e6)+' ล้าน฿/วัน ('+fmt(lossY)+' ล้าน฿/ปี)</b>'+(gap>0?' | <span style="color:var(--amber)">ถ้า Ext=97.5% → น้ำตาลเพิ่ม '+fmt(gap)+' t/d = '+fmt(gap*16000/1e6)+' ล้าน฿/วัน</span>':'')+mi;
+}
+
+
+// Calc: Bagasse Quality & Moisture
+function bagCalc(){
+  const tcd=+document.getElementById('bag_tcd').value, pc=+document.getElementById('bag_pc').value/100;
+  const moist=+document.getElementById('bag_moist').value/100, pol=+document.getElementById('bag_pol').value/100;
+  const fib=+document.getElementById('bag_fib').value/100, price=+document.getElementById('bag_price').value;
+  const bagasse=tcd*pc;
+  const gcv=(18600*(1-moist)-2257*moist)/1000; // Hugot formula MJ/kg
+  const sucLost=bagasse*pol;
+  const moneyLost=sucLost*price;
+  document.getElementById('bag_r1').textContent=fmt(bagasse);
+  document.getElementById('bag_r2').textContent=fmt(gcv);
+  document.getElementById('bag_r3').textContent=fmt(sucLost);
+  document.getElementById('bag_r4').textContent=fmt(moneyLost);
+  var bi='';
+  if(moist<=0.48) bi='<div style="margin-top:8px;padding:8px;border-radius:6px;background:var(--green-bg);border-left:3px solid var(--green)">✅ <b>Moisture '+fmt(moist*100)+'% ดีมาก!</b> (≤48%) — GCV สูง Boiler ทำงานดี เหลือ Bagasse ขายได้</div>';
+  else if(moist<=0.52) bi='<div style="margin-top:8px;padding:8px;border-radius:6px;background:rgba(245,158,11,.1);border-left:3px solid var(--amber)">⚠ <b>Moisture '+fmt(moist*100)+'%</b> (48-52%) — ปกติ แต่ถ้าลดได้จะเพิ่ม GCV อย่างมาก ทุก 1% moisture = GCV เพิ่ม ~0.2 MJ/kg</div>';
+  else bi='<div style="margin-top:8px;padding:8px;border-radius:6px;background:var(--red-bg);border-left:3px solid var(--red)">🔴 <b>Moisture '+fmt(moist*100)+'% สูงมาก!</b> (>52%) — GCV ต่ำ Boiler เผาไม่หมด อาจต้องซื้อเชื้อเพลิงเสริม ตรวจ Imbibition rate + Mill pressure</div>';
+  if(pol>0.02) bi+='<div style="margin-top:4px;padding:8px;border-radius:6px;background:var(--red-bg);border-left:3px solid var(--red)">⚠ Pol%Bagasse '+fmt(pol*100)+'% สูง (>2.0%) → สูญเสีย '+fmt(sucLost)+' t/d = <b>'+fmt(moneyLost/1e6)+' ล้าน฿/วัน</b> ตรวจ Extraction, Imbibition, PI</div>';
+  else if(pol>0.016) bi+='<div style="margin-top:4px;padding:8px;border-radius:6px;background:rgba(245,158,11,.1);border-left:3px solid var(--amber)">⚠ Pol%Bagasse '+fmt(pol*100)+'% (1.6-2.0%) — ยังลดได้อีก เพิ่ม Imbibition จะช่วย</div>';
+  else bi+='<div style="margin-top:4px;padding:8px;border-radius:6px;background:var(--green-bg);border-left:3px solid var(--green)">✅ Pol%Bagasse '+fmt(pol*100)+'% ดีมาก (≤1.6%) — สกัด Sucrose ได้ดี</div>';
+  var dryFib=fib/(1-moist);
+  bi+='<div style="margin-top:4px;padding:8px;border-radius:6px;background:var(--blue-bg);border-left:3px solid var(--blue)">📊 Fiber%Bagasse (dry basis) = '+fmt(dryFib*100)+'% | Brix%Bagasse ≈ '+fmt((1-moist-fib)*100)+'% | ถ้า Moisture ลด 2% → GCV เพิ่ม ~'+fmt(((18600*(1-(moist-0.02))-2257*(moist-0.02))/1000)-gcv)+' MJ/kg → Steam เพิ่ม ~'+fmt(bagasse*0.02*2.5)+' t/d</div>';
+  document.getElementById('bag_ex').innerHTML='Bagasse '+fmt(bagasse)+' t/d × GCV '+fmt(gcv)+' MJ/kg | <b style="color:var(--red)">น้ำตาลหาย '+fmt(sucLost)+' t/d = '+fmt(moneyLost/1e6)+' ล้าน฿/วัน</b> | ถ้า Pol ลดจาก '+fmt(pol*100)+'% เป็น 1.6% → <span style="color:var(--green)">ลด Loss '+fmt((pol-0.016)*bagasse)+' t/d = '+fmt((pol-0.016)*bagasse*price/1e6)+' ล้าน฿/วัน</span>'+bi;
+}
+// Calc: Mill Control Optimization
+function millCtrl(){
+  const tcd=+document.getElementById('mc_tcd').value;
+  const fib=+document.getElementById('mc_fib').value/100;
+  const polc=+document.getElementById('mc_polc').value/100;
+  const curImb=+document.getElementById('mc_imb').value;
+  const tgtImb=+document.getElementById('mc_tgtimb').value;
+  const curMoist=+document.getElementById('mc_moist').value/100;
+  const tgtMoist=+document.getElementById('mc_tgtmoist').value/100;
+  const curPI=+document.getElementById('mc_pi').value;
+  const tgtPI=+document.getElementById('mc_tgtpi').value;
+  const price=+document.getElementById('mc_price').value;
+  // Current extraction estimate
+  var curExt=0.93+0.0017*(curPI-80)+0.002*((curImb-200)/10);
+  curExt=Math.min(0.99,Math.max(0.90,curExt));
+  var tgtExt=0.93+0.0017*(tgtPI-80)+0.002*((tgtImb-200)/10);
+  tgtExt=Math.min(0.99,Math.max(0.90,tgtExt));
+  var sucInCane=tcd*polc;
+  var curSuc=sucInCane*curExt;
+  var tgtSuc=sucInCane*tgtExt;
+  var gainSuc=(tgtSuc-curSuc);
+  var gainMoney=gainSuc*price;
+  // Bagasse analysis
+  var curBag=tcd*fib/(1-curMoist)*0.95;
+  var tgtBag=tcd*fib/(1-tgtMoist)*0.95;
+  var curGCV=(18600*(1-curMoist)-2257*curMoist)/1000;
+  var tgtGCV=(18600*(1-tgtMoist)-2257*tgtMoist)/1000;
+  var steamGain=(tgtBag*tgtGCV-curBag*curGCV)*0.4; // approx kg steam per MJ
+  // Display
+  document.getElementById('mc_r1').textContent=fmt(curExt*100)+' → '+fmt(tgtExt*100);
+  document.getElementById('mc_r2').textContent=fmt(gainSuc);
+  document.getElementById('mc_r3').textContent=fmt(gainMoney/1e6);
+  document.getElementById('mc_r4').textContent=fmt(curGCV)+' → '+fmt(tgtGCV);
+  var mci='';
+  if(gainSuc>0) mci+='<div style="margin-top:8px;padding:10px;border-radius:8px;background:var(--green-bg);border-left:4px solid var(--green)">✅ <b>ถ้าปรับปรุงตามเป้า:</b> น้ำตาลเพิ่ม <b>'+fmt(gainSuc)+' t/d</b> = <b style="color:var(--green)">'+fmt(gainMoney/1e6)+' ล้าน฿/วัน</b></div>';
+  if(tgtImb>curImb) mci+='<div style="margin-top:4px;padding:8px;border-radius:6px;background:var(--blue-bg);border-left:3px solid var(--blue)">💧 เพิ่ม Imbibition '+curImb+'% → '+tgtImb+'% (+'+fmt(tgtImb-curImb)+'%) → Extraction เพิ่ม ~'+fmt((tgtImb-curImb)/10*0.2)+'%</div>';
+  if(tgtPI>curPI) mci+='<div style="margin-top:4px;padding:8px;border-radius:6px;background:var(--amber-bg);border-left:3px solid var(--amber)">⚙️ เพิ่ม PI '+curPI+' → '+tgtPI+' (+'+fmt(tgtPI-curPI)+') → Extraction เพิ่ม ~'+fmt((tgtPI-curPI)*0.17)+'%</div>';
+  if(tgtMoist<curMoist) mci+='<div style="margin-top:4px;padding:8px;border-radius:6px;background:rgba(251,146,60,.08);border-left:3px solid var(--orange)">🔥 ลด Moisture '+fmt(curMoist*100)+'% → '+fmt(tgtMoist*100)+'% → GCV เพิ่ม '+fmt(tgtGCV-curGCV)+' MJ/kg → Steam เพิ่ม ~'+fmt(steamGain)+' kg/h</div>';
+  document.getElementById('mc_ex').innerHTML=mci;
+}
+
+// Calc: Evaporation
+function e1(){
+  const j=+document.getElementById('e1j').value,bi=+document.getElementById('e1bi').value/100,
+  bo=+document.getElementById('e1bo').value/100,n=+document.getElementById('e1n').value;
+  const syrup=j*bi/bo, evap=j-syrup;
+  const sf={3:0.40,4:0.32,5:0.28}; const steam=evap*(sf[n]||0.28);
+  const bpe=0.01*Math.pow(bo*100,2);
+  document.getElementById('e1r1').textContent=fmt(evap);
+  document.getElementById('e1r2').textContent=fmt(syrup);
+  document.getElementById('e1r3').textContent=fmt(steam);
+  document.getElementById('e1r4').textContent=fmt(bpe);
+  const steamCost=steam*300; // ~300 ฿/t steam approx
+  const n5eff=evap*0.28, n4eff=evap*0.32, saving=(n4eff-n5eff)*300*24;
+  var ei='';
+  var syBx=bo*100;
+  if(syBx>=60&&syBx<=68) ei='<div style="margin-top:8px;padding:8px;border-radius:6px;background:var(--green-bg);border-left:3px solid var(--green)">✅ <b>Syrup Brix '+fmt(syBx)+'%</b> อยู่ในเกณฑ์ดี (60-68%) — Pan จะเคี่ยวได้ง่าย ประหยัดเวลา</div>';
+  else if(syBx<60) ei='<div style="margin-top:8px;padding:8px;border-radius:6px;background:rgba(245,158,11,.1);border-left:3px solid var(--amber)">⚠ <b>Syrup Brix '+fmt(syBx)+'% ต่ำ!</b> (<60%) Pan ต้องระเหยน้ำเพิ่มเอง → สิ้นเปลืองไอน้ำ + เวลาเคี่ยวนานขึ้น</div>';
+  else ei='<div style="margin-top:8px;padding:8px;border-radius:6px;background:var(--red-bg);border-left:3px solid var(--red)">🔴 <b>Syrup Brix '+fmt(syBx)+'% สูงเกิน!</b> (>68%) เสี่ยง Scaling หนัก + ไหลไม่สะดวก ลด Brix ออก</div>';
+  if(n<5) ei+='<div style="margin-top:4px;padding:8px;border-radius:6px;background:var(--blue-bg);border-left:3px solid var(--blue)">💡 ใช้ '+n+'-Effect → ถ้าเพิ่มเป็น 5-Effect จะประหยัด Steam ~'+(n==3?'30':'12')+'%</div>';
+  document.getElementById('e1ex').innerHTML='ระเหยน้ำ '+fmt(evap/j*100)+'% | '+n+'-Effect ใช้ไอน้ำ ~'+fmt(sf[n]*100)+'% ของน้ำที่ระเหย | BPE ที่ Syrup '+bo*100+'% Brix = '+fmt(bpe)+'°C | <b style="color:var(--amber)">Steam cost ~'+fmt(steamCost*24/1e6)+' ล้าน฿/วัน</b>'+(n<5?' | <span style="color:var(--green)">ถ้าเพิ่มเป็น 5-Effect ประหยัด ~'+fmt(saving/1e6)+' ล้าน฿/วัน</span>':'')+ei;
+}
+
+// Production Manager — E2E Calculator & Loss Analysis
+function ee2(){
+  // === INPUT VALUES ===
+  const tcd=+document.getElementById('ee2_tcd_in').value;
+  const polc=+document.getElementById('ee2_polc').value/100;
+  const fib=+document.getElementById('ee2_fib').value/100;
+  const ccs=+document.getElementById('ee2_ccs').value;
+  const mjbx=+document.getElementById('ee2_mjbx').value/100;
+  const mjpur=+document.getElementById('ee2_mjpur').value/100;
+  const burnt=+document.getElementById('ee2_burnt').value/100;
+  const pi=+document.getElementById('ee2_pi').value;
+  const ext=+document.getElementById('ee2_ext').value/100;
+  const imb=+document.getElementById('ee2_imb').value;
+  const polbag=+document.getElementById('ee2_polbag').value/100;
+  const bagpc=+document.getElementById('ee2_bagpc').value/100;
+  const purdrop=+document.getElementById('ee2_purdrop').value/100;
+  const sybx=+document.getElementById('ee2_sybx').value/100;
+  const nEff=+document.getElementById('ee2_neff').value;
+  const fmp=+document.getElementById('ee2_fmp').value;
+  const fmpc=+document.getElementById('ee2_fmpc').value/100;
+  const bhr=+document.getElementById('ee2_bhr').value/100;
+  const lbag=+document.getElementById('ee2_lbag').value/100;
+  const lfc=+document.getElementById('ee2_lfc').value/100;
+  const lfm=+document.getElementById('ee2_lfm').value/100;
+  const lud=+document.getElementById('ee2_lud').value/100;
+  const price=+document.getElementById('ee2_price').value;
+  const molprice=+document.getElementById('ee2_molprice').value;
+  const caneprice=+document.getElementById('ee2_caneprice').value;
+  const days=+document.getElementById('ee2_days').value;
+  // Energy inputs
+  const beff=+document.getElementById('ee2_beff').value/100;
+  const stpress=+document.getElementById('ee2_stpress').value;
+  const bagmoist=+document.getElementById('ee2_bagmoist').value/100;
+  const elecprice=+document.getElementById('ee2_elecprice').value;
+  const elecsell=+document.getElementById('ee2_elecsell').value;
+  const limecost=+document.getElementById('ee2_limecost').value;
+  const chemcost=+document.getElementById('ee2_chemcost').value;
+
+  // === MASS BALANCE ===
+  const sucInCane=tcd*polc;
+  const bagasse=tcd*bagpc;
+  const fiber=tcd*fib;
+  const sucInBag=bagasse*polbag;
+  const sucExtracted=sucInCane*ext;
+  const mjFlow=tcd*(1-fib)+fiber*(imb/100)*0.75;
+  const mjPol=sucExtracted;
+  const mjSolids=mjFlow*mjbx;
+  const clJPur=(mjpur-purdrop)*100;
+  const clJPol=mjPol*0.998;
+  const syrupFlow=mjFlow*mjbx/sybx;
+  const evapWater=mjFlow-syrupFlow;
+  const sf={3:0.40,4:0.32,5:0.28};
+  const steamEvap=evapWater*(sf[nEff]||0.28);
+  const syrupPol=clJPol*0.997;
+  const syrupPur=clJPur;
+  const sugarFromBH=syrupPol*bhr;
+  const centEff=0.985;
+  const sugarFinal=sugarFromBH*centEff;
+  const finalMol=tcd*fmpc;
+  const overallRecov=sucInCane>0?(sugarFinal/sucInCane*100):0;
+  const rendement=tcd>0?(sugarFinal/tcd*100):0;
+
+  // === LOSS CALCULATIONS (as % of Pol in Cane) ===
+  const lossBag_t=sucInCane*lbag;
+  const lossFC_t=sucInCane*lfc;
+  const lossFM_t=sucInCane*lfm;
+  const lossUD_t=sucInCane*lud;
+  const totalLossPc=lbag+lfc+lfm+lud;
+  const totalLoss_t=lossBag_t+lossFC_t+lossFM_t+lossUD_t;
+
+  // Targets (from Daily Report)
+  const tBag=0.03, tFC=0.0033, tFM=0.0772, tUD=0.0549;
+  const tTotal=tBag+tFC+tFM+tUD;
+  const gapBag=lbag-tBag, gapFC=lfc-tFC, gapFM=lfm-tFM, gapUD=lud-tUD;
+  const gapTotal=totalLossPc-tTotal;
+
+  // Loss to money
+  const lossBag_b=lossBag_t*price;
+  const lossFC_b=lossFC_t*price;
+  const lossFM_b=lossFM_t*price;
+  const lossUD_b=lossUD_t*price;
+  const totalLoss_b=totalLoss_t*price;
+
+  // Opportunity (gap × sucInCane × price)
+  const oppBag_t=Math.max(0,gapBag)*sucInCane;
+  const oppFC_t=Math.max(0,gapFC)*sucInCane;
+  const oppFM_t=Math.max(0,gapFM)*sucInCane;
+  const oppUD_t=Math.max(0,gapUD)*sucInCane;
+  const oppTotal_t=oppBag_t+oppFC_t+oppFM_t+oppUD_t;
+  const oppTotal_b=oppTotal_t*price;
+
+  // === DISPLAY: Summary Results ===
+  document.getElementById('ee2_sugar').textContent=fmt(sugarFinal);
+  document.getElementById('ee2_yield').textContent=fmt(rendement);
+  document.getElementById('ee2_recov').textContent=fmt(overallRecov);
+  const revSugarDay=sugarFinal*price;
+  document.getElementById('ee2_rev').textContent=fmt(revSugarDay/1e6);
+
+  // === DISPLAY: Mass Balance Table ===
+  const mb=document.getElementById('ee2_mass').querySelector('tbody');
+  const tgExt='97.5%', tgPolBag='<1.61%', tgImb='280%', tgBHR='86.04%', tgFMP='<33.1%';
+  function vs(actual,target,unit,lower){
+    const diff=actual-target;
+    const ok=lower?(diff<=0):(diff>=0);
+    return '<span style="color:var(--'+(ok?'green':'red')+')">'+fmt(actual)+unit+' '+(ok?'✓':'⚠ gap '+(diff>0?'+':'')+fmt(diff)+unit)+'</span>';
+  }
+  mb.innerHTML=
+  '<tr><td>1. อ้อยเข้า</td><td>Cane</td><td><b>'+tcd.toLocaleString()+'</b></td><td>'+fmt(sucInCane)+'</td><td>Pol '+polc*100+'% | Fiber '+fib*100+'% | CCS '+ccs+'</td><td>อ้อยไฟไหม้ '+vs(burnt*100,3,'%',true)+'</td></tr>'+
+  '<tr><td>2. เตรียมอ้อย</td><td>Shredded Cane</td><td>'+tcd.toLocaleString()+'</td><td>'+fmt(sucInCane)+'</td><td>PI = '+pi+'</td><td>'+vs(pi,92,'',false)+'</td></tr>'+
+  '<tr><td>3. ลูกหีบ</td><td>Mixed Juice</td><td><b>'+fmt(mjFlow)+'</b></td><td>'+fmt(sucExtracted)+'</td><td>Ext '+ext*100+'% | Imb '+imb+'%/fib</td><td>'+vs(ext*100,97.5,'%',false)+'</td></tr>'+
+  '<tr><td></td><td>Bagasse</td><td>'+fmt(bagasse)+'</td><td><span class="hr">-'+fmt(sucInBag)+'</span></td><td>Pol%Bag '+fmt(polbag*100)+'%</td><td>'+vs(polbag*100,1.61,'%',true)+'</td></tr>'+
+  '<tr><td>4. ทำใส</td><td>Clear Juice</td><td>'+fmt(mjFlow*0.97)+'</td><td>'+fmt(clJPol)+'</td><td>Purity '+fmt(clJPur)+'% | Pur Drop '+fmt(purdrop*100)+'%</td><td>Pur Drop '+vs(purdrop*100,1.5,'%',true)+'</td></tr>'+
+  '<tr><td>5. หม้อต้ม</td><td>Syrup</td><td><b>'+fmt(syrupFlow)+'</b></td><td>'+fmt(syrupPol)+'</td><td>Brix '+(sybx*100)+'% | '+nEff+'-Effect | Evap '+fmt(evapWater)+' t/d</td><td>Steam ~'+fmt(steamEvap)+' t/d</td></tr>'+
+  '<tr><td>6. หม้อเคี่ยว+ปั่น</td><td>Raw Sugar</td><td><b class="hg">'+fmt(sugarFinal)+'</b></td><td class="hg"><b>'+fmt(sugarFinal)+'</b></td><td>BHR '+fmt(bhr*100)+'% | FMP '+fmp+'%</td><td>BHR '+vs(bhr*100,86.04,'%',false)+'</td></tr>'+
+  '<tr><td></td><td>Final Molasses</td><td>'+fmt(finalMol)+'</td><td><span class="hr">-'+fmt(lossFM_t)+'</span></td><td>Purity '+fmp+'%</td><td>FMP '+vs(fmp,33.1,'%',true)+'</td></tr>';
+
+  // === DISPLAY: Loss Analysis Table ===
+  const lb=document.getElementById('ee2_loss').querySelector('tbody');
+  function lrow(name,cause,pc,target){
+    const t=sucInCane*pc;
+    const b=t*price;
+    const by=b*days/1e6;
+    const g=pc-target;
+    const gCol=g>0.001?'var(--red)':'var(--green)';
+    return '<tr><td><b>'+name+'</b></td><td style="font-size:11px">'+cause+'</td><td>'+fmt(pc*100)+'%</td><td>'+fmt(t)+'</td><td style="color:var(--red)">'+b.toLocaleString('th-TH',{maximumFractionDigits:0})+'</td><td style="color:var(--red)">'+fmt(by)+'</td><td>'+fmt(target*100)+'%</td><td style="color:'+gCol+'">'+(g>0?'+':'')+fmt(g*100)+'%</td></tr>';
+  }
+  lb.innerHTML=
+  lrow('Bagasse Loss','Pol%Bagasse สูง → สกัดไม่หมด<br>สาเหตุ: Imb ต่ำ(239% vs 280%), PI ต่ำ, ลูกกลิ้งสึก, Hydraulic ต่ำ',lbag,tBag)+
+  lrow('Filter Cake Loss','Sucrose ติดไปกับกากตะกอน<br>สาเหตุ: Mud ข้น, Rotary vacuum filter ไม่ดี, Wash water ไม่พอ',lfc,tFC)+
+  lrow('Final Molasses Loss','น้ำตาลที่ recover ไม่ได้ ติดอยู่ในกากน้ำตาล<br>สาเหตุ: FMP สูง(36.6%>33.1%), BHR ต่ำ, Non-sucrose สูง',lfm,tFM)+
+  lrow('Undetermined Loss','หาสาเหตุไม่ได้ชัดเจน<br>สาเหตุ: Inversion(pH/temp), Entrainment, Leak, Dextran, Sampling error',lud,tUD);
+
+  // Total Loss display
+  document.getElementById('ee2_totloss').textContent=fmt(totalLossPc*100)+'%';
+  document.getElementById('ee2_totloss_t').textContent=fmt(totalLoss_t);
+  document.getElementById('ee2_totloss_b').textContent=totalLoss_b.toLocaleString('th-TH',{maximumFractionDigits:0});
+  document.getElementById('ee2_totloss_y').textContent=fmt(totalLoss_b*days/1e6);
+
+  // Opportunity display
+  document.getElementById('ee2_opp_t').textContent=fmt(oppTotal_t);
+  document.getElementById('ee2_opp_b').textContent=oppTotal_b.toLocaleString('th-TH',{maximumFractionDigits:0});
+  document.getElementById('ee2_opp_y').textContent=fmt(oppTotal_b*days/1e6);
+
+  // === DISPLAY: Suggestions ===
+  let sug=[];
+  const sugStyle='padding:10px;margin:6px 0;border-radius:6px;font-size:12px;';
+  if(gapBag>0.001) sug.push('<div style="'+sugStyle+'background:rgba(239,68,68,.08);border-left:4px solid var(--red)"><b>🔴 Bagasse Loss สูงกว่า Target '+fmt(gapBag*100)+'%</b> → น้ำตาลหาย '+fmt(oppBag_t)+' t/d = <b>'+fmt(oppBag_t*price/1e6)+' ล้าน฿/วัน</b><br>แก้ไข: เพิ่ม Imbibition จาก 239% เป็น 280%/fiber (+41%), ปรับ PI ให้ ≥94, ตรวจลูกกลิ้ง/Hydraulic pressure</div>');
+  if(gapFM>0.001) sug.push('<div style="'+sugStyle+'background:rgba(239,68,68,.08);border-left:4px solid var(--red)"><b>🔴 Final Molasses Loss สูงกว่า Target '+fmt(gapFM*100)+'%</b> → น้ำตาลหาย '+fmt(oppFM_t)+' t/d = <b>'+fmt(oppFM_t*price/1e6)+' ล้าน฿/วัน</b><br>แก้ไข: ลด FMP จาก '+fmp+'% → <33.1% (เพิ่มรอบเคี่ยว C-strike, ปรับ Seed size, ลดอุณหภูมิ Pan), ปรับปรุง BHR จาก '+fmt(bhr*100)+'% → 86%</div>');
+  if(gapUD>0.001) sug.push('<div style="'+sugStyle+'background:var(--amber-bg);border-left:4px solid var(--amber)"><b>🟡 Undetermined Loss สูงกว่า Target '+fmt(gapUD*100)+'%</b> → น้ำตาลหาย '+fmt(oppUD_t)+' t/d = <b>'+fmt(oppUD_t*price/1e6)+' ล้าน฿/วัน</b><br>แก้ไข: ลด Inversion (ควบคุม pH 7.0-7.2 ทุกจุด), ป้องกัน Entrainment ที่ Evaporator, ซ่อมรอยรั่ว, ลดอ้อยไฟไหม้ (Dextran), ตรวจสอบ Sampling</div>');
+  if(gapFC>0.001) sug.push('<div style="'+sugStyle+'background:var(--blue-bg);border-left:4px solid var(--blue)"><b>🔵 Filter Cake Loss สูงกว่า Target '+fmt(gapFC*100)+'%</b> → น้ำตาลหาย '+fmt(oppFC_t)+' t/d = <b>'+fmt(oppFC_t*price/1e6)+' ล้าน฿/วัน</b><br>แก้ไข: เพิ่ม Wash water ใน Rotary Vacuum Filter, ปรับสุญญากาศ, ลด Mud dens</div>');
+  if(burnt*100>3) sug.push('<div style="'+sugStyle+'background:var(--amber-bg);border-left:4px solid var(--amber)"><b>🟡 อ้อยไฟไหม้ '+fmt(burnt*100)+'% (Target <3%)</b><br>ผลกระทบ: Dextran สูง → เพิ่ม Undetermined Loss, ลด Purity 0.5-2%, เพิ่มสี ICUMSA, ลดอายุเก็บน้ำตาล</div>');
+  if(imb<270) sug.push('<div style="'+sugStyle+'background:var(--blue-bg);border-left:4px solid var(--blue)"><b>🔵 Imbibition ต่ำ '+imb+'% vs มาตรฐาน 280%</b><br>เพิ่ม Imb ทุก 10% → Extraction เพิ่ม ~0.2-0.4% → น้ำตาลเพิ่ม ~'+fmt(sucInCane*0.003)+' t/d = '+fmt(sucInCane*0.003*price/1e6)+' ล้าน฿/วัน</div>');
+  if(sug.length===0) sug.push('<div style="'+sugStyle+'background:var(--green-bg);border-left:4px solid var(--green)"><b>✅ ผลิตได้ตาม Target แล้ว!</b> ทุกค่า Loss อยู่ในเกณฑ์</div>');
+  const totalOppY=oppTotal_b*days/1e6;
+  if(totalOppY>0) sug.unshift('<div style="'+sugStyle+'background:linear-gradient(135deg,rgba(239,68,68,.12),rgba(245,158,11,.08));border:2px solid var(--red);font-size:13px"><b style="font-size:16px;color:var(--red)">โอกาสรวม: ถ้าปรับปรุง Loss ทุกจุดให้ถึง Target → น้ำตาลเพิ่ม '+fmt(oppTotal_t)+' t/d → รายได้เพิ่ม '+fmt(totalOppY)+' ล้าน฿/ปี ('+days+' วัน)</b></div>');
+  document.getElementById('ee2_suggest').innerHTML=sug.join('');
+
+  // === ENERGY CALCULATIONS ===
+  const bagForFuel=bagasse*(1-0); // all bagasse to boiler
+  const steamRatio=stpress>=40?2.4:stpress>=25?2.6:2.8;
+  const steamProd=bagForFuel*steamRatio*beff;
+  const kwhPerTon=stpress>=40?110:stpress>=25?90:70;
+  const powerProd=tcd*kwhPerTon; // kWh/day
+  const factoryUse=tcd*25; // ~25 kWh/t cane internal use
+  const surplusPower=Math.max(0,powerProd-factoryUse);
+  const elecRevDay=surplusPower*elecsell;
+  const elecCostDay=factoryUse*elecprice; // internal usage cost (opportunity)
+  const limeDose=0.65; // kg/t cane
+  const limeCostDay=tcd*limeDose/1000*limecost;
+  const chemCostDay=tcd*chemcost;
+
+  // === DISPLAY: Revenue Table ===
+  const mt=document.getElementById('ee2_money').querySelector('tbody');
+  const caneCostDay=tcd*ccs*caneprice/100;
+  const molRevDay=finalMol*molprice;
+  const totalRev=revSugarDay+molRevDay+elecRevDay;
+  const totalCost=caneCostDay+limeCostDay+chemCostDay;
+  const grossProfit=totalRev-totalCost;
+  mt.innerHTML=
+  '<tr style="color:var(--green)"><td><b>รายได้น้ำตาลดิบ</b></td><td>'+fmt(sugarFinal)+'</td><td>'+price.toLocaleString()+'</td><td><b>'+revSugarDay.toLocaleString('th-TH',{maximumFractionDigits:0})+'</b></td><td>'+fmt(revSugarDay*days/1e6)+'</td></tr>'+
+  '<tr style="color:var(--amber)"><td>รายได้โมลาส</td><td>'+fmt(finalMol)+'</td><td>'+molprice.toLocaleString()+'</td><td>'+molRevDay.toLocaleString('th-TH',{maximumFractionDigits:0})+'</td><td>'+fmt(molRevDay*days/1e6)+'</td></tr>'+
+  '<tr style="color:var(--cyan)"><td>รายได้ขายไฟฟ้า Surplus</td><td>'+fmt(surplusPower/1000)+' MWh</td><td>'+elecsell+' ฿/kWh</td><td>'+elecRevDay.toLocaleString('th-TH',{maximumFractionDigits:0})+'</td><td>'+fmt(elecRevDay*days/1e6)+'</td></tr>'+
+  '<tr style="border-top:2px solid var(--bdr);color:var(--green)"><td><b>รวมรายได้</b></td><td colspan="2"></td><td><b>'+totalRev.toLocaleString('th-TH',{maximumFractionDigits:0})+'</b></td><td><b>'+fmt(totalRev*days/1e6)+'</b></td></tr>'+
+  '<tr style="color:var(--red)"><td>ต้นทุนอ้อย (CCS-based)</td><td>'+tcd.toLocaleString()+' × CCS '+ccs+'</td><td>'+caneprice.toLocaleString()+'/t CCS</td><td>-('+caneCostDay.toLocaleString('th-TH',{maximumFractionDigits:0})+')</td><td>-('+fmt(caneCostDay*days/1e6)+')</td></tr>'+
+  '<tr style="color:var(--red)"><td>ต้นทุนปูนขาว</td><td>'+fmt(tcd*limeDose/1000)+' t/d</td><td>'+limecost.toLocaleString()+' ฿/t</td><td>-('+limeCostDay.toLocaleString('th-TH',{maximumFractionDigits:0})+')</td><td>-('+fmt(limeCostDay*days/1e6)+')</td></tr>'+
+  '<tr style="color:var(--red)"><td>ต้นทุน Chemicals อื่น</td><td>'+tcd.toLocaleString()+' t/d</td><td>'+chemcost+' ฿/t cane</td><td>-('+chemCostDay.toLocaleString('th-TH',{maximumFractionDigits:0})+')</td><td>-('+fmt(chemCostDay*days/1e6)+')</td></tr>'+
+  '<tr style="border-top:3px solid var(--bdr)"><td><b style="font-size:14px">กำไรขั้นต้น</b></td><td colspan="2"><span style="font-size:11px;color:var(--txt3)">Steam '+fmt(steamProd)+' t/d | Power '+fmt(powerProd/1000)+' MWh/d | Surplus '+fmt(surplusPower/1000)+' MWh/d</span></td><td><b style="font-size:14px;color:'+(grossProfit>=0?'var(--green)':'var(--red)')+'">'+grossProfit.toLocaleString('th-TH',{maximumFractionDigits:0})+'</b></td><td><b style="color:'+(grossProfit>=0?'var(--green)':'var(--red)')+'">'+fmt(grossProfit*days/1e6)+'</b></td></tr>';
+
+  document.getElementById('ee2_profit').textContent=grossProfit.toLocaleString('th-TH',{maximumFractionDigits:0});
+  document.getElementById('ee2_profity').textContent=fmt(grossProfit*days/1e6);
+}
+
+// Steam calc
+function st(){
+  const cane=+document.getElementById('st_cane').value,fib=+document.getElementById('st_fib').value/100,
+  moist=+document.getElementById('st_moist').value/100,beff=+document.getElementById('st_beff').value/100,
+  press=+document.getElementById('st_press').value;
+  const bagasse=cane*fib/(1-moist)*0.95;
+  const gcv=18600*(1-moist)-2257*moist; // kJ/kg approx
+  const steamRatio=press>=40?2.4:press>=25?2.6:2.8;
+  const steam=bagasse*steamRatio*beff;
+  const kwhPerTon=press>=40?110:press>=25?90:70;
+  const power=cane*kwhPerTon;
+  document.getElementById('st_r1').textContent=fmt(bagasse);
+  document.getElementById('st_r2').textContent=fmt(steam);
+  document.getElementById('st_r3').textContent=fmt(power);
+  document.getElementById('st_r4').textContent=kwhPerTon;
+  var si='';
+  var steamPC=cane>0?(steam/cane*100):0;
+  if(steamPC>55) si='<div style="margin-top:8px;padding:8px;border-radius:6px;background:var(--green-bg);border-left:3px solid var(--green)">✅ <b>Steam/Cane '+fmt(steamPC)+'%</b> เพียงพอ (>55%) — มี Surplus ขายไฟได้</div>';
+  else if(steamPC>45) si='<div style="margin-top:8px;padding:8px;border-radius:6px;background:rgba(245,158,11,.1);border-left:3px solid var(--amber)">⚠ <b>Steam/Cane '+fmt(steamPC)+'%</b> พอดี (45-55%) — อาจไม่เหลือขายไฟ ตรวจ Boiler eff + Moisture</div>';
+  else si='<div style="margin-top:8px;padding:8px;border-radius:6px;background:var(--red-bg);border-left:3px solid var(--red)">🔴 <b>Steam/Cane '+fmt(steamPC)+'% ไม่พอ!</b> (<45%) — อาจต้องซื้อเชื้อเพลิงเสริม ลด Moisture, เพิ่ม Boiler eff</div>';
+  if(moist>0.52) si+='<div style="margin-top:4px;padding:8px;border-radius:6px;background:var(--red-bg);border-left:3px solid var(--red)">⚠ Bagasse Moisture '+fmt(moist*100)+'% สูง! ลด 2% → GCV เพิ่ม ~0.4 MJ/kg → Steam เพิ่ม ~'+fmt(bagasse*0.05)+' t/h</div>';
+  if(press<30) si+='<div style="margin-top:4px;padding:8px;border-radius:6px;background:var(--blue-bg);border-left:3px solid var(--blue)">💡 Steam pressure '+press+' bar — ถ้าเพิ่มเป็น 40+ bar จะผลิตไฟฟ้าเพิ่ม ~57% (110 vs 70 kWh/t)</div>';
+  document.getElementById('st_ex').innerHTML='Bagasse GCV ≈'+fmt(gcv/1000)+' MJ/kg | Steam ratio '+steamRatio+' kg steam/kg bagasse | ที่ '+press+' bar → ~'+kwhPerTon+' kWh/t cane'+si;
+}
+
+// Calc: Clarification — Inversion Loss
+function cl1(){
+  const tau=+document.getElementById('cl1_tau').value, ph=+document.getElementById('cl1_ph').value,
+  temp=+document.getElementById('cl1_temp').value, suc=+document.getElementById('cl1_suc').value;
+  const loss=100*(5.79e-5*tau*Math.pow(10,ph-2.68))*(1+0.005*(temp-100));
+  const lossKg=suc*1000*loss/100;
+  document.getElementById('cl1_r1').textContent=fmt(loss);
+  document.getElementById('cl1_r2').textContent=fmt(lossKg);
+  document.getElementById('cl1_r3').textContent=fmt(lossKg*24/1000);
+  const lossDay2=lossKg*24/1000, lossMoney=lossDay2*16000;
+  var ci='';
+  if(loss<0.01) ci='<div style="margin-top:8px;padding:8px;border-radius:6px;background:var(--green-bg);border-left:3px solid var(--green)">✅ <b>ดีมาก!</b> Inversion loss ต่ำมาก — pH และ Residence time เหมาะสม</div>';
+  else if(loss<0.05) ci='<div style="margin-top:8px;padding:8px;border-radius:6px;background:rgba(245,158,11,.1);border-left:3px solid var(--amber)">⚠ <b>ระวัง</b> Inversion loss เริ่มสูง — ตรวจ pH (ควร 7.0-7.2) และลด Residence time</div>';
+  else ci='<div style="margin-top:8px;padding:8px;border-radius:6px;background:var(--red-bg);border-left:3px solid var(--red)">🔴 <b>สูงมาก!</b> สูญเสียน้ำตาลจาก Inversion มาก — ต้องปรับ pH ทันที หรือลดเวลาในถังทำใส</div>';
+  if(ph<6.8) ci+='<div style="margin-top:4px;padding:8px;border-radius:6px;background:var(--red-bg);border-left:3px solid var(--red)">⚠ pH '+ph+' ต่ำเกิน! Inversion จะเร่งขึ้นมาก ต้องเพิ่มปูนขาว</div>';
+  document.getElementById('cl1_ex').innerHTML='ที่ pH '+ph+', '+temp+'°C, '+tau+' นาที → สูญเสีย '+fmt(loss)+' g/100g sucrose | <b style="color:var(--red)">ต่อวัน = '+fmt(lossDay2)+' ตัน = '+fmt(lossMoney/1e6)+' ล้าน฿/วัน ('+fmt(lossMoney*120/1e6)+' ล้าน฿/ปี)</b> | ถ้าลด residence time ครึ่งหนึ่ง → <span style="color:var(--green)">ประหยัด '+fmt(lossMoney/2/1e6)+' ล้าน฿/วัน</span>'+ci;
+}
+
+// Calc: Clarification — SRI Sizing
+function cl2(){
+  const flow=+document.getElementById('cl2_flow').value, uo=+document.getElementById('cl2_uo').value;
+  const A=33.3*flow/uo*2; // design fraction 0.5 means multiply by 2
+  const dia=Math.sqrt(4*A/Math.PI);
+  const resMin=83.3/uo*60*2.5; // simplified
+  document.getElementById('cl2_r1').textContent=fmt(A);
+  document.getElementById('cl2_r2').textContent=fmt(dia);
+  document.getElementById('cl2_r3').textContent=fmt(resMin);
+  document.getElementById('cl2_ex').innerHTML='SRI method: A = 33.3 × Vjc / u₀ / design_fraction | Dia = √(4A/π) | สูง 2.5m → Residence ≈ '+fmt(resMin)+' นาที';
+}
+
+// Calc: Clarification — Lime
+function cl3(){
+  const cane=+document.getElementById('cl3_cane').value, dose=+document.getElementById('cl3_dose').value,
+  p2o5=+document.getElementById('cl3_p2o5').value, jcr=+document.getElementById('cl3_jcr').value;
+  const lime=cane*dose;
+  const juice=cane*jcr;
+  const p2o5_kg=juice*p2o5/1e6*1000;
+  document.getElementById('cl3_r1').textContent=fmt(lime);
+  document.getElementById('cl3_r2').textContent=fmt(lime*24/1000);
+  document.getElementById('cl3_r3').textContent=fmt(p2o5_kg);
+}
+
+// Calc: Evaporation — Heating Area
+function e2(){
+  const evap=+document.getElementById('e2_evap').value, k=+document.getElementById('e2_k').value,
+  dt=+document.getElementById('e2_dt').value, n=+document.getElementById('e2_n').value;
+  const evapPerEffect=evap/n;
+  const Q=evapPerEffect*1000*2257/3600; // kW (latent heat ~2257 kJ/kg)
+  const A=Q/(k*dt);
+  document.getElementById('e2_r1').textContent=fmt(Q);
+  document.getElementById('e2_r2').textContent=fmt(A);
+  document.getElementById('e2_r3').textContent=fmt(A*n);
+  document.getElementById('e2_ex').innerHTML='น้ำระเหย/Effect = '+fmt(evapPerEffect)+' t/h | Q = '+fmt(Q)+' kW | A/Effect = '+fmt(A)+' m² | A total = '+fmt(A*n)+' m²';
+}
+
+// Calc: Crystallization — BHR
+function cr1(){
+  const sp=+document.getElementById('cr1_sp').value, mp=+document.getElementById('cr1_mp').value,
+  sf=+document.getElementById('cr1_sf').value, bx=+document.getElementById('cr1_bx').value;
+  const bhr=(sp-mp)/(100-mp)/sp*10000;
+  const sucInSyrup=sf*bx/100*sp/100;
+  const sugarOut=sucInSyrup*bhr/100;
+  const sugarLost=sucInSyrup-sugarOut;
+  document.getElementById('cr1_r1').textContent=fmt(bhr);
+  document.getElementById('cr1_r2').textContent=fmt(sucInSyrup);
+  document.getElementById('cr1_r3').textContent=fmt(sugarOut);
+  document.getElementById('cr1_r4').textContent=fmt(sugarLost);
+  const lostDay=sugarLost*24, lostMoney=lostDay*16000, bhrTgt=86.04;
+  const extraBHR=sucInSyrup*(bhrTgt/100)-sugarOut, extraDay=extraBHR>0?extraBHR*24:0;
+  var ri='';
+  if(bhr>=86) ri='<div style="margin-top:8px;padding:8px;border-radius:6px;background:var(--green-bg);border-left:3px solid var(--green)">✅ <b>BHR '+fmt(bhr)+'% ดีมาก!</b> (≥86%) — การเคี่ยวมีประสิทธิภาพสูง สูญเสียในโมลาสน้อย</div>';
+  else if(bhr>=80) ri='<div style="margin-top:8px;padding:8px;border-radius:6px;background:rgba(245,158,11,.1);border-left:3px solid var(--amber)">⚠ <b>BHR '+fmt(bhr)+'%</b> (80-86%) — พอใช้ แต่ยังปรับปรุงได้ ลอง: ลด FMP, เพิ่มรอบ C-strike, ปรับ Seed size</div>';
+  else ri='<div style="margin-top:8px;padding:8px;border-radius:6px;background:var(--red-bg);border-left:3px solid var(--red)">🔴 <b>BHR '+fmt(bhr)+'% ต่ำมาก!</b> (<80%) น้ำตาลหายไปในโมลาสเยอะมาก ตรวจ: FMP, การ Seeding, อุณหภูมิ Pan, จำนวน Strike</div>';
+  if(mp>35) ri+='<div style="margin-top:4px;padding:8px;border-radius:6px;background:var(--red-bg);border-left:3px solid var(--red)">⚠ Final Molasses Purity '+mp+'% สูง (>35%) → น้ำตาล recover ไม่ได้เหลือมาก ต้องเพิ่ม C-strike</div>';
+  document.getElementById('cr1_ex').innerHTML='BHR = '+fmt(bhr)+'% | <b style="color:var(--red)">น้ำตาลสูญเสียในโมลาส = '+fmt(sugarLost)+' t/h = '+fmt(lostDay)+' t/d = '+fmt(lostMoney/1e6)+' ล้าน฿/วัน ('+fmt(lostMoney*120/1e6)+' ล้าน฿/ปี)</b>'+(extraDay>0?' | <span style="color:var(--green)">ถ้า BHR=86% → น้ำตาลเพิ่ม '+fmt(extraDay)+' t/d = '+fmt(extraDay*16000/1e6)+' ล้าน฿/วัน</span>':'')+ri;
+}
+
+// Calc: Crystallization — Supersaturation Zone
+function cr2(){
+  const c=+document.getElementById('cr2_c').value, cs=+document.getElementById('cr2_cs').value;
+  const y=c/cs;
+  let zone='', color='';
+  if(y<1.0){zone='Undersaturated — ผลึกละลาย!'; color='var(--blue)';}
+  else if(y<=1.2){zone='✓ Growth Zone — ดี!'; color='var(--green)';}
+  else if(y<=1.3){zone='⚠ Metastable — เริ่มเสี่ยง'; color='var(--amber)';}
+  else{zone='✗ Labile — FALSE GRAIN!'; color='var(--red)';}
+  document.getElementById('cr2_r1').textContent=fmt(y);
+  document.getElementById('cr2_r2').textContent=zone;
+  document.getElementById('cr2_r2').style.color=color;
+}
+
+// Calc: Centrifugal — G-factor
+function cn1(){
+  const n=+document.getElementById('cn1_n').value, d=+document.getElementById('cn1_d').value;
+  const G=5.59e-4*n*n*d/1000;
+  const tipSpeed=Math.PI*d/1000*n/60;
+  const Geff=G*0.816;
+  document.getElementById('cn1_r1').textContent=fmt(G);
+  document.getElementById('cn1_r2').textContent=fmt(tipSpeed);
+  document.getElementById('cn1_r3').textContent=fmt(Geff);
+  let rating='';
+  if(G>=1000&&G<=1500)rating='✓ เหมาะสำหรับ Batch A-massecuite';
+  else if(G>1500&&G<=2700)rating='✓ เหมาะสำหรับ Continuous B/C';
+  else if(G>2700)rating='⚠ สูงมาก — ระวังผลึกแตก!';
+  else rating='⚠ ต่ำเกินไป — แยกไม่สะอาด';
+  document.getElementById('cn1_ex').innerHTML=rating+' | Tip speed '+fmt(tipSpeed)+' m/s'+(tipSpeed>100?' <b style="color:var(--red)">— เกิน 100 m/s ผลึกจะแตก!</b>':'');
+}
+
+// Calc: Centrifugal — Void Fraction
+function cn2(){
+  const e=+document.getElementById('cn2_e').value;
+  const term=Math.pow(e,3)/Math.pow(1-e,2);
+  const baseline=Math.pow(0.40,3)/Math.pow(0.60,2);
+  const pct=(term/baseline-1)*100;
+  document.getElementById('cn2_r1').textContent=fmt(term);
+  document.getElementById('cn2_r2').textContent=(pct>=0?'+':'')+pct.toFixed(1);
+}
+
+// Calc: Centrifugal — Purging
+function cn3(){
+  const mf=+document.getElementById('cn3_mf').value, nsi=+document.getElementById('cn3_nsi').value/100,
+  eta=+document.getElementById('cn3_eta').value, wash=+document.getElementById('cn3_wash').value/1000;
+  const nsIn=mf*nsi;
+  const nsRemoved=nsIn*eta;
+  const nsInSugar=nsIn*(1-eta);
+  document.getElementById('cn3_r1').textContent=fmt(nsRemoved);
+  document.getElementById('cn3_r2').textContent=fmt(nsInSugar);
+  document.getElementById('cn3_r3').textContent=fmt(wash);
+}
+
+// Machine Spec: Evaporator → Output
+function ev3(){
+  const tl=+document.getElementById('ev3_tl').value, td=+document.getElementById('ev3_td').value/1000,
+  nt=+document.getElementById('ev3_nt').value, ne=+document.getElementById('ev3_ne').value,
+  dt=+document.getElementById('ev3_dt').value, k=+document.getElementById('ev3_k').value,
+  cj=+document.getElementById('ev3_cj').value, bi=+document.getElementById('ev3_bi').value/100;
+  const aPerEffect=Math.PI*td*tl*nt;
+  const qPerEffect=k*aPerEffect*dt;
+  const evapPerEffect=qPerEffect*3600/2257/1000;
+  const totalEvap=evapPerEffect*ne;
+  const solids=cj*bi;
+  const syrupOut=cj-totalEvap;
+  const syrupBrix=syrupOut>0?(solids/syrupOut*100):0;
+  document.getElementById('ev3_r1').textContent=fmt(aPerEffect);
+  document.getElementById('ev3_r2').textContent=fmt(totalEvap);
+  document.getElementById('ev3_r3').textContent=fmt(syrupBrix);
+  document.getElementById('ev3_r4').textContent=fmt(syrupOut);
+  document.getElementById('ev3_res').style.display='block';
+  document.getElementById('ev3_ex').innerHTML='Tube area/effect = π×'+fmt(td)+'×'+tl+'×'+nt+' = '+fmt(aPerEffect)+' m² | Q = '+fmt(qPerEffect)+' kW | Evap capacity = '+fmt(totalEvap)+' t/h | <b style="color:var(--amber)">Syrup Brix = '+fmt(syrupBrix)+'%</b>'+(syrupBrix<60?' <span style="color:var(--red)">⚠ ต่ำเกิน! เพิ่ม Effect หรือ Area</span>':(syrupBrix>70?' <span style="color:var(--red)">⚠ สูงเกิน! ระวัง Scaling</span>':' ✓ ปกติ'));
+}
+
+// Machine Spec: Pan → Sugar Output
+function panCalc(){
+  const na=+document.getElementById('pan_na').value, va=+document.getElementById('pan_va').value,
+  ha=+document.getElementById('pan_ha').value, ta=+document.getElementById('pan_ta').value,
+  nb=+document.getElementById('pan_nb').value, vb=+document.getElementById('pan_vb').value,
+  tb=+document.getElementById('pan_tb').value, nc=+document.getElementById('pan_nc').value,
+  vc=+document.getElementById('pan_vc').value, tc=+document.getElementById('pan_tc').value,
+  md=+document.getElementById('pan_md').value, cc=+document.getElementById('pan_cc').value/100;
+  const strikeA=na*(60/ta)*va*md;
+  const strikeB=nb*(60/tb)*vb*md;
+  const strikeC=nc*(60/tc)*vc*md;
+  const totalMass=strikeA+strikeB+strikeC;
+  const aSugar=strikeA*cc;
+  // TCD estimate: ~12% rendement → sugar/day / 0.12
+  const tcd=(aSugar*24)/0.12;
+  document.getElementById('pan_r1').textContent=fmt(strikeA);
+  document.getElementById('pan_r2').textContent=fmt(aSugar);
+  document.getElementById('pan_r3').textContent=fmt(totalMass);
+  document.getElementById('pan_r4').textContent=fmt(tcd);
+  document.getElementById('pan_res').style.display='block';
+  document.getElementById('pan_ex').innerHTML='A-Pan: '+na+'×'+fmt(60/ta)+' strike/h × '+va+' m³ × '+md+' t/m³ = '+fmt(strikeA)+' t/h | B: '+fmt(strikeB)+' t/h | C: '+fmt(strikeC)+' t/h | <b style="color:var(--green)">A-Sugar ~'+fmt(aSugar)+' t/h → ~'+fmt(aSugar*24)+' t/d</b> | <b style="color:var(--amber)">รองรับอ้อยได้ ~'+fmt(tcd)+' TCD</b>';
+}
+
+// Machine Spec: Centrifugal → Throughput
+function cen4(){
+  const na=+document.getElementById('cen4_na').value, vol=+document.getElementById('cen4_vol').value/1000,
+  cyc=+document.getElementById('cen4_cyc').value, dia=+document.getElementById('cen4_dia').value,
+  rpm=+document.getElementById('cen4_rpm').value, nc=+document.getElementById('cen4_nc').value,
+  ct=+document.getElementById('cen4_ct').value;
+  const G=5.59e-4*rpm*rpm*dia/1000;
+  const batchPerH=3600/cyc;
+  const massDensity=1.48;
+  const batchThroughput=na*batchPerH*vol*massDensity;
+  const crystContent=0.5;
+  const aSugar=batchThroughput*crystContent;
+  const contTotal=nc*ct;
+  const tcd=(aSugar*24)/0.12;
+  document.getElementById('cen4_r1').textContent=fmt(aSugar);
+  document.getElementById('cen4_r2').textContent=fmt(G);
+  document.getElementById('cen4_r3').textContent=fmt(contTotal);
+  document.getElementById('cen4_r4').textContent=fmt(tcd);
+  document.getElementById('cen4_res').style.display='block';
+  document.getElementById('cen4_ex').innerHTML='Batch: '+na+'×'+fmt(batchPerH)+' cycle/h × '+fmt(vol)+' m³ = '+fmt(batchThroughput)+' t/h mass | A-Sugar '+fmt(aSugar)+' t/h | G-factor = '+fmt(G)+(G>1500?' ⚠ สูง — ตรวจผลึก':'')+(G<800?' ⚠ ต่ำ — แยกไม่สะอาด':'')+ ' | <b style="color:var(--green)">Continuous B/C: '+fmt(contTotal)+' t/h</b> | <b style="color:var(--amber)">รองรับอ้อย ~'+fmt(tcd)+' TCD</b>';
+}
+
+// Power Selling Calculator
+function pwCalc(){
+  const cane=+document.getElementById('pw_cane').value, hrs=+document.getElementById('pw_hrs').value,
+  days=+document.getElementById('pw_days').value, fib=+document.getElementById('pw_fib').value/100,
+  bagpc=+document.getElementById('pw_bagpc').value/100, moist=+document.getElementById('pw_moist').value/100,
+  beff=+document.getElementById('pw_beff').value/100, press=+document.getElementById('pw_press').value,
+  teff=+document.getElementById('pw_teff').value/100, factory=+document.getElementById('pw_factory').value,
+  sell=+document.getElementById('pw_sell').value, buy=+document.getElementById('pw_buy').value,
+  ppa=+document.getElementById('pw_ppa').value, offm=+document.getElementById('pw_offm').value,
+  offcost=+document.getElementById('pw_offcost').value;
+  const bag=cane*bagpc;
+  const gcv=(18600*(1-moist)-2257*moist)/1000;
+  const steamRatio=press>=40?2.4:press>=25?2.6:2.8;
+  const steam=bag*steamRatio*beff;
+  const enthDrop=press>=40?400:press>=25?300:220;
+  const powerKW=steam*1000*enthDrop/3600*teff;
+  const powerMW=powerKW/1000;
+  const factoryMW=cane*factory/1000;
+  const surplusMW=Math.max(0,powerMW-factoryMW);
+  const exportMW=Math.min(surplusMW,ppa);
+  const revDay=exportMW*1000*hrs*sell;
+  const revYear=revDay*days/1e6;
+  const savDay=factoryMW*1000*hrs*buy;
+  const savYear=savDay*days/1e6;
+  const offRev=offm>0?ppa*1000*24*30*offm*sell/1e6:0;
+  const offCost=offm>0?ppa*1000*24*30*offm*offcost/1e6:0;
+  document.getElementById('pw_r1').textContent=fmt(powerMW);
+  document.getElementById('pw_r2').textContent=fmt(factoryMW);
+  document.getElementById('pw_r3').textContent=fmt(exportMW);
+  document.getElementById('pw_r4').textContent=fmt(revYear+savYear);
+  document.getElementById('pw_res').style.display='block';
+  const tb=document.getElementById('pw_table').querySelector('tbody');
+  tb.innerHTML=
+  '<tr><td>Bagasse ผลิตได้</td><td>'+fmt(bag)+'</td><td>t/h</td><td colspan="2">GCV = '+fmt(gcv)+' MJ/kg (ที่ moisture '+moist*100+'%)</td></tr>'+
+  '<tr><td>Steam ผลิตได้</td><td>'+fmt(steam)+'</td><td>t/h</td><td colspan="2">Ratio '+steamRatio+' kg steam/kg bagasse × eff '+beff*100+'%</td></tr>'+
+  '<tr><td>ไฟฟ้าผลิตรวม</td><td>'+fmt(powerMW)+'</td><td>MW</td><td>'+(powerMW*1000*hrs*sell).toLocaleString('th-TH',{maximumFractionDigits:0})+'</td><td>'+fmt(powerMW*1000*hrs*days*sell/1e6)+'</td></tr>'+
+  '<tr><td>ใช้ในโรงงาน</td><td>'+fmt(factoryMW)+'</td><td>MW</td><td style="color:var(--amber)">ประหยัดค่าไฟ: '+savDay.toLocaleString('th-TH',{maximumFractionDigits:0})+'</td><td style="color:var(--amber)">'+fmt(savYear)+'</td></tr>'+
+  '<tr style="color:var(--green)"><td><b>ขายไฟ Surplus (In-season)</b></td><td>'+fmt(exportMW)+'</td><td>MW</td><td><b>'+revDay.toLocaleString('th-TH',{maximumFractionDigits:0})+'</b></td><td><b>'+fmt(revYear)+'</b></td></tr>'+
+  (offm>0?'<tr style="color:var(--cyan)"><td>ขายไฟ Off-season ('+offm+' เดือน)</td><td>'+ppa+'</td><td>MW</td><td>'+((offRev*1e6)/(offm*30)).toLocaleString('th-TH',{maximumFractionDigits:0})+'</td><td>'+fmt(offRev)+'</td></tr><tr style="color:var(--red)"><td>ต้นทุนเชื้อเพลิง Off-season</td><td>—</td><td></td><td>—</td><td>-('+fmt(offCost)+')</td></tr>':'')+
+  '<tr style="border-top:3px solid var(--bdr)"><td><b style="font-size:14px">รวมรายได้พลังงาน/ปี</b></td><td colspan="2"></td><td colspan="2"><b style="font-size:18px;color:var(--green)">'+fmt(revYear+savYear+offRev-offCost)+' ล้าน฿/ปี</b></td></tr>';
+  document.getElementById('pw_ex').innerHTML='ผลิตไฟ '+fmt(powerMW)+' MW | ใช้เอง '+fmt(factoryMW)+' MW | ขาย '+fmt(exportMW)+' MW @ '+sell+' ฿/kWh | <b style="color:var(--green)">รายได้ขายไฟ '+fmt(revYear)+' ล้าน฿/ปี + ประหยัดค่าไฟ '+fmt(savYear)+' ล้าน฿/ปี = '+fmt(revYear+savYear)+' ล้าน฿/ปี</b>';
+}
+
+
+// === CHARTS: Market & Price ===
+function initCharts(){
+  if(typeof Chart==='undefined'){
+    var s=document.createElement('script');
+    s.src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js';
+    s.onload=function(){drawCharts();};
+    document.head.appendChild(s);
+  } else { drawCharts(); }
+}
+function drawCharts(){
+  // 1. 10-Year Price Chart
+  var ctx1=document.getElementById('priceChart');
+  if(ctx1){
+    new Chart(ctx1,{type:'line',data:{
+      labels:['2015','2016','2017','2018','2019','2020','2021','2022','2023','2024','2025'],
+      datasets:[{
+        label:'NY No.11 Raw Sugar (US¢/lb)',
+        data:[13.2,18.8,14.5,12.3,12.8,12.5,17.8,19.1,24.6,22.4,19.8],
+        borderColor:'#f59e0b',backgroundColor:'rgba(245,158,11,.15)',fill:true,
+        tension:0.3,pointBackgroundColor:'#f59e0b',pointRadius:5,pointHoverRadius:8,
+        borderWidth:3
+      },{
+        label:'London No.5 White Sugar (USD/t ÷10 for scale)',
+        data:[38.5,50.2,36.8,32.5,33.8,35.5,45.2,52.6,68.4,61.8,55.2],
+        borderColor:'#60a5fa',backgroundColor:'rgba(96,165,250,.08)',fill:true,
+        tension:0.3,pointBackgroundColor:'#60a5fa',pointRadius:4,pointHoverRadius:7,
+        borderWidth:2,borderDash:[5,3]
+      }]
+    },options:{
+      responsive:true,
+      plugins:{
+        legend:{labels:{color:'#94a3b8',font:{size:11}}},
+        title:{display:true,text:'ICE Sugar Futures — Annual Average Price (2015-2025)',color:'#e2e8f0',font:{size:14}}
+      },
+      scales:{
+        x:{ticks:{color:'#64748b'},grid:{color:'rgba(255,255,255,.05)'}},
+        y:{ticks:{color:'#64748b',callback:function(v){return v;}},grid:{color:'rgba(255,255,255,.08)'},
+          title:{display:true,text:'US¢/lb (Raw) | USD/t ÷10 (White)',color:'#94a3b8'}}
+      }
+    }});
+  }
+  // 2. Sugar Type Demand Pie
+  var ctx2=document.getElementById('typeChart');
+  if(ctx2){
+    new Chart(ctx2,{type:'doughnut',data:{
+      labels:['White/Refined (55%)','Raw Sugar VHP (35%)','Plantation White (5%)','Others (5%)'],
+      datasets:[{data:[55,35,5,5],
+        backgroundColor:['#60a5fa','#fb923c','#34d399','#a78bfa'],
+        borderColor:'#ffffff',borderWidth:2}]
+    },options:{
+      responsive:true,
+      plugins:{
+        legend:{position:'bottom',labels:{color:'#CBD5E1',font:{size:11},padding:12}},
+        title:{display:true,text:'Global Sugar Demand by Type (~180 Mt/yr)',color:'#F1F5F9',font:{size:13}}
+      }
+    }});
+  }
+  // 3. Top Consumers Bar
+  var ctx3=document.getElementById('consumeChart');
+  if(ctx3){
+    new Chart(ctx3,{type:'bar',data:{
+      labels:['India','EU-27','China','Brazil','USA','Indonesia','Russia','Pakistan','Mexico','Egypt'],
+      datasets:[{
+        label:'Consumption (Million tonnes)',
+        data:[29.5,17.0,16.5,10.5,10.2,7.5,5.8,5.6,4.8,3.5],
+        backgroundColor:['#f59e0b','#60a5fa','#f87171','#34d399','#a78bfa','#fb923c','#22d3ee','#f472b6','#818cf8','#fbbf24'],
+        borderColor:'#ffffff',borderWidth:1,borderRadius:4
+      }]
+    },options:{
+      responsive:true,indexAxis:'y',
+      plugins:{
+        legend:{display:false},
+        title:{display:true,text:'Top 10 Sugar Consuming Countries (Mt/yr)',color:'#F1F5F9',font:{size:13}}
+      },
+      scales:{
+        x:{ticks:{color:'#CBD5E1'},grid:{color:'rgba(0,0,0,.06)'},title:{display:true,text:'Million tonnes',color:'#CBD5E1'}},
+        y:{ticks:{color:'#CBD5E1',font:{size:11}},grid:{display:false}}
+      }
+    }});
+  }
+}
+// Load charts when market tab is visible
+var _origOpenSub=openSub;
+openSub=function(btn,id){_origOpenSub(btn,id);if(id==='sug-market')initCharts();};
+var _origOpenTab=openTab;
+// Also try on tab click
+
+
+// Report Simulator
+function simReport(){
+  var tcc=+document.getElementById('sim_tcc').value;
+  var polc=+document.getElementById('sim_polc').value;
+  var brixc=+document.getElementById('sim_brixc').value;
+  var fibc=+document.getElementById('sim_fibc').value;
+  var burnt=+document.getElementById('sim_burnt').value;
+  var pi=+document.getElementById('sim_pi').value;
+  var polbag=+document.getElementById('sim_polbag').value;
+  var moistbag=+document.getElementById('sim_moistbag').value;
+  var mjbx=+document.getElementById('sim_mjbx').value;
+  var mjpol=+document.getElementById('sim_mjpol').value;
+  var phmj=+document.getElementById('sim_phmj').value;
+  var phcj=+document.getElementById('sim_phcj').value;
+  var dcr=+document.getElementById('sim_dcr').value;
+  var vhp=+document.getElementById('sim_vhp').value;
+  var sugpol=+document.getElementById('sim_sugpol').value;
+  var sugmoist=+document.getElementById('sim_sugmoist').value;
+  var icumsa=+document.getElementById('sim_icumsa').value;
+  var fmwt=+document.getElementById('sim_fmwt').value;
+  var fmbx=+document.getElementById('sim_fmbx').value;
+  var fmpur=+document.getElementById('sim_fmpur').value;
+  var steam=+document.getElementById('sim_steam').value;
+  var kwh=+document.getElementById('sim_kwh').value;
+  var kwhuse=+document.getElementById('sim_kwhuse').value;
+  var hrs=+document.getElementById('sim_hrs').value;
+  var hrsavail=+document.getElementById('sim_hrsavail').value;
+  var fcwt=+document.getElementById('sim_fcwt').value;
+  var fcpol=+document.getElementById('sim_fcpol').value;
+  // ===== CALCULATED VALUES =====
+  var ccs=(polc-(brixc-polc)*0.4)*0.74;
+  var purc=brixc>0?(polc/brixc*100):0;
+  var totalSugar=dcr+vhp;
+  var sugarPolWt=totalSugar*sugpol/100;
+  var canePolWt=tcc*polc/100;
+  var bagpc=fibc>0?(fibc/(1-moistbag/100)*0.95/tcc*100*tcc/100):28;
+  // Simplified: Bagasse%Cane ≈ actual from report
+  var bagWt=tcc*0.29; // ~29% typical
+  var mjCane=100+33.7-fibc*0.95; // approx MJ%Cane
+  var mjPur=mjbx>0?(mjpol/mjbx*100):0;
+  var extPol=canePolWt>0?((totalSugar*sugpol/100+fmwt*fmpur*fmbx/10000+fcwt*fcpol/100)/(canePolWt)*100):0;
+  // Simpler extraction
+  var extSimple=canePolWt>0?(mjpol*mjCane/100*tcc/100/(canePolWt)*100):97;
+  extSimple=Math.min(99,extSimple);
+  var overallRecov=canePolWt>0?(sugarPolWt/canePolWt*100):0;
+  var fmCane=tcc>0?(fmwt/tcc*100):0;
+  var lossBag=canePolWt>0?(bagWt*polbag/100/canePolWt*100):0;
+  var lossFC=canePolWt>0?(fcwt*fcpol/100/canePolWt*100):0;
+  var lossFM=canePolWt>0?(fmwt*fmpur/100*fmbx/100/canePolWt*100):0;
+  var totalLoss=100-overallRecov;
+  var lossUD=totalLoss-lossBag-lossFC-lossFM;
+  var bhr_calc=mjPur>0&&fmpur<100?((mjPur-fmpur)/(100-fmpur)/mjPur*10000):0;
+  var sjm=canePolWt>0?(mjpol*mjCane/100*tcc/100/canePolWt*100):0;
+  sjm=Math.min(99,sjm);
+  var tph=hrs>0?(tcc/hrs):0;
+  var steamCane=tcc>0?(steam/tcc*1000):0;
+  var steamSugar=totalSugar>0?(steam/totalSugar*1000):0;
+  var kwhCane=tcc>0?(kwhuse/tcc):0;
+  var lossTime=hrsavail>0?((hrsavail-hrs)/hrsavail*100):0;
+  var timeEff=hrsavail>0?(hrs/hrsavail*100):0;
+  var caneAsS=tcc>0?(totalSugar/tcc*100):0;
+  var caneCCS=ccs>0?(caneAsS/ccs*100*10):0;
+  var gcv=(18600*(1-moistbag/100)-2257*moistbag/100)/1000;
+  // ===== OUTPUT =====
+  function row(label,val,unit,tgt,warn){
+    var pb='rgba(52,211,153,.1)';var pc='#34D399';var pt='Good';var dot='#34D399';
+    if(warn==='bad'){pb='rgba(248,113,113,.1)';pc='#F87171';pt='Low';dot='#F87171';}
+    else if(warn==='warn'){pb='rgba(251,191,36,.1)';pc='#FBBF24';pt='Watch';dot='#FBBF24';}
+    return '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid rgba(255,255,255,.04);transition:background .2s" onmouseover="this.style.background=\'rgba(255,255,255,.03)\'" onmouseout="this.style.background=\'transparent\'"><span style="color:#CBD5E1;font-size:13px;font-weight:500">'+label+'</span><div style="display:flex;align-items:center;gap:12px"><span style="font-size:16px;font-weight:700;color:#F1F5F9;letter-spacing:-.3px">'+fmt(val)+'<span style="font-size:11px;font-weight:400;color:#94A3B8;margin-left:2px">'+unit+'</span></span><span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:99px;font-size:10px;font-weight:600;background:'+pb+';color:'+pc+';border:1px solid '+dot+'33"><span style="width:5px;height:5px;border-radius:50%;background:'+dot+'"></span>'+pt+'</span>'+(tgt?'<span style="font-size:10px;color:#94A3B8">'+tgt+'</span>':'')+'</div></div>';
+  }
+  var o='';
+  o+='<h5 style="color:var(--amber);margin:8px 0 4px;font-size:12px;border-bottom:1px solid var(--amber);padding-bottom:4px">** CANE **</h5>';
+  o+=row('C.C.S. of Factory',ccs,'%','13.85',ccs<12?'bad':ccs<13?'warn':'ok');
+  o+=row('Purity % Cane',purc,'%','>85',purc<82?'bad':purc<85?'warn':'ok');
+  o+='<h5 style="color:var(--amber);margin:12px 0 4px;font-size:12px;border-bottom:1px solid var(--amber);padding-bottom:4px">** MILLING HOUSE **</h5>';
+  o+=row('Tons Cane / Hour',tph,'','>297',tph<250?'bad':tph<297?'warn':'ok');
+  o+=row('Bagasse % Cane',bagpc*100/fibc*fibc/100*100,'%','28.5','ok'); // simplified
+  o+=row('Extraction % Pol',extSimple,'%','>97',extSimple<96?'bad':extSimple<97?'warn':'ok');
+  o+=row('Imbibition % Fiber (est)',(mjCane-100+fibc)/fibc*100,'%','280','ok');
+  o+=row('MJ Purity',mjPur,'%','—','ok');
+  o+=row('Milling Loss (Bagasse)',lossBag,'%','<3.0',lossBag>3.5?'bad':lossBag>3?'warn':'ok');
+  o+='<h5 style="color:var(--amber);margin:12px 0 4px;font-size:12px;border-bottom:1px solid var(--amber);padding-bottom:4px">** SUGAR **</h5>';
+  o+=row('Total Sugar Weight',totalSugar,'t','—','ok');
+  o+=row('% Cane as Sugar (Rendement)',caneAsS,'%','>12.16',caneAsS<10?'bad':caneAsS<12?'warn':'ok');
+  o+=row('% CCS Recovery',caneCCS,'%','>87.82',caneCCS<85?'bad':caneCCS<87.82?'warn':'ok');
+  o+='<h5 style="color:var(--amber);margin:12px 0 4px;font-size:12px;border-bottom:1px solid var(--amber);padding-bottom:4px">** BALANCE & RECOVERY **</h5>';
+  o+=row('Overall Recovery',overallRecov,'%','>86',overallRecov<80?'bad':overallRecov<86?'warn':'ok');
+  o+=row('BHR (est.)',bhr_calc,'%','>86',bhr_calc<80?'bad':bhr_calc<86?'warn':'ok');
+  o+=row('SJM (est.)',sjm,'%','>88','ok');
+  o+=row('Loss in Bagasse',lossBag,'%','<3.0',lossBag>3.5?'bad':lossBag>3?'warn':'ok');
+  o+=row('Loss in Filter Cake',lossFC,'%','<0.33',lossFC>0.5?'bad':lossFC>0.33?'warn':'ok');
+  o+=row('Loss in Final Molasses',lossFM,'%','<7.7',lossFM>10?'bad':lossFM>7.7?'warn':'ok');
+  o+=row('Undetermined Loss',lossUD,'%','<5.5',lossUD>8?'bad':lossUD>5.5?'warn':'ok');
+  o+=row('Total Losses',totalLoss,'%','—',totalLoss>20?'bad':totalLoss>15?'warn':'ok');
+  o+='<h5 style="color:var(--amber);margin:12px 0 4px;font-size:12px;border-bottom:1px solid var(--amber);padding-bottom:4px">** FINAL MOLASSES **</h5>';
+  o+=row('FM % Cane',fmCane,'%','<4.20',fmCane>5?'bad':fmCane>4.2?'warn':'ok');
+  o+=row('FM Purity',fmpur,'%','<33.1',fmpur>36?'bad':fmpur>33.1?'warn':'ok');
+  o+='<h5 style="color:var(--amber);margin:12px 0 4px;font-size:12px;border-bottom:1px solid var(--amber);padding-bottom:4px">** STEAM & ELECTRICITY **</h5>';
+  o+=row('Steam kg/t Cane',steamCane,'','<550',steamCane>600?'bad':steamCane>550?'warn':'ok');
+  o+=row('kWh/t Cane',kwhCane,'','<40',kwhCane>45?'bad':kwhCane>40?'warn':'ok');
+  o+=row('Bagasse GCV',gcv,' MJ/kg','—',gcv<7?'bad':gcv<8?'warn':'ok');
+  o+='<h5 style="color:var(--amber);margin:12px 0 4px;font-size:12px;border-bottom:1px solid var(--amber);padding-bottom:4px">** TIME ACCOUNT **</h5>';
+  o+=row('Time Efficiency',timeEff,'%','>95',timeEff<90?'bad':timeEff<95?'warn':'ok');
+  o+=row('Loss Time %',lossTime,'%','<5',lossTime>10?'bad':lossTime>5?'warn':'ok');
+  document.getElementById('simOutput').innerHTML=o;
+  // === PRODUCTION SUMMARY ===
+  var sm='';
+  sm+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px">';
+  sm+='<div class="ee2-kpi-card amber" style="text-align:center"><div class="ct">อ้อยหีบ</div><div class="cv ha" style="font-size:26px">'+fmt(tcc)+'</div><div class="cu">ตัน/วัน</div></div>';
+  sm+='<div class="ee2-kpi-card green" style="text-align:center"><div class="ct">น้ำตาลผลิตได้</div><div class="cv hg" style="font-size:26px">'+fmt(totalSugar)+'</div><div class="cu">ตัน (DCR '+fmt(dcr)+' + VHP '+fmt(vhp)+')</div></div>';
+  sm+='<div class="ee2-kpi-card blue" style="text-align:center"><div class="ct">% Cane as Sugar</div><div class="cv hb" style="font-size:26px">'+fmt(caneAsS)+'%</div><div class="cu">'+(caneAsS>=12?'✅ ดี':'⚠ ต่ำกว่าเป้า 12%')+'</div></div>';
+  sm+='<div class="ee2-kpi-card amber" style="text-align:center"><div class="ct">Overall Recovery</div><div class="cv '+(overallRecov>=86?'hg':'hr')+'" style="font-size:26px">'+fmt(overallRecov)+'%</div><div class="cu">'+(overallRecov>=86?'✅ ดี':'⚠ ต่ำกว่าเป้า 86%')+'</div></div>';
+  sm+='</div>';
+  // Losses summary
+  sm+='<div style="margin-bottom:14px;padding:14px;border-radius:10px;background:var(--red-bg);border:1px solid rgba(220,38,38,.12)">';
+  sm+='<h4 style="color:var(--red);margin:0 0 8px;font-size:13px">⚠ สรุปการสูญเสีย (Total Loss: '+fmt(totalLoss)+'%)</h4>';
+  sm+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;font-size:12px">';
+  sm+='<div style="text-align:center;padding:8px;background:var(--s2);border-radius:8px"><div style="color:var(--txt3)">Bagasse Loss</div><div style="color:var(--red);font-weight:700;font-size:15px">'+fmt(lossBag)+'%</div></div>';
+  sm+='<div style="text-align:center;padding:8px;background:var(--s2);border-radius:8px"><div style="color:var(--txt3)">Filter Cake Loss</div><div style="color:var(--red);font-weight:700;font-size:15px">'+fmt(lossFC)+'%</div></div>';
+  sm+='<div style="text-align:center;padding:8px;background:var(--s2);border-radius:8px"><div style="color:var(--txt3)">Molasses Loss</div><div style="color:var(--red);font-weight:700;font-size:15px">'+fmt(lossFM)+'%</div></div>';
+  sm+='<div style="text-align:center;padding:8px;background:var(--s2);border-radius:8px"><div style="color:var(--txt3)">Undetermined</div><div style="color:'+(lossUD>5.5?'var(--red)':'var(--amber)')+';font-weight:700;font-size:15px">'+fmt(lossUD)+'%</div></div>';
+  sm+='</div></div>';
+  // Energy
+  sm+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">';
+  sm+='<div style="padding:12px;border-radius:10px;background:var(--blue-bg);border:1px solid rgba(37,99,235,.12)">';
+  sm+='<h4 style="color:var(--blue);margin:0 0 6px;font-size:13px">⚡ พลังงาน</h4>';
+  sm+='<div style="font-size:12px;line-height:2">Steam/ตันอ้อย: <b>'+fmt(steamCane)+' kg</b> '+(steamCane<=550?'✅':'⚠')+'<br>kWh/ตันอ้อย: <b>'+fmt(kwhCane)+'</b> '+(kwhCane<=40?'✅':'⚠')+'<br>kWh ผลิตได้: <b>'+fmt(kwh)+'</b> | ใช้: <b>'+fmt(kwhuse)+'</b> | ส่งขาย: <b>'+fmt(kwh-kwhuse)+'</b></div></div>';
+  sm+='<div style="padding:12px;border-radius:10px;background:var(--green-bg);border:1px solid rgba(5,150,105,.12)">';
+  sm+='<h4 style="color:var(--green);margin:0 0 6px;font-size:13px">⏱ ประสิทธิภาพเวลา</h4>';
+  sm+='<div style="font-size:12px;line-height:2">หีบจริง: <b>'+fmt(hrs)+' ชม.</b> / '+fmt(hrsavail)+' ชม.<br>Time Efficiency: <b>'+fmt(timeEff)+'%</b> '+(timeEff>=95?'✅':'⚠')+'<br>Crushing Rate: <b>'+fmt(tph)+' TCH</b> '+(tph>=297?'✅':'⚠')+'</div></div>';
+  sm+='</div>';
+  // Verdict
+  var vGood=0;var vTotal=6;
+  if(caneAsS>=12)vGood++;if(overallRecov>=86)vGood++;if(totalLoss<=15)vGood++;if(steamCane<=550)vGood++;if(timeEff>=95)vGood++;if(kwhCane<=40)vGood++;
+  var vColor=vGood>=5?'var(--green)':vGood>=3?'var(--amber)':'var(--red)';
+  var vMsg=vGood>=5?'ผลการผลิตดีเยี่ยม! ทุกตัวชี้วัดอยู่ในเกณฑ์ — รักษาไว้':vGood>=3?'ผลผลิตปานกลาง มีบางตัวชี้วัดต่ำกว่าเป้า — ควรปรับปรุง':'ผลผลิตต่ำกว่าเป้าหมายหลายด้าน — ต้องวิเคราะห์สาเหตุเร่งด่วน';
+  sm+='<div style="text-align:center;padding:14px;border-radius:10px;background:var(--s3);border:1px solid '+vColor+'">';
+  sm+='<div style="font-size:14px;font-weight:800;color:'+vColor+'">สรุป: '+vGood+'/'+vTotal+' ผ่านเกณฑ์ — '+vMsg+'</div></div>';
+
+  document.getElementById('simSummaryContent').innerHTML=sm;
+  document.getElementById('simSummary').style.display='block';
+}
+// Init
+// Calculators now use manual buttons — init only E2E and Steam
+ee2();
+// ═══ THEME TOGGLE ═══
+function toggleTheme(){
+  var html=document.documentElement;
+  var current=html.getAttribute('data-theme');
+  var next=current==='light'?'dark':'light';
+  html.setAttribute('data-theme',next);
+  try{localStorage.setItem('theme',next);}catch(e){}
+  var sw=document.getElementById('themeSwitch');
+  if(sw) sw.style.transform=next==='light'?'translateX(28px)':'translateX(0)';
+}
+// Apply saved theme on load
+(function(){
+  try{
+    var saved=localStorage.getItem('theme');
+    if(saved==='light'){
+      document.documentElement.setAttribute('data-theme','light');
+      var sw=document.getElementById('themeSwitch');
+      if(sw) sw.style.transform='translateX(28px)';
+    }
+  }catch(e){}
+})();
+
+
+// ═══ DAILY REPORT EXCEL PARSER ═══
 // ═══ DAILY REPORT EXCEL PARSER ═══
 // Field mapping: Excel cell (Sheet "Daily (General)", TO-DAY columns D/L/T) → E2E input ID
 var dailyReportMap = {
@@ -1434,7 +2501,7 @@ var dailyReportMap = {
 // Fields that require manual input (not in Daily Report)
 var ee2ManualFields = [
   'ee2_price','ee2_molprice','ee2_caneprice','ee2_days',
-  'ee2_beff','ee2_stpress','ee2_elecprice','ee2_elecsell',
+  'ee2_beff','ee2_stpress','ee2_elecsell',
   'ee2_limecost','ee2_chemcost','ee2_neff'
 ];
 
@@ -1445,7 +2512,7 @@ var ee2AllRequired = [
   'ee2_purdrop','ee2_sybx','ee2_neff',
   'ee2_fmp','ee2_fmpc','ee2_bhr','ee2_lbag','ee2_lfc','ee2_lfm','ee2_lud',
   'ee2_price','ee2_molprice','ee2_caneprice','ee2_days',
-  'ee2_beff','ee2_stpress','ee2_bagmoist','ee2_elecprice','ee2_elecsell',
+  'ee2_beff','ee2_stpress','ee2_bagmoist','ee2_elecsell',
   'ee2_limecost','ee2_chemcost'
 ];
 
@@ -1557,13 +2624,16 @@ function parseDailyReport(file) {
   reader.readAsArrayBuffer(file);
 }
 
+var ee2ZeroOK=['ee2_burnt','ee2_lbag','ee2_lfc','ee2_lfm','ee2_lud','ee2_elecsell'];
 function validateEE2() {
   var missing = [];
   ee2AllRequired.forEach(function(fid) {
     var inp = document.getElementById(fid);
     if (!inp) return;
     var val = inp.value;
-    if (val === '' || val === null || val === undefined || isNaN(parseFloat(val)) || parseFloat(val) === 0) {
+    var isEmpty = (val === '' || val === null || val === undefined || isNaN(parseFloat(val)));
+    var isZero = (!isEmpty && parseFloat(val) === 0 && ee2ZeroOK.indexOf(fid) === -1);
+    if (isEmpty || isZero) {
       missing.push(fid);
       inp.classList.add('needs-input');
     } else {
@@ -1607,6 +2677,18 @@ function validateEE2() {
     if (files.length > 0) parseDailyReport(files[0]);
   });
 })();
+
+// ═══ LANDING PAGE NAVIGATION ═══
+function enterDashboard() {
+  document.getElementById('landingPage').classList.add('lp-hidden');
+  document.getElementById('dashboardMain').style.display = '';
+}
+function goLanding() {
+  document.getElementById('landingPage').classList.remove('lp-hidden');
+  document.getElementById('dashboardMain').style.display = 'none';
+  window.scrollTo(0,0);
+}
+
 </script>
 </head>
 <body>
@@ -1614,36 +2696,38 @@ function validateEE2() {
 <!-- ═══ LANDING PAGE ═══ -->
 <div id="landingPage">
   <div class="lp-bg">
-    <div class="lp-particle"></div><div class="lp-particle"></div>
-    <div class="lp-particle"></div><div class="lp-particle"></div>
-    <div class="lp-glow-line"></div><div class="lp-glow-line"></div><div class="lp-glow-line"></div>
+    <div class="lp-particle"></div>
+    <div class="lp-particle"></div>
+    <div class="lp-particle"></div>
+    <div class="lp-particle"></div>
+    <div class="lp-glow-line"></div>
+    <div class="lp-glow-line"></div>
+    <div class="lp-glow-line"></div>
   </div>
-  <button class="lp-home-nav" onclick="goLanding()">HOME</button>
+  <button class="lp-home-nav" onclick="window.location.reload()">🏠 HOME</button>
   <div class="lp-content">
     <div class="lp-badge">Sugar Process Engineering</div>
     <h1 class="lp-title">WELCOME TO<br><span>ML SUGARTECH</span></h1>
-    <p class="lp-subtitle">ยินดีต้อนรับสู่ ML SUGARTECH</p>
-    <p class="lp-desc">Exploring Innovations in Sustainable Sugar Production<br>through Machine Learning &amp; Technology.</p>
+    <p class="lp-subtitle">Educational Dashboard</p>
+    <p class="lp-desc">แหล่งเรียนรู้วิศวกรรมกระบวนการน้ำตาลระดับ PhD — ครอบคลุมตั้งแต่ Cane Preparation จนถึง Raw Sugar พร้อมเครื่องคำนวณ E2E และมาตรฐาน ISO</p>
     <div class="lp-buttons">
-      <button class="lp-btn lp-btn-primary" onclick="enterDashboard()">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-        เข้าสู่เว็บไซต์
-      </button>
-      <a class="lp-btn lp-btn-secondary" href="https://boboapp2020-design.github.io/MLDashboard/" target="_blank">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/><circle cx="12" cy="12" r="9"/></svg>
-        เข้าสู่ Dashboard
-      </a>
+      <button class="lp-btn lp-btn-primary" onclick="enterDashboard()">เข้าสู่เว็บไซต์ →</button>
+      <a href="https://boboapp2020-design.github.io/MLDashboard/" target="_blank" class="lp-btn lp-btn-secondary">เข้าสู่ Dashboard ↗</a>
     </div>
   </div>
-  <div class="lp-footer">สร้างโดย นายสุรศักดิ์ นามวรรณ แผนกบริหารคุณภาพ</div>
+  <div class="lp-footer">
+    <p>สร้างโดย นายสุรศักดิ์ นามวรรณ แผนกบริหารคุณภาพ</p>
+  </div>
 </div>
-
 <!-- ═══ MAIN DASHBOARD ═══ -->
 <div id="dashboardMain" style="display:none">
 
+
+
+
 <div class="topbar">
-  <button class="topbar-home" onclick="goLanding()" title="กลับหน้าแรก">🏠 Home</button>
-  <h1><span>Sugar Process Engineering</span> &nbsp;·&nbsp; Educational Dashboard</h1>
+    <button class="topbar-home" onclick="goLanding()" title="กลับหน้าแรก">🏠 Home</button>
+<h1><span>Sugar Process Engineering</span> &nbsp;·&nbsp; Educational Dashboard</h1>
   <span class="topbar-ref">Ref: Peter Rein (2007) · Hugot (1986)</span>
   <div class="theme-toggle" onclick="toggleTheme()" title="สลับ Dark / Bright Mode">
     <span class="tl">🌙</span>
@@ -1665,7 +2749,8 @@ function validateEE2() {
   <button class="tab-btn" onclick="openTab('steam')">สมดุลไอน้ำ</button>
   <button class="tab-btn" onclick="openTab('glossary')">คำศัพท์</button>
   <button class="tab-btn" onclick="openTab('reportguide')">อ่านรายงาน</button>
-  <button class="tab-btn" onclick="openTab('benchmarks')">เปรียบเทียบ</button>
+  <button class="tab-btn" onclick="openTab('benchmarks')">มาตรฐาน</button>
+  <button class="tab-btn" onclick="window.open('https://boboapp2020-design.github.io/issue-and-community/','_blank')">รายงานปัญหา/พูดคุย</button>
 </div>
 
 <div class="main-wrap">
@@ -4563,7 +5648,6 @@ Brix: <b>85-90%</b><br>
 <div class="cr"><label>Boiler Efficiency (%):</label><input type="number" id="ee2_beff" value="82" step="1"><span class="cr-hint">(ประสิทธิภาพ Boiler; ค่าปกติ 72-85%)</span></div>
 <div class="cr"><label>Steam Pressure (bar):</label><input type="number" id="ee2_stpress" value="30" step="5"><span class="cr-hint">(แรงดันไอน้ำจาก Boiler; ค่าปกติ 20-45 bar)</span></div>
 <div class="cr"><label>Bagasse Moisture (%):</label><input type="number" id="ee2_bagmoist" value="50" step="1"><span class="cr-hint">(ความชื้นชานอ้อย; ยิ่งต่ำยิ่งให้พลังงานสูง)</span></div>
-<div class="cr"><label>ค่าไฟฟ้า (฿/kWh):</label><input type="number" id="ee2_elecprice" value="3.5" step="0.1"><span class="cr-hint">(ราคาซื้อไฟฟ้าจากการไฟฟ้า)</span></div>
 <div class="cr"><label>ขายไฟ Surplus (฿/kWh):</label><input type="number" id="ee2_elecsell" value="2.8" step="0.1"><span class="cr-hint">(ราคาขายไฟฟ้าส่วนเกินให้การไฟฟ้า)</span></div>
 <div class="cr"><label>ต้นทุนปูนขาว (฿/ตัน):</label><input type="number" id="ee2_limecost" value="3000" step="100"><span class="cr-hint">(ต้นทุนปูนขาว CaO; ใช้ในกระบวนการทำใส)</span></div>
 <div class="cr"><label>ต้นทุน Chemicals (฿/ตัน อ้อย):</label><input type="number" id="ee2_chemcost" value="15" step="1"><span class="cr-hint">(ต้นทุนเคมีภัณฑ์รวมต่อตันอ้อย)</span></div>
@@ -5860,1247 +6944,64 @@ Brix: <b>85-90%</b><br>
 <!-- ======== TAB: E2E CALCULATOR ======== -->
 
 
-<!-- Credit Footer -->
-<div style="margin-top:40px;padding:24px;text-align:center;border-top:1px solid var(--bdr)">
-<p style="font-size:13px;color:var(--txt3)">อ้างอิง: <b>Peter Rein — Cane Sugar Engineering (2007)</b> | <b>Hugot — Handbook of Cane Sugar Engineering (1986)</b></p>
-<p style="font-size:14px;color:var(--amber);font-weight:700;margin-top:8px">สร้างโดย นายสุรศักดิ์ นามวรรณ แผนกบริหารคุณภาพ</p>
-<p style="font-size:11px;color:var(--txt3);margin-top:4px">Sugar Process Engineering Dashboard</p>
+<!-- ═══ มาตรฐานโรงงานน้ำตาล ═══ -->
+<div class="sh" style="border-left-color:var(--c-purple)"><div class="sh-n" style="background:var(--c-purple)">9</div><div><h2>มาตรฐานระบบจัดการ & ข้อกำหนดกฎหมาย</h2><p>มาตรฐานสากลและกฎหมายที่โรงงานน้ำตาลต้องปฏิบัติตาม</p></div></div>
+
+<div class="c"><div class="ct">📋 มาตรฐานระบบจัดการ (Management System Standards)</div>
+<table class="dt"><thead><tr><th style="width:18%">มาตรฐาน</th><th style="width:22%">ชื่อเต็ม</th><th style="width:35%">ขอบเขต & ความสำคัญในโรงงานน้ำตาล</th><th style="width:25%">ข้อกำหนดหลัก</th></tr></thead><tbody>
+<tr><td><b class="hg">ISO 9001:2015</b></td><td>Quality Management System</td><td>ระบบบริหารคุณภาพ ควบคุมคุณภาพน้ำตาลให้ได้ตามข้อกำหนด (Pol, ICUMSA, Moisture) ลดของเสีย เพิ่มประสิทธิภาพ</td><td>Process approach, Risk-based thinking, PDCA, Customer focus, Internal audit</td></tr>
+<tr><td><b class="hg">FSSC 22000</b></td><td>Food Safety System Certification</td><td>ระบบความปลอดภัยอาหาร — บังคับสำหรับส่งออกน้ำตาล Food Grade ไป EU, Japan, US. ครอบคลุมตั้งแต่ Reception → Packaging</td><td>HACCP, PRPs, Food defense, Food fraud, Allergen management, Traceability</td></tr>
+<tr><td><b class="hg">ISO 22000:2018</b></td><td>Food Safety Management</td><td>ระบบจัดการความปลอดภัยอาหาร — เป็นแกนกลางของ FSSC 22000 กำหนด HACCP principles + management system</td><td>Hazard analysis, CCP/OPRP, Validation, Verification, Management review</td></tr>
+<tr><td><b class="hw">GHPs</b></td><td>Good Hygiene Practices</td><td>หลักเกณฑ์วิธีการที่ดีในการผลิตอาหาร — พื้นฐานสำคัญก่อนทำ HACCP ครอบคลุมสุขลักษณะโรงงาน บุคลากร อุปกรณ์</td><td>สุขาภิบาล, การควบคุมสัตว์พาหะ, น้ำใช้, สุขลักษณะส่วนบุคคล, เครื่องจักร</td></tr>
+<tr><td><b class="hw">HACCP</b></td><td>Hazard Analysis & Critical Control Points</td><td>ระบบวิเคราะห์อันตรายและจุดวิกฤต — จุดวิกฤตในโรงงานน้ำตาล: โลหะปนเปื้อน (Metal detector), สิ่งแปลกปลอม, สารเคมี (SO₂)</td><td>7 หลักการ HACCP: Hazard analysis → CCP → Critical limits → Monitoring → Corrective action → Verification → Record</td></tr>
+<tr><td><b class="hb">ISO 14001:2015</b></td><td>Environmental Management System</td><td>ระบบจัดการสิ่งแวดล้อม — ควบคุมน้ำเสีย (BOD/COD จาก molasses), อากาศ (Bagasse boiler), กากอ้อย, Filter cake disposal</td><td>Environmental aspects, Legal compliance, Life cycle perspective, Pollution prevention, Emergency preparedness</td></tr>
+<tr><td><b class="hb">ISO 45001:2018</b></td><td>Occupational Health & Safety</td><td>ระบบจัดการอาชีวอนามัยและความปลอดภัย — ความเสี่ยงสูง: เครื่องจักร (Milling), ความร้อน (Evaporator/Pan), สารเคมี, ไฟ, พื้นที่อับอากาศ</td><td>Hazard identification, Risk assessment, Worker participation, Incident investigation, Emergency response</td></tr>
+<tr><td><b class="hb">ISO 50001:2018</b></td><td>Energy Management System</td><td>ระบบจัดการพลังงาน — โรงงานน้ำตาลใช้พลังงานมาก (Boiler, Evaporator, Pan) การจัดการดีช่วยลด Steam consumption อย่างมีนัยสำคัญ</td><td>Energy baseline, EnPIs, Energy review, Significant energy uses, Monitoring & measurement</td></tr>
+<tr><td><b>ISO 17025:2017</b></td><td>Lab Competence</td><td>มาตรฐานห้องปฏิบัติการ — Lab โรงงานน้ำตาลวิเคราะห์ Pol, Brix, Purity, Moisture, ICUMSA ต้องมีความน่าเชื่อถือ</td><td>Measurement uncertainty, Method validation, Proficiency testing, Equipment calibration</td></tr>
+</tbody></table></div>
+
+<div class="c" style="margin-top:20px"><div class="ct">⚖️ ข้อกำหนดกฎหมายไทย ที่เกี่ยวข้องกับโรงงานน้ำตาล</div>
+<table class="dt"><thead><tr><th style="width:25%">กฎหมาย/ประกาศ</th><th style="width:35%">ขอบเขต</th><th style="width:40%">ข้อกำหนดหลักที่เกี่ยวข้อง</th></tr></thead><tbody>
+<tr><td><b>พ.ร.บ. โรงงาน พ.ศ. 2535</b></td><td>ควบคุมการตั้งและดำเนินกิจการโรงงาน</td><td>ใบอนุญาต ร.ง.4, ผู้ควบคุมมลพิษ, รายงาน EIA, มาตรฐานน้ำทิ้ง</td></tr>
+<tr><td><b>พ.ร.บ. อ้อยและน้ำตาลทราย พ.ศ. 2527</b></td><td>ควบคุมอุตสาหกรรมอ้อยและน้ำตาล</td><td>ระบบแบ่งปันผลประโยชน์ 70:30, ราคาอ้อยขั้นต้น, โควตา ก. ข. ค., คณะกรรมการอ้อยและน้ำตาลทราย</td></tr>
+<tr><td><b>ประกาศ อย. เรื่อง GMP</b></td><td>มาตรฐานการผลิตอาหาร (สำหรับน้ำตาลทราย)</td><td>GHPs, การควบคุมกระบวนการ, สุขลักษณะ, Recall procedure</td></tr>
+<tr><td><b>ประกาศกระทรวงอุตสาหกรรม</b></td><td>มาตรฐานน้ำทิ้งจากโรงงาน</td><td>BOD ≤20 mg/L, COD ≤120 mg/L, pH 5.5-9.0, SS ≤50 mg/L, TDS ≤3,000 mg/L</td></tr>
+<tr><td><b>พ.ร.บ. ส่งเสริมและรักษาคุณภาพสิ่งแวดล้อม</b></td><td>ควบคุมมลพิษทางอากาศ น้ำ เสียง</td><td>ค่า TSP จาก Boiler ≤320 mg/m³, SO₂ ≤60 ppm (Bagasse boiler), Opacity ≤20%</td></tr>
+<tr><td><b>พ.ร.บ. ความปลอดภัย อาชีวอนามัย</b></td><td>คุ้มครองแรงงานในโรงงาน</td><td>จป.วิชาชีพ, การประเมินความเสี่ยง, PPE, อบรมความปลอดภัย, รายงานอุบัติเหตุ</td></tr>
+<tr><td><b>พ.ร.บ. พลังงาน (DEDE)</b></td><td>โรงงานควบคุม (ใช้พลังงาน &gt;20 ล้าน MJ/ปี)</td><td>ผู้รับผิดชอบด้านพลังงาน, แผนอนุรักษ์พลังงาน, รายงานประจำปี, เป้าหมายลด 1% ต่อปี</td></tr>
+<tr><td><b>มอก. 56-2538</b></td><td>มาตรฐานน้ำตาลทราย (TIS)</td><td>น้ำตาลทรายขาว: Pol ≥99.5%, ICUMSA ≤45 | น้ำตาลดิบ: Pol 96-98.5%</td></tr>
+</tbody></table></div>
+
+<div class="c" style="margin-top:20px"><div class="ct">🌍 ข้อกำหนด EU ที่เกี่ยวข้องกับการส่งออกน้ำตาล</div>
+<table class="dt"><thead><tr><th style="width:28%">Regulation</th><th style="width:35%">Scope</th><th style="width:37%">Key Requirements</th></tr></thead><tbody>
+<tr><td><b class="hg">EC 178/2002</b></td><td>General Food Law — กฎหมายอาหารทั่วไปของ EU</td><td>Traceability, Rapid Alert System (RASFF), Responsibility of food business operators</td></tr>
+<tr><td><b class="hg">EC 852/2004</b></td><td>Hygiene of Foodstuffs</td><td>HACCP-based procedures, Registration, GHP requirements</td></tr>
+<tr><td><b class="hw">EC 1881/2006</b></td><td>Maximum Levels of Contaminants</td><td>Lead (Pb) ≤0.50 mg/kg, Cadmium, Mycotoxins (ถ้ามี), Pesticide residues (MRLs)</td></tr>
+<tr><td><b class="hw">EC 396/2005</b></td><td>Maximum Residue Levels (MRLs) for Pesticides</td><td>สารตกค้างจากการปลูกอ้อย: Glyphosate, Atrazine, 2,4-D — ต้องต่ำกว่า MRL</td></tr>
+<tr><td><b class="hb">EU Regulation 2023/1115</b></td><td>EU Deforestation Regulation (EUDR)</td><td>ห้ามนำเข้าสินค้าที่เกี่ยวข้องกับการตัดไม้ทำลายป่า — มีผลกับ Sugarcane supply chain</td></tr>
+<tr><td><b>EC 231/2012</b></td><td>Food Additives Specifications</td><td>SO₂ ใน Refined Sugar ≤15 mg/kg, สำหรับ Raw Sugar ที่ใช้ Sulfitation ≤20 mg/kg</td></tr>
+<tr><td><b>EU ETS / CBAM</b></td><td>Carbon Border Adjustment Mechanism</td><td>อาจมีผลกับน้ำตาลส่งออก EU ในอนาคต — ต้องรายงาน Carbon footprint</td></tr>
+</tbody></table></div>
+
+<div class="c" style="margin-top:20px"><div class="ct">🇱🇦 ข้อกำหนดกฎหมายลาว (Lao PDR) ที่เกี่ยวข้อง</div>
+<table class="dt"><thead><tr><th style="width:28%">กฎหมาย</th><th style="width:35%">ขอบเขต</th><th style="width:37%">ข้อกำหนดหลัก</th></tr></thead><tbody>
+<tr><td><b>ກົດໝາຍ ວ່າດ້ວຍອຸດສາຫະກຳປຸງແຕ່ງ</b><br>(Law on Processing Industry)</td><td>ควบคุมโรงงานแปรรูป รวมถึงโรงงานน้ำตาล</td><td>ใบอนุญาตประกอบกิจการ, มาตรฐานการผลิต, การตรวจสอบจากกระทรวงอุตสาหกรรม</td></tr>
+<tr><td><b>ກົດໝາຍ ວ່າດ້ວຍສິ່ງແວດລ້ອມ</b><br>(Environmental Protection Law)</td><td>คุ้มครองสิ่งแวดล้อม</td><td>EIA/IEE สำหรับโครงการใหญ่, มาตรฐานน้ำทิ้ง, การจัดการกากของเสีย</td></tr>
+<tr><td><b>ກົດໝາຍ ວ່າດ້ວຍອາຫານ</b><br>(Food Law)</td><td>ความปลอดภัยอาหาร</td><td>มาตรฐานอาหารแห่งชาติ, การขึ้นทะเบียน, การตรวจสอบสารปนเปื้อน</td></tr>
+<tr><td><b>ດຳລັດ ວ່າດ້ວຍແຮງງານ</b><br>(Labour Law Decree)</td><td>คุ้มครองแรงงาน</td><td>ชั่วโมงทำงาน, ความปลอดภัย, สวัสดิการ, ประกันสังคม — โรงงาน 24 ชม. ต้องมีระบบกะชัดเจน</td></tr>
+<tr><td><b>Investment Promotion Law</b></td><td>ส่งเสริมการลงทุน</td><td>สิทธิประโยชน์ทางภาษี, สัมปทานที่ดิน (บาง Concession 50-70 ปี), เขตเศรษฐกิจพิเศษ</td></tr>
+</tbody></table></div>
+
+<div class="ins" style="margin-top:20px">
+<b style="color:var(--pri)">💡 สรุปมาตรฐานที่บังคับ vs สมัครใจ</b><br><br>
+<b>บังคับ (Mandatory):</b> GHPs, HACCP (ตามกฎหมายอาหารไทย), พ.ร.บ. โรงงาน, พ.ร.บ. สิ่งแวดล้อม, พ.ร.บ. ความปลอดภัย, มอก. 56<br>
+<b>สมัครใจแต่จำเป็นสำหรับส่งออก:</b> FSSC 22000, ISO 22000, ISO 9001, ISO 14001<br>
+<b>สมัครใจ (Voluntary):</b> ISO 45001, ISO 50001, ISO 17025, Bonsucro, VIVE Sustainable Supply
 </div>
 
-</div><!-- /main-wrap -->
 
-<script>
-function fmt(n){if(isNaN(n)||n===null)return'—';var s=Math.abs(n)<0.01&&n!==0?n.toFixed(2):parseFloat(n.toFixed(2));return Number(s).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:2});}
-function openTab(id){
-  document.querySelectorAll('.tab-page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('tab-'+id).classList.add('active');
-  event.target.classList.add('active');
-  window.scrollTo(0,0);
-}
-function goTab(id){
-  document.querySelectorAll('.tab-page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('tab-'+id).classList.add('active');
-  const btns=document.querySelectorAll('.tab-btn');
-  btns.forEach(b=>{if(b.textContent.trim()===({cane:'คุณภาพอ้อย',milling:'ลูกหีบ',clarification:'การทำใส',evaporation:'หม้อต้ม',crystallization:'หม้อเคี่ยว',centrifugal:'หม้อปั่น',sugar:'น้ำตาล'}[id]||''))b.classList.add('active');});
-  window.scrollTo(0,0);
-}
-function openSub(btn,id){
-  const parent=btn.closest('.tab-page');
-  parent.querySelectorAll('.spage').forEach(p=>p.classList.remove('active'));
-  parent.querySelectorAll('.stab').forEach(b=>b.classList.remove('active'));
-  document.getElementById('sp-'+id).classList.add('active');
-  btn.classList.add('active');
-}
 
-// Calc: CCS Multi-Formula Calculator
-function ccsCalc(){
-  const pol=+document.getElementById('ccs_pol').value;
-  const brix=+document.getElementById('ccs_brix').value;
-  const fiber=+document.getElementById('ccs_fiber').value;
-  const suc=+document.getElementById('ccs_suc').value;
-  const ns=+document.getElementById('ccs_ns').value;
-  const price=+document.getElementById('ccs_price').value;
-  const pur=brix>0?(pol/brix*100):0;
-  // 1. CCS Australia/Thai (BSES formula)
-  var ccs=(pol-(brix-pol)*0.4)*0.74;
-  // 2. RV South Africa
-  var rv=suc-0.35*ns-0.02*fiber;
-  // 3. Winter/Carp RS
-  var wrs=suc-0.4*(ns-fiber/2);
-  // 4. ERS (USA) - Chen & Chou
-  var rfactor=pur>60?(0.4+0.006*pur):0.75;
-  var ers=pol*rfactor-0.05;
-  // 5. TRS Brazil (CONSECANA simplified)
-  var rs_est=brix-pol; // approx reducing sugars proxy
-  var trs=10*pol*(1-0.01*fiber)*(1.0313-0.00575*fiber)-Math.max(0,rs_est)*(5.18-0.0054*pur);
-  trs=trs/10; // back to % cane
-  // 6. Simple Hugot
-  var hugot=pol*0.75*0.90;
-  // 7. SJM proxy
-  var sjm=pur>0?(pol/pol*0.88*100):0; // simplified — actual needs MJ data
-  // Build results table
-  var rows=[
-    {n:'CCS ออสเตรเลีย/ไทย',v:ccs,c:'var(--amber)',f:'(Pol−(Brix−Pol)×0.4)×0.74',flag:'🇦🇺🇹🇭🇱🇦'},
-    {n:'RV แอฟริกาใต้',v:rv,c:'var(--green)',f:'S−0.35×NS−0.02×F',flag:'🇿🇦'},
-    {n:'Winter/Carp RS',v:wrs,c:'var(--blue)',f:'S−0.4×(NS−F/2)',flag:'📖'},
-    {n:'ERS สหรัฐ',v:ers,c:'var(--purple)',f:'Pol×R(Pur)−0.05',flag:'🇺🇸'},
-    {n:'TRS บราซิล',v:trs,c:'var(--orange)',f:'CONSECANA formula',flag:'🇧🇷'},
-    {n:'Hugot Simple',v:hugot,c:'var(--cyan)',f:'Pol×0.75×0.90',flag:'📘'},
-  ];
-  var tb='';
-  var best=0,worst=999;
-  for(var i=0;i<rows.length;i++){
-    var r=rows[i];
-    var kg=r.v*10;
-    var money=r.v*10*price/1000;
-    tb+='<tr><td>'+(i+1)+'</td><td><b style="color:'+r.c+'">'+r.flag+' '+r.n+'</b></td><td style="font-size:16px;font-weight:800;color:'+r.c+'">'+fmt(r.v)+'%</td><td>'+fmt(kg)+'</td><td>'+fmt(money)+'</td><td style="font-size:11px;color:var(--txt3)">'+r.f+'</td></tr>';
-    if(r.v>best)best=r.v;
-    if(r.v<worst&&r.v>0)worst=r.v;
-  }
-  document.getElementById('ccsTbody').innerHTML=tb;
-  // KPI cards
-  var kpiHtml='';
-  kpiHtml+='<div class="ee2-kpi-card amber" style="text-align:center"><div class="ct">Purity</div><div class="cv ha" style="font-size:28px">'+fmt(pur)+'%</div><div class="cu">'+(pur>=85?'✅ ดี':'⚠ ต่ำ')+'</div></div>';
-  kpiHtml+='<div class="ee2-kpi-card green" style="text-align:center"><div class="ct">CCS สูงสุด</div><div class="cv hg" style="font-size:28px">'+fmt(best)+'%</div><div class="cu">'+fmt(best*10)+' kg/t cane</div></div>';
-  kpiHtml+='<div class="ee2-kpi-card blue" style="text-align:center"><div class="ct">CCS ต่ำสุด</div><div class="cv hb" style="font-size:28px">'+fmt(worst)+'%</div><div class="cu">'+fmt(worst*10)+' kg/t cane</div></div>';
-  kpiHtml+='<div class="ee2-kpi-card amber" style="text-align:center"><div class="ct">มูลค่า/ตัน (CCS)</div><div class="cv ha" style="font-size:28px">'+fmt(ccs*10*price/1000)+'</div><div class="cu">฿/ตันอ้อย</div></div>';
-  document.getElementById('ccsKPI').innerHTML=kpiHtml;
-  // Interpretation
-  var interp='';
-  if(ccs>=13) interp+='<div style="padding:10px;border-radius:8px;background:var(--green-bg);border-left:4px solid var(--green);margin-bottom:8px">✅ <b>CCS '+fmt(ccs)+'% ดีเยี่ยม!</b> (≥13) อ้อยคุณภาพสูงมาก — ราคาอ้อยจะสูงตาม สร้างรายได้ ~'+fmt(ccs*10*price/1000)+' ฿/ตัน</div>';
-  else if(ccs>=11) interp+='<div style="padding:10px;border-radius:8px;background:var(--blue-bg);border-left:4px solid var(--blue);margin-bottom:8px">✓ <b>CCS '+fmt(ccs)+'%</b> (11-13) อยู่ในเกณฑ์ดี</div>';
-  else if(ccs>=9) interp+='<div style="padding:10px;border-radius:8px;background:var(--amber-bg);border-left:4px solid var(--amber);margin-bottom:8px">⚠ <b>CCS '+fmt(ccs)+'%</b> (9-11) ต่ำกว่ามาตรฐาน ตรวจ: อ้อยอ่อน? อ้อยค้าง? Purity '+fmt(pur)+'%</div>';
-  else interp+='<div style="padding:10px;border-radius:8px;background:var(--red-bg);border-left:4px solid var(--red);margin-bottom:8px">🔴 <b>CCS '+fmt(ccs)+'% ต่ำมาก!</b> (<9) สูญเสียรายได้มหาศาล</div>';
-  if(pur<82) interp+='<div style="padding:10px;border-radius:8px;background:var(--red-bg);border-left:4px solid var(--red);margin-bottom:8px">⚠ <b>Purity '+fmt(pur)+'% ต่ำ</b> (<82%) — Non-sucrose สูง ทำให้ Recovery แย่ ไม่ว่าจะใช้สูตรไหนก็ได้ CCS ต่ำ</div>';
-  var spread=best-worst;
-  interp+='<div style="padding:10px;border-radius:8px;background:var(--purple-bg);border-left:4px solid var(--purple);margin-bottom:8px">📊 <b>ความแตกต่างระหว่างสูตร: '+fmt(spread)+'%</b> — ค่านี้แสดงว่าการเลือกสูตรมีผลต่อราคาอ้อย ±'+fmt(spread*10*price/1000)+' ฿/ตัน | CCS ออสเตรเลีย/ไทยเป็นสูตรที่นิยมใช้ในภูมิภาค</div>';
-  document.getElementById('ccsInterpret').innerHTML=interp;
-  // === CANE QUALITY ASSESSMENT ===
-  var qhtml='';
-  qhtml+='<div style="margin-top:20px;padding:20px;border-radius:14px;background:var(--amber-bg);border:1px solid rgba(217,119,6,.15)">';
-  qhtml+='<h3 style="color:var(--amber);margin:0 0 14px;font-size:16px">🌾 รายงานคุณภาพอ้อย (Cane Quality Assessment)</h3>';
-  // Quality scoring
-  var score=0;var maxScore=100;var details=[];
-  // 1. Pol%Cane
-  if(pol>=15){score+=20;details.push({p:'Pol%Cane',v:fmt(pol)+'%',s:'✅ ดีเยี่ยม (≥15%)',c:'var(--green)',pt:20});}
-  else if(pol>=13){score+=15;details.push({p:'Pol%Cane',v:fmt(pol)+'%',s:'✓ ดี (13-15%)',c:'var(--green)',pt:15});}
-  else if(pol>=11){score+=8;details.push({p:'Pol%Cane',v:fmt(pol)+'%',s:'⚠ ปานกลาง (11-13%) — อ้อยอาจยังไม่สุก หรือมี Trash มาก',c:'var(--amber)',pt:8});}
-  else{score+=3;details.push({p:'Pol%Cane',v:fmt(pol)+'%',s:'🔴 ต่ำ (<11%) — อ้อยอ่อน/ค้าง/Trash เยอะ — สูญเสียรายได้!',c:'var(--red)',pt:3});}
-  // 2. Brix
-  if(brix>=20){score+=15;details.push({p:'Brix%Cane',v:fmt(brix)+'%',s:'✅ สุกสมบูรณ์ (≥20%)',c:'var(--green)',pt:15});}
-  else if(brix>=17){score+=10;details.push({p:'Brix%Cane',v:fmt(brix)+'%',s:'✓ ดี (17-20%)',c:'var(--green)',pt:10});}
-  else if(brix>=14){score+=5;details.push({p:'Brix%Cane',v:fmt(brix)+'%',s:'⚠ ยังไม่สุกเต็มที่ (14-17%)',c:'var(--amber)',pt:5});}
-  else{score+=2;details.push({p:'Brix%Cane',v:fmt(brix)+'%',s:'🔴 อ้อยอ่อนมาก (<14%)',c:'var(--red)',pt:2});}
-  // 3. Purity
-  if(pur>=88){score+=20;details.push({p:'Purity',v:fmt(pur)+'%',s:'✅ ดีเยี่ยม (≥88%) — Non-sucrose น้อย, Recovery สูง',c:'var(--green)',pt:20});}
-  else if(pur>=85){score+=15;details.push({p:'Purity',v:fmt(pur)+'%',s:'✓ ดี (85-88%)',c:'var(--green)',pt:15});}
-  else if(pur>=80){score+=8;details.push({p:'Purity',v:fmt(pur)+'%',s:'⚠ ปานกลาง (80-85%) — Non-sucrose สูง จะทำให้ Molasses มาก Recovery ต่ำ',c:'var(--amber)',pt:8});}
-  else{score+=3;details.push({p:'Purity',v:fmt(pur)+'%',s:'🔴 ต่ำ (<80%) — อ้อยเน่า/ค้าง/มี Trash มาก → Recovery แย่มาก',c:'var(--red)',pt:3});}
-  // 4. Fiber
-  if(fiber>=11&&fiber<=13){score+=15;details.push({p:'Fiber%Cane',v:fmt(fiber)+'%',s:'✅ เหมาะสม (11-13%) — พลังงาน Bagasse พอดี',c:'var(--green)',pt:15});}
-  else if(fiber>=13&&fiber<=15){score+=10;details.push({p:'Fiber%Cane',v:fmt(fiber)+'%',s:'✓ ค่อนข้างสูง (13-15%) — Extraction ยากขึ้น แต่ Bagasse เหลือเยอะ',c:'var(--blue)',pt:10});}
-  else if(fiber>15){score+=5;details.push({p:'Fiber%Cane',v:fmt(fiber)+'%',s:'⚠ สูง (>15%) — หีบยาก ต้องเพิ่ม Imbibition | Pol/Cane ลดลง | แต่ Bagasse surplus ขายได้',c:'var(--amber)',pt:5});}
-  else{score+=4;details.push({p:'Fiber%Cane',v:fmt(fiber)+'%',s:'⚠ ต่ำ (<11%) — อ้อยนิ่ม Bagasse อาจไม่พอเผา',c:'var(--amber)',pt:4});}
-  // 5. CCS
-  if(ccs>=14){score+=30;details.push({p:'CCS',v:fmt(ccs)+'%',s:'✅ ดีเยี่ยม (≥14%) — อ้อยเกรดพรีเมียม!',c:'var(--green)',pt:30});}
-  else if(ccs>=12){score+=22;details.push({p:'CCS',v:fmt(ccs)+'%',s:'✓ ดี (12-14%)',c:'var(--green)',pt:22});}
-  else if(ccs>=10){score+=12;details.push({p:'CCS',v:fmt(ccs)+'%',s:'⚠ ปานกลาง (10-12%) — ควรตรวจสาเหตุ',c:'var(--amber)',pt:12});}
-  else{score+=4;details.push({p:'CCS',v:fmt(ccs)+'%',s:'🔴 ต่ำมาก (<10%) — สูญเสียรายได้!',c:'var(--red)',pt:4});}
 
-  // Grade
-  var grade,gradeColor,gradeIcon,gradeMsg;
-  if(score>=85){grade='A';gradeColor='var(--green)';gradeIcon='🏆';gradeMsg='อ้อยคุณภาพพรีเมียม — สมบูรณ์ทุกด้าน ราคาสูง Recovery ดีเยี่ยม';}
-  else if(score>=70){grade='B';gradeColor='var(--blue)';gradeIcon='👍';gradeMsg='อ้อยคุณภาพดี — โรงงานทำงานได้ปกติ ผลผลิตน่าพอใจ';}
-  else if(score>=50){grade='C';gradeColor='var(--amber)';gradeIcon='⚠';gradeMsg='อ้อยคุณภาพปานกลาง — ควรตรวจสอบปัจจัยที่ทำให้คะแนนต่ำ';}
-  else{grade='D';gradeColor='var(--red)';gradeIcon='🔴';gradeMsg='อ้อยคุณภาพต่ำ — สูญเสียรายได้มาก ต้องแก้ไขเร่งด่วน';}
-
-  // Grade display
-  qhtml+='<div style="display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:center;margin-bottom:16px">';
-  qhtml+='<div style="text-align:center;min-width:140px"><div style="font-size:60px;line-height:1">'+gradeIcon+'</div><div style="font-size:48px;font-weight:900;color:'+gradeColor+'">Grade '+grade+'</div><div style="font-size:20px;font-weight:700;color:'+gradeColor+'">'+score+'/100 คะแนน</div></div>';
-  qhtml+='<div><div style="font-size:15px;color:'+gradeColor+';font-weight:700;margin-bottom:8px">'+gradeMsg+'</div>';
-  // Score bar
-  qhtml+='<div style="background:var(--s3);border-radius:10px;height:18px;overflow:hidden;margin-bottom:12px"><div style="width:'+score+'%;height:100%;background:linear-gradient(90deg,'+gradeColor+',rgba(255,255,255,.3));border-radius:10px;transition:width .5s"></div></div>';
-  // Detail items
-  for(var d=0;d<details.length;d++){
-    qhtml+='<div style="display:flex;justify-content:space-between;padding:6px 10px;border-bottom:1px solid var(--bdr2);font-size:13px"><span style="color:var(--txt2);font-weight:600">'+details[d].p+' = <b style="color:'+details[d].c+'">'+details[d].v+'</b></span><span style="color:'+details[d].c+'">'+details[d].s+' ('+details[d].pt+' คะแนน)</span></div>';
-  }
-  qhtml+='</div></div>';
-
-  // Recommendations
-  qhtml+='<div style="margin-top:14px;padding:14px;border-radius:10px;background:var(--blue-bg);border:1px solid rgba(37,99,235,.12)">';
-  qhtml+='<h4 style="color:var(--blue);margin:0 0 8px;font-size:14px">💡 คำแนะนำเพื่อเพิ่มคุณภาพอ้อย</h4>';
-  var recs=[];
-  if(pol<13) recs.push('เพิ่ม Pol โดย: ตัดอ้อยเมื่อสุกเต็มที่ (อายุ 11-14 เดือน), หยุดให้น้ำก่อนตัด 30 วัน, ลดยอดอ้อยและใบ');
-  if(pur<85) recs.push('เพิ่ม Purity โดย: ตัดอ้อยสด (ไม่เผา), ส่งโรงงานภายใน 24 ชม., ลด Trash/ดิน/ยอดอ้อย');
-  if(fiber>15) recs.push('Fiber สูง: ตรวจสอบพันธุ์อ้อย (อาจเป็นพันธุ์ Fiber สูง), เพิ่ม Imbibition%Fiber ≥280%, ตรวจ Shredder/PI');
-  if(fiber<11) recs.push('Fiber ต่ำ: อ้อยอาจมีน้ำมาก (ฝนตก), ตรวจ Moisture, Bagasse อาจไม่พอเผา — อาจต้องลด Imbibition');
-  if(ccs<12) recs.push('CCS ต่ำ: สาเหตุหลัก = Pol ต่ำ + Purity ต่ำ → ดูแลคุณภาพวัตถุดิบ, ลดเวลาค้าง, ตัดอ้อยสด');
-  if(brix<17) recs.push('Brix ต่ำ: อ้อยอาจยังไม่สุก, ตรวจอายุอ้อย, พิจารณาเลื่อนการตัด');
-  if(recs.length===0) recs.push('คุณภาพอ้อยดีทุกด้าน! รักษามาตรฐานนี้ไว้ ตัดสดส่งเร็ว');
-  for(var r=0;r<recs.length;r++){
-    qhtml+='<div style="padding:4px 0;font-size:13px;color:var(--txt);line-height:1.6">• '+recs[r]+'</div>';
-  }
-  qhtml+='</div>';
-
-  // Money impact
-  var tonsPerDay=8000; // 8000 TCD
-  var potentialSugar=ccs/100*tonsPerDay*10; // kg
-  var tonsSugar=potentialSugar/1000;
-  var moneyPerDay=tonsSugar*price;
-  qhtml+='<div style="margin-top:14px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px">';
-  qhtml+='<div class="ee2-kpi-card amber" style="text-align:center"><div class="ct">น้ำตาลที่ควรได้/วัน</div><div class="cv ha" style="font-size:22px">'+fmt(tonsSugar)+' ตัน</div><div class="cu">ที่ 8,000 TCD</div></div>';
-  qhtml+='<div class="ee2-kpi-card green" style="text-align:center"><div class="ct">มูลค่า/วัน</div><div class="cv hg" style="font-size:22px">'+fmt(moneyPerDay/1e6)+' ล้าน฿</div><div class="cu">@ '+fmt(price)+' ฿/t</div></div>';
-  qhtml+='<div class="ee2-kpi-card blue" style="text-align:center"><div class="ct">มูลค่า/ปี (120 วัน)</div><div class="cv hb" style="font-size:22px">'+fmt(moneyPerDay*120/1e6)+' ล้าน฿</div><div class="cu">Crop 120 วัน</div></div>';
-  qhtml+='</div>';
-
-  qhtml+='</div>';
-  document.getElementById('ccsInterpret').innerHTML+=qhtml;
-  document.getElementById('ccsResults').style.display='block';
-}
-// Keep old c1() as alias
-function c1(){ccsCalc();}
-
-
-// Calc: Milling
-function m1(){
-  const r=+document.getElementById('m1r').value,f=+document.getElementById('m1f').value/100,
-  i=+document.getElementById('m1i').value/100,s=+document.getElementById('m1s').value/100,e=+document.getElementById('m1e').value/100;
-  const fiber=r*f, water=fiber*i, juice=r*(1-f)+water*0.75;
-  const sucJ=r*s*e, sucB=r*s*(1-e);
-  document.getElementById('m1r1').textContent=fmt(fiber);
-  document.getElementById('m1r2').textContent=fmt(water);
-  document.getElementById('m1r3').textContent=fmt(juice);
-  document.getElementById('m1r4').textContent=fmt(sucJ);
-  document.getElementById('m1r5').textContent=fmt(sucB);
-  const lossDay=sucB*24, lossB=lossDay*16000, lossY=lossB*120/1e6;
-  const tgtE=0.975, tgtLoss=r*s*(1-tgtE), gap=(sucB-tgtLoss)*24;
-  var mi='';
-  if(e>=0.97) mi='<div style="margin-top:8px;padding:8px;border-radius:6px;background:var(--green-bg);border-left:3px solid var(--green)">✅ <b>Extraction ≥97%</b> — ดีมาก! ประสิทธิภาพหีบอยู่ระดับสากล</div>';
-  else if(e>=0.95) mi='<div style="margin-top:8px;padding:8px;border-radius:6px;background:rgba(245,158,11,.1);border-left:3px solid var(--amber)">⚠ <b>Extraction 95-97%</b> — พอใช้ ควรตรวจ Imbibition rate, PI, สภาพลูกกลิ้ง</div>';
-  else mi='<div style="margin-top:8px;padding:8px;border-radius:6px;background:var(--red-bg);border-left:3px solid var(--red)">🔴 <b>Extraction <95%</b> — ต่ำมาก! น้ำตาลสูญเสียหนัก ตรวจ Hydraulic, ลูกกลิ้งสึก, Imbibition</div>';
-  if(i<2.5) mi+='<div style="margin-top:4px;padding:8px;border-radius:6px;background:var(--blue-bg);border-left:3px solid var(--blue)">💡 Imbibition '+fmt(i*100)+'%/fiber ต่ำกว่ามาตรฐาน 280% → เพิ่ม Imb จะช่วย Extraction เพิ่ม 0.2-0.4% ต่อ 10% Imb</div>';
-  document.getElementById('m1ex').innerHTML='Sucrose ในอ้อย: '+fmt(r*s)+' t/h | สกัดได้ '+fmt(sucJ)+' t/h | <b style="color:var(--red)">สูญเสียใน Bagasse '+fmt(sucB)+' t/h = '+fmt(lossDay)+' t/d = '+fmt(lossB/1e6)+' ล้าน฿/วัน ('+fmt(lossY)+' ล้าน฿/ปี)</b>'+(gap>0?' | <span style="color:var(--amber)">ถ้า Ext=97.5% → น้ำตาลเพิ่ม '+fmt(gap)+' t/d = '+fmt(gap*16000/1e6)+' ล้าน฿/วัน</span>':'')+mi;
-}
-
-
-// Calc: Bagasse Quality & Moisture
-function bagCalc(){
-  const tcd=+document.getElementById('bag_tcd').value, pc=+document.getElementById('bag_pc').value/100;
-  const moist=+document.getElementById('bag_moist').value/100, pol=+document.getElementById('bag_pol').value/100;
-  const fib=+document.getElementById('bag_fib').value/100, price=+document.getElementById('bag_price').value;
-  const bagasse=tcd*pc;
-  const gcv=(18600*(1-moist)-2257*moist)/1000; // Hugot formula MJ/kg
-  const sucLost=bagasse*pol;
-  const moneyLost=sucLost*price;
-  document.getElementById('bag_r1').textContent=fmt(bagasse);
-  document.getElementById('bag_r2').textContent=fmt(gcv);
-  document.getElementById('bag_r3').textContent=fmt(sucLost);
-  document.getElementById('bag_r4').textContent=fmt(moneyLost);
-  var bi='';
-  if(moist<=0.48) bi='<div style="margin-top:8px;padding:8px;border-radius:6px;background:var(--green-bg);border-left:3px solid var(--green)">✅ <b>Moisture '+fmt(moist*100)+'% ดีมาก!</b> (≤48%) — GCV สูง Boiler ทำงานดี เหลือ Bagasse ขายได้</div>';
-  else if(moist<=0.52) bi='<div style="margin-top:8px;padding:8px;border-radius:6px;background:rgba(245,158,11,.1);border-left:3px solid var(--amber)">⚠ <b>Moisture '+fmt(moist*100)+'%</b> (48-52%) — ปกติ แต่ถ้าลดได้จะเพิ่ม GCV อย่างมาก ทุก 1% moisture = GCV เพิ่ม ~0.2 MJ/kg</div>';
-  else bi='<div style="margin-top:8px;padding:8px;border-radius:6px;background:var(--red-bg);border-left:3px solid var(--red)">🔴 <b>Moisture '+fmt(moist*100)+'% สูงมาก!</b> (>52%) — GCV ต่ำ Boiler เผาไม่หมด อาจต้องซื้อเชื้อเพลิงเสริม ตรวจ Imbibition rate + Mill pressure</div>';
-  if(pol>0.02) bi+='<div style="margin-top:4px;padding:8px;border-radius:6px;background:var(--red-bg);border-left:3px solid var(--red)">⚠ Pol%Bagasse '+fmt(pol*100)+'% สูง (>2.0%) → สูญเสีย '+fmt(sucLost)+' t/d = <b>'+fmt(moneyLost/1e6)+' ล้าน฿/วัน</b> ตรวจ Extraction, Imbibition, PI</div>';
-  else if(pol>0.016) bi+='<div style="margin-top:4px;padding:8px;border-radius:6px;background:rgba(245,158,11,.1);border-left:3px solid var(--amber)">⚠ Pol%Bagasse '+fmt(pol*100)+'% (1.6-2.0%) — ยังลดได้อีก เพิ่ม Imbibition จะช่วย</div>';
-  else bi+='<div style="margin-top:4px;padding:8px;border-radius:6px;background:var(--green-bg);border-left:3px solid var(--green)">✅ Pol%Bagasse '+fmt(pol*100)+'% ดีมาก (≤1.6%) — สกัด Sucrose ได้ดี</div>';
-  var dryFib=fib/(1-moist);
-  bi+='<div style="margin-top:4px;padding:8px;border-radius:6px;background:var(--blue-bg);border-left:3px solid var(--blue)">📊 Fiber%Bagasse (dry basis) = '+fmt(dryFib*100)+'% | Brix%Bagasse ≈ '+fmt((1-moist-fib)*100)+'% | ถ้า Moisture ลด 2% → GCV เพิ่ม ~'+fmt(((18600*(1-(moist-0.02))-2257*(moist-0.02))/1000)-gcv)+' MJ/kg → Steam เพิ่ม ~'+fmt(bagasse*0.02*2.5)+' t/d</div>';
-  document.getElementById('bag_ex').innerHTML='Bagasse '+fmt(bagasse)+' t/d × GCV '+fmt(gcv)+' MJ/kg | <b style="color:var(--red)">น้ำตาลหาย '+fmt(sucLost)+' t/d = '+fmt(moneyLost/1e6)+' ล้าน฿/วัน</b> | ถ้า Pol ลดจาก '+fmt(pol*100)+'% เป็น 1.6% → <span style="color:var(--green)">ลด Loss '+fmt((pol-0.016)*bagasse)+' t/d = '+fmt((pol-0.016)*bagasse*price/1e6)+' ล้าน฿/วัน</span>'+bi;
-}
-// Calc: Mill Control Optimization
-function millCtrl(){
-  const tcd=+document.getElementById('mc_tcd').value;
-  const fib=+document.getElementById('mc_fib').value/100;
-  const polc=+document.getElementById('mc_polc').value/100;
-  const curImb=+document.getElementById('mc_imb').value;
-  const tgtImb=+document.getElementById('mc_tgtimb').value;
-  const curMoist=+document.getElementById('mc_moist').value/100;
-  const tgtMoist=+document.getElementById('mc_tgtmoist').value/100;
-  const curPI=+document.getElementById('mc_pi').value;
-  const tgtPI=+document.getElementById('mc_tgtpi').value;
-  const price=+document.getElementById('mc_price').value;
-  // Current extraction estimate
-  var curExt=0.93+0.0017*(curPI-80)+0.002*((curImb-200)/10);
-  curExt=Math.min(0.99,Math.max(0.90,curExt));
-  var tgtExt=0.93+0.0017*(tgtPI-80)+0.002*((tgtImb-200)/10);
-  tgtExt=Math.min(0.99,Math.max(0.90,tgtExt));
-  var sucInCane=tcd*polc;
-  var curSuc=sucInCane*curExt;
-  var tgtSuc=sucInCane*tgtExt;
-  var gainSuc=(tgtSuc-curSuc);
-  var gainMoney=gainSuc*price;
-  // Bagasse analysis
-  var curBag=tcd*fib/(1-curMoist)*0.95;
-  var tgtBag=tcd*fib/(1-tgtMoist)*0.95;
-  var curGCV=(18600*(1-curMoist)-2257*curMoist)/1000;
-  var tgtGCV=(18600*(1-tgtMoist)-2257*tgtMoist)/1000;
-  var steamGain=(tgtBag*tgtGCV-curBag*curGCV)*0.4; // approx kg steam per MJ
-  // Display
-  document.getElementById('mc_r1').textContent=fmt(curExt*100)+' → '+fmt(tgtExt*100);
-  document.getElementById('mc_r2').textContent=fmt(gainSuc);
-  document.getElementById('mc_r3').textContent=fmt(gainMoney/1e6);
-  document.getElementById('mc_r4').textContent=fmt(curGCV)+' → '+fmt(tgtGCV);
-  var mci='';
-  if(gainSuc>0) mci+='<div style="margin-top:8px;padding:10px;border-radius:8px;background:var(--green-bg);border-left:4px solid var(--green)">✅ <b>ถ้าปรับปรุงตามเป้า:</b> น้ำตาลเพิ่ม <b>'+fmt(gainSuc)+' t/d</b> = <b style="color:var(--green)">'+fmt(gainMoney/1e6)+' ล้าน฿/วัน</b></div>';
-  if(tgtImb>curImb) mci+='<div style="margin-top:4px;padding:8px;border-radius:6px;background:var(--blue-bg);border-left:3px solid var(--blue)">💧 เพิ่ม Imbibition '+curImb+'% → '+tgtImb+'% (+'+fmt(tgtImb-curImb)+'%) → Extraction เพิ่ม ~'+fmt((tgtImb-curImb)/10*0.2)+'%</div>';
-  if(tgtPI>curPI) mci+='<div style="margin-top:4px;padding:8px;border-radius:6px;background:var(--amber-bg);border-left:3px solid var(--amber)">⚙️ เพิ่ม PI '+curPI+' → '+tgtPI+' (+'+fmt(tgtPI-curPI)+') → Extraction เพิ่ม ~'+fmt((tgtPI-curPI)*0.17)+'%</div>';
-  if(tgtMoist<curMoist) mci+='<div style="margin-top:4px;padding:8px;border-radius:6px;background:rgba(251,146,60,.08);border-left:3px solid var(--orange)">🔥 ลด Moisture '+fmt(curMoist*100)+'% → '+fmt(tgtMoist*100)+'% → GCV เพิ่ม '+fmt(tgtGCV-curGCV)+' MJ/kg → Steam เพิ่ม ~'+fmt(steamGain)+' kg/h</div>';
-  document.getElementById('mc_ex').innerHTML=mci;
-}
-
-// Calc: Evaporation
-function e1(){
-  const j=+document.getElementById('e1j').value,bi=+document.getElementById('e1bi').value/100,
-  bo=+document.getElementById('e1bo').value/100,n=+document.getElementById('e1n').value;
-  const syrup=j*bi/bo, evap=j-syrup;
-  const sf={3:0.40,4:0.32,5:0.28}; const steam=evap*(sf[n]||0.28);
-  const bpe=0.01*Math.pow(bo*100,2);
-  document.getElementById('e1r1').textContent=fmt(evap);
-  document.getElementById('e1r2').textContent=fmt(syrup);
-  document.getElementById('e1r3').textContent=fmt(steam);
-  document.getElementById('e1r4').textContent=fmt(bpe);
-  const steamCost=steam*300; // ~300 ฿/t steam approx
-  const n5eff=evap*0.28, n4eff=evap*0.32, saving=(n4eff-n5eff)*300*24;
-  var ei='';
-  var syBx=bo*100;
-  if(syBx>=60&&syBx<=68) ei='<div style="margin-top:8px;padding:8px;border-radius:6px;background:var(--green-bg);border-left:3px solid var(--green)">✅ <b>Syrup Brix '+fmt(syBx)+'%</b> อยู่ในเกณฑ์ดี (60-68%) — Pan จะเคี่ยวได้ง่าย ประหยัดเวลา</div>';
-  else if(syBx<60) ei='<div style="margin-top:8px;padding:8px;border-radius:6px;background:rgba(245,158,11,.1);border-left:3px solid var(--amber)">⚠ <b>Syrup Brix '+fmt(syBx)+'% ต่ำ!</b> (<60%) Pan ต้องระเหยน้ำเพิ่มเอง → สิ้นเปลืองไอน้ำ + เวลาเคี่ยวนานขึ้น</div>';
-  else ei='<div style="margin-top:8px;padding:8px;border-radius:6px;background:var(--red-bg);border-left:3px solid var(--red)">🔴 <b>Syrup Brix '+fmt(syBx)+'% สูงเกิน!</b> (>68%) เสี่ยง Scaling หนัก + ไหลไม่สะดวก ลด Brix ออก</div>';
-  if(n<5) ei+='<div style="margin-top:4px;padding:8px;border-radius:6px;background:var(--blue-bg);border-left:3px solid var(--blue)">💡 ใช้ '+n+'-Effect → ถ้าเพิ่มเป็น 5-Effect จะประหยัด Steam ~'+(n==3?'30':'12')+'%</div>';
-  document.getElementById('e1ex').innerHTML='ระเหยน้ำ '+fmt(evap/j*100)+'% | '+n+'-Effect ใช้ไอน้ำ ~'+fmt(sf[n]*100)+'% ของน้ำที่ระเหย | BPE ที่ Syrup '+bo*100+'% Brix = '+fmt(bpe)+'°C | <b style="color:var(--amber)">Steam cost ~'+fmt(steamCost*24/1e6)+' ล้าน฿/วัน</b>'+(n<5?' | <span style="color:var(--green)">ถ้าเพิ่มเป็น 5-Effect ประหยัด ~'+fmt(saving/1e6)+' ล้าน฿/วัน</span>':'')+ei;
-}
-
-// Production Manager — E2E Calculator & Loss Analysis
-function ee2(){
-  // === INPUT VALUES ===
-  const tcd=+document.getElementById('ee2_tcd_in').value;
-  const polc=+document.getElementById('ee2_polc').value/100;
-  const fib=+document.getElementById('ee2_fib').value/100;
-  const ccs=+document.getElementById('ee2_ccs').value;
-  const mjbx=+document.getElementById('ee2_mjbx').value/100;
-  const mjpur=+document.getElementById('ee2_mjpur').value/100;
-  const burnt=+document.getElementById('ee2_burnt').value/100;
-  const pi=+document.getElementById('ee2_pi').value;
-  const ext=+document.getElementById('ee2_ext').value/100;
-  const imb=+document.getElementById('ee2_imb').value;
-  const polbag=+document.getElementById('ee2_polbag').value/100;
-  const bagpc=+document.getElementById('ee2_bagpc').value/100;
-  const purdrop=+document.getElementById('ee2_purdrop').value/100;
-  const sybx=+document.getElementById('ee2_sybx').value/100;
-  const nEff=+document.getElementById('ee2_neff').value;
-  const fmp=+document.getElementById('ee2_fmp').value;
-  const fmpc=+document.getElementById('ee2_fmpc').value/100;
-  const bhr=+document.getElementById('ee2_bhr').value/100;
-  const lbag=+document.getElementById('ee2_lbag').value/100;
-  const lfc=+document.getElementById('ee2_lfc').value/100;
-  const lfm=+document.getElementById('ee2_lfm').value/100;
-  const lud=+document.getElementById('ee2_lud').value/100;
-  const price=+document.getElementById('ee2_price').value;
-  const molprice=+document.getElementById('ee2_molprice').value;
-  const caneprice=+document.getElementById('ee2_caneprice').value;
-  const days=+document.getElementById('ee2_days').value;
-  // Energy inputs
-  const beff=+document.getElementById('ee2_beff').value/100;
-  const stpress=+document.getElementById('ee2_stpress').value;
-  const bagmoist=+document.getElementById('ee2_bagmoist').value/100;
-  const elecprice=+document.getElementById('ee2_elecprice').value;
-  const elecsell=+document.getElementById('ee2_elecsell').value;
-  const limecost=+document.getElementById('ee2_limecost').value;
-  const chemcost=+document.getElementById('ee2_chemcost').value;
-
-  // === MASS BALANCE ===
-  const sucInCane=tcd*polc;
-  const bagasse=tcd*bagpc;
-  const fiber=tcd*fib;
-  const sucInBag=bagasse*polbag;
-  const sucExtracted=sucInCane*ext;
-  const mjFlow=tcd*(1-fib)+fiber*(imb/100)*0.75;
-  const mjPol=sucExtracted;
-  const mjSolids=mjFlow*mjbx;
-  const clJPur=(mjpur-purdrop)*100;
-  const clJPol=mjPol*0.998;
-  const syrupFlow=mjFlow*mjbx/sybx;
-  const evapWater=mjFlow-syrupFlow;
-  const sf={3:0.40,4:0.32,5:0.28};
-  const steamEvap=evapWater*(sf[nEff]||0.28);
-  const syrupPol=clJPol*0.997;
-  const syrupPur=clJPur;
-  const sugarFromBH=syrupPol*bhr;
-  const centEff=0.985;
-  const sugarFinal=sugarFromBH*centEff;
-  const finalMol=tcd*fmpc;
-  const overallRecov=sucInCane>0?(sugarFinal/sucInCane*100):0;
-  const rendement=tcd>0?(sugarFinal/tcd*100):0;
-
-  // === LOSS CALCULATIONS (as % of Pol in Cane) ===
-  const lossBag_t=sucInCane*lbag;
-  const lossFC_t=sucInCane*lfc;
-  const lossFM_t=sucInCane*lfm;
-  const lossUD_t=sucInCane*lud;
-  const totalLossPc=lbag+lfc+lfm+lud;
-  const totalLoss_t=lossBag_t+lossFC_t+lossFM_t+lossUD_t;
-
-  // Targets (from Daily Report)
-  const tBag=0.03, tFC=0.0033, tFM=0.0772, tUD=0.0549;
-  const tTotal=tBag+tFC+tFM+tUD;
-  const gapBag=lbag-tBag, gapFC=lfc-tFC, gapFM=lfm-tFM, gapUD=lud-tUD;
-  const gapTotal=totalLossPc-tTotal;
-
-  // Loss to money
-  const lossBag_b=lossBag_t*price;
-  const lossFC_b=lossFC_t*price;
-  const lossFM_b=lossFM_t*price;
-  const lossUD_b=lossUD_t*price;
-  const totalLoss_b=totalLoss_t*price;
-
-  // Opportunity (gap × sucInCane × price)
-  const oppBag_t=Math.max(0,gapBag)*sucInCane;
-  const oppFC_t=Math.max(0,gapFC)*sucInCane;
-  const oppFM_t=Math.max(0,gapFM)*sucInCane;
-  const oppUD_t=Math.max(0,gapUD)*sucInCane;
-  const oppTotal_t=oppBag_t+oppFC_t+oppFM_t+oppUD_t;
-  const oppTotal_b=oppTotal_t*price;
-
-  // === DISPLAY: Summary Results ===
-  document.getElementById('ee2_sugar').textContent=fmt(sugarFinal);
-  document.getElementById('ee2_yield').textContent=fmt(rendement);
-  document.getElementById('ee2_recov').textContent=fmt(overallRecov);
-  const revSugarDay=sugarFinal*price;
-  document.getElementById('ee2_rev').textContent=fmt(revSugarDay/1e6);
-
-  // === DISPLAY: Mass Balance Table ===
-  const mb=document.getElementById('ee2_mass').querySelector('tbody');
-  const tgExt='97.5%', tgPolBag='<1.61%', tgImb='280%', tgBHR='86.04%', tgFMP='<33.1%';
-  function vs(actual,target,unit,lower){
-    const diff=actual-target;
-    const ok=lower?(diff<=0):(diff>=0);
-    return '<span style="color:var(--'+(ok?'green':'red')+')">'+fmt(actual)+unit+' '+(ok?'✓':'⚠ gap '+(diff>0?'+':'')+fmt(diff)+unit)+'</span>';
-  }
-  mb.innerHTML=
-  '<tr><td>1. อ้อยเข้า</td><td>Cane</td><td><b>'+tcd.toLocaleString()+'</b></td><td>'+fmt(sucInCane)+'</td><td>Pol '+polc*100+'% | Fiber '+fib*100+'% | CCS '+ccs+'</td><td>อ้อยไฟไหม้ '+vs(burnt*100,3,'%',true)+'</td></tr>'+
-  '<tr><td>2. เตรียมอ้อย</td><td>Shredded Cane</td><td>'+tcd.toLocaleString()+'</td><td>'+fmt(sucInCane)+'</td><td>PI = '+pi+'</td><td>'+vs(pi,92,'',false)+'</td></tr>'+
-  '<tr><td>3. ลูกหีบ</td><td>Mixed Juice</td><td><b>'+fmt(mjFlow)+'</b></td><td>'+fmt(sucExtracted)+'</td><td>Ext '+ext*100+'% | Imb '+imb+'%/fib</td><td>'+vs(ext*100,97.5,'%',false)+'</td></tr>'+
-  '<tr><td></td><td>Bagasse</td><td>'+fmt(bagasse)+'</td><td><span class="hr">-'+fmt(sucInBag)+'</span></td><td>Pol%Bag '+fmt(polbag*100)+'%</td><td>'+vs(polbag*100,1.61,'%',true)+'</td></tr>'+
-  '<tr><td>4. ทำใส</td><td>Clear Juice</td><td>'+fmt(mjFlow*0.97)+'</td><td>'+fmt(clJPol)+'</td><td>Purity '+fmt(clJPur)+'% | Pur Drop '+fmt(purdrop*100)+'%</td><td>Pur Drop '+vs(purdrop*100,1.5,'%',true)+'</td></tr>'+
-  '<tr><td>5. หม้อต้ม</td><td>Syrup</td><td><b>'+fmt(syrupFlow)+'</b></td><td>'+fmt(syrupPol)+'</td><td>Brix '+(sybx*100)+'% | '+nEff+'-Effect | Evap '+fmt(evapWater)+' t/d</td><td>Steam ~'+fmt(steamEvap)+' t/d</td></tr>'+
-  '<tr><td>6. หม้อเคี่ยว+ปั่น</td><td>Raw Sugar</td><td><b class="hg">'+fmt(sugarFinal)+'</b></td><td class="hg"><b>'+fmt(sugarFinal)+'</b></td><td>BHR '+fmt(bhr*100)+'% | FMP '+fmp+'%</td><td>BHR '+vs(bhr*100,86.04,'%',false)+'</td></tr>'+
-  '<tr><td></td><td>Final Molasses</td><td>'+fmt(finalMol)+'</td><td><span class="hr">-'+fmt(lossFM_t)+'</span></td><td>Purity '+fmp+'%</td><td>FMP '+vs(fmp,33.1,'%',true)+'</td></tr>';
-
-  // === DISPLAY: Loss Analysis Table ===
-  const lb=document.getElementById('ee2_loss').querySelector('tbody');
-  function lrow(name,cause,pc,target){
-    const t=sucInCane*pc;
-    const b=t*price;
-    const by=b*days/1e6;
-    const g=pc-target;
-    const gCol=g>0.001?'var(--red)':'var(--green)';
-    return '<tr><td><b>'+name+'</b></td><td style="font-size:11px">'+cause+'</td><td>'+fmt(pc*100)+'%</td><td>'+fmt(t)+'</td><td style="color:var(--red)">'+b.toLocaleString('th-TH',{maximumFractionDigits:0})+'</td><td style="color:var(--red)">'+fmt(by)+'</td><td>'+fmt(target*100)+'%</td><td style="color:'+gCol+'">'+(g>0?'+':'')+fmt(g*100)+'%</td></tr>';
-  }
-  lb.innerHTML=
-  lrow('Bagasse Loss','Pol%Bagasse สูง → สกัดไม่หมด<br>สาเหตุ: Imb ต่ำ(239% vs 280%), PI ต่ำ, ลูกกลิ้งสึก, Hydraulic ต่ำ',lbag,tBag)+
-  lrow('Filter Cake Loss','Sucrose ติดไปกับกากตะกอน<br>สาเหตุ: Mud ข้น, Rotary vacuum filter ไม่ดี, Wash water ไม่พอ',lfc,tFC)+
-  lrow('Final Molasses Loss','น้ำตาลที่ recover ไม่ได้ ติดอยู่ในกากน้ำตาล<br>สาเหตุ: FMP สูง(36.6%>33.1%), BHR ต่ำ, Non-sucrose สูง',lfm,tFM)+
-  lrow('Undetermined Loss','หาสาเหตุไม่ได้ชัดเจน<br>สาเหตุ: Inversion(pH/temp), Entrainment, Leak, Dextran, Sampling error',lud,tUD);
-
-  // Total Loss display
-  document.getElementById('ee2_totloss').textContent=fmt(totalLossPc*100)+'%';
-  document.getElementById('ee2_totloss_t').textContent=fmt(totalLoss_t);
-  document.getElementById('ee2_totloss_b').textContent=totalLoss_b.toLocaleString('th-TH',{maximumFractionDigits:0});
-  document.getElementById('ee2_totloss_y').textContent=fmt(totalLoss_b*days/1e6);
-
-  // Opportunity display
-  document.getElementById('ee2_opp_t').textContent=fmt(oppTotal_t);
-  document.getElementById('ee2_opp_b').textContent=oppTotal_b.toLocaleString('th-TH',{maximumFractionDigits:0});
-  document.getElementById('ee2_opp_y').textContent=fmt(oppTotal_b*days/1e6);
-
-  // === DISPLAY: Suggestions ===
-  let sug=[];
-  const sugStyle='padding:16px 20px;margin:10px 0;border-radius:14px;font-size:12px;line-height:1.8;box-shadow:0 2px 6px rgba(0,40,20,.04);';
-  if(gapBag>0.001) sug.push('<div style="'+sugStyle+'background:rgba(239,68,68,.08);border-left:4px solid var(--red)"><b>🔴 Bagasse Loss สูงกว่า Target '+fmt(gapBag*100)+'%</b> → น้ำตาลหาย '+fmt(oppBag_t)+' t/d = <b>'+fmt(oppBag_t*price/1e6)+' ล้าน฿/วัน</b><br>แก้ไข: เพิ่ม Imbibition จาก 239% เป็น 280%/fiber (+41%), ปรับ PI ให้ ≥94, ตรวจลูกกลิ้ง/Hydraulic pressure</div>');
-  if(gapFM>0.001) sug.push('<div style="'+sugStyle+'background:rgba(239,68,68,.08);border-left:4px solid var(--red)"><b>🔴 Final Molasses Loss สูงกว่า Target '+fmt(gapFM*100)+'%</b> → น้ำตาลหาย '+fmt(oppFM_t)+' t/d = <b>'+fmt(oppFM_t*price/1e6)+' ล้าน฿/วัน</b><br>แก้ไข: ลด FMP จาก '+fmp+'% → <33.1% (เพิ่มรอบเคี่ยว C-strike, ปรับ Seed size, ลดอุณหภูมิ Pan), ปรับปรุง BHR จาก '+fmt(bhr*100)+'% → 86%</div>');
-  if(gapUD>0.001) sug.push('<div style="'+sugStyle+'background:var(--cal);border-left:4px solid var(--amber)"><b>🟡 Undetermined Loss สูงกว่า Target '+fmt(gapUD*100)+'%</b> → น้ำตาลหาย '+fmt(oppUD_t)+' t/d = <b>'+fmt(oppUD_t*price/1e6)+' ล้าน฿/วัน</b><br>แก้ไข: ลด Inversion (ควบคุม pH 7.0-7.2 ทุกจุด), ป้องกัน Entrainment ที่ Evaporator, ซ่อมรอยรั่ว, ลดอ้อยไฟไหม้ (Dextran), ตรวจสอบ Sampling</div>');
-  if(gapFC>0.001) sug.push('<div style="'+sugStyle+'background:var(--cbl);border-left:4px solid var(--blue)"><b>🔵 Filter Cake Loss สูงกว่า Target '+fmt(gapFC*100)+'%</b> → น้ำตาลหาย '+fmt(oppFC_t)+' t/d = <b>'+fmt(oppFC_t*price/1e6)+' ล้าน฿/วัน</b><br>แก้ไข: เพิ่ม Wash water ใน Rotary Vacuum Filter, ปรับสุญญากาศ, ลด Mud dens</div>');
-  if(burnt*100>3) sug.push('<div style="'+sugStyle+'background:var(--cal);border-left:4px solid var(--amber)"><b>🟡 อ้อยไฟไหม้ '+fmt(burnt*100)+'% (Target <3%)</b><br>ผลกระทบ: Dextran สูง → เพิ่ม Undetermined Loss, ลด Purity 0.5-2%, เพิ่มสี ICUMSA, ลดอายุเก็บน้ำตาล</div>');
-  if(imb<270) sug.push('<div style="'+sugStyle+'background:var(--cbl);border-left:4px solid var(--blue)"><b>🔵 Imbibition ต่ำ '+imb+'% vs มาตรฐาน 280%</b><br>เพิ่ม Imb ทุก 10% → Extraction เพิ่ม ~0.2-0.4% → น้ำตาลเพิ่ม ~'+fmt(sucInCane*0.003)+' t/d = '+fmt(sucInCane*0.003*price/1e6)+' ล้าน฿/วัน</div>');
-  if(sug.length===0) sug.push('<div style="'+sugStyle+'background:var(--cgl);border-left:4px solid var(--green)"><b>✅ ผลิตได้ตาม Target แล้ว!</b> ทุกค่า Loss อยู่ในเกณฑ์</div>');
-  const totalOppY=oppTotal_b*days/1e6;
-  if(totalOppY>0) sug.unshift('<div style="'+sugStyle+'background:linear-gradient(135deg,rgba(239,68,68,.12),rgba(245,158,11,.08));border:2px solid var(--red);font-size:13px"><b style="font-size:16px;color:var(--red)">โอกาสรวม: ถ้าปรับปรุง Loss ทุกจุดให้ถึง Target → น้ำตาลเพิ่ม '+fmt(oppTotal_t)+' t/d → รายได้เพิ่ม '+fmt(totalOppY)+' ล้าน฿/ปี ('+days+' วัน)</b></div>');
-  document.getElementById('ee2_suggest').innerHTML=sug.join('');
-
-  // === ENERGY CALCULATIONS ===
-  const bagForFuel=bagasse*(1-0); // all bagasse to boiler
-  const steamRatio=stpress>=40?2.4:stpress>=25?2.6:2.8;
-  const steamProd=bagForFuel*steamRatio*beff;
-  const kwhPerTon=stpress>=40?110:stpress>=25?90:70;
-  const powerProd=tcd*kwhPerTon; // kWh/day
-  const factoryUse=tcd*25; // ~25 kWh/t cane internal use
-  const surplusPower=Math.max(0,powerProd-factoryUse);
-  const elecRevDay=surplusPower*elecsell;
-  const elecCostDay=factoryUse*elecprice; // internal usage cost (opportunity)
-  const limeDose=0.65; // kg/t cane
-  const limeCostDay=tcd*limeDose/1000*limecost;
-  const chemCostDay=tcd*chemcost;
-
-  // === DISPLAY: Revenue Table ===
-  const mt=document.getElementById('ee2_money').querySelector('tbody');
-  const caneCostDay=tcd*ccs*caneprice/100;
-  const molRevDay=finalMol*molprice;
-  const totalRev=revSugarDay+molRevDay+elecRevDay;
-  const totalCost=caneCostDay+limeCostDay+chemCostDay;
-  const grossProfit=totalRev-totalCost;
-  mt.innerHTML=
-  '<tr style="color:var(--green)"><td><b>รายได้น้ำตาลดิบ</b></td><td>'+fmt(sugarFinal)+'</td><td>'+price.toLocaleString()+'</td><td><b>'+revSugarDay.toLocaleString('th-TH',{maximumFractionDigits:0})+'</b></td><td>'+fmt(revSugarDay*days/1e6)+'</td></tr>'+
-  '<tr style="color:var(--amber)"><td>รายได้โมลาส</td><td>'+fmt(finalMol)+'</td><td>'+molprice.toLocaleString()+'</td><td>'+molRevDay.toLocaleString('th-TH',{maximumFractionDigits:0})+'</td><td>'+fmt(molRevDay*days/1e6)+'</td></tr>'+
-  '<tr style="color:var(--cyan)"><td>รายได้ขายไฟฟ้า Surplus</td><td>'+fmt(surplusPower/1000)+' MWh</td><td>'+elecsell+' ฿/kWh</td><td>'+elecRevDay.toLocaleString('th-TH',{maximumFractionDigits:0})+'</td><td>'+fmt(elecRevDay*days/1e6)+'</td></tr>'+
-  '<tr style="border-top:2px solid var(--bdr);color:var(--green)"><td><b>รวมรายได้</b></td><td colspan="2"></td><td><b>'+totalRev.toLocaleString('th-TH',{maximumFractionDigits:0})+'</b></td><td><b>'+fmt(totalRev*days/1e6)+'</b></td></tr>'+
-  '<tr style="color:var(--red)"><td>ต้นทุนอ้อย (CCS-based)</td><td>'+tcd.toLocaleString()+' × CCS '+ccs+'</td><td>'+caneprice.toLocaleString()+'/t CCS</td><td>-('+caneCostDay.toLocaleString('th-TH',{maximumFractionDigits:0})+')</td><td>-('+fmt(caneCostDay*days/1e6)+')</td></tr>'+
-  '<tr style="color:var(--red)"><td>ต้นทุนปูนขาว</td><td>'+fmt(tcd*limeDose/1000)+' t/d</td><td>'+limecost.toLocaleString()+' ฿/t</td><td>-('+limeCostDay.toLocaleString('th-TH',{maximumFractionDigits:0})+')</td><td>-('+fmt(limeCostDay*days/1e6)+')</td></tr>'+
-  '<tr style="color:var(--red)"><td>ต้นทุน Chemicals อื่น</td><td>'+tcd.toLocaleString()+' t/d</td><td>'+chemcost+' ฿/t cane</td><td>-('+chemCostDay.toLocaleString('th-TH',{maximumFractionDigits:0})+')</td><td>-('+fmt(chemCostDay*days/1e6)+')</td></tr>'+
-  '<tr style="border-top:3px solid var(--bdr)"><td><b style="font-size:14px">กำไรขั้นต้น</b></td><td colspan="2"><span style="font-size:11px;color:var(--txt3)">Steam '+fmt(steamProd)+' t/d | Power '+fmt(powerProd/1000)+' MWh/d | Surplus '+fmt(surplusPower/1000)+' MWh/d</span></td><td><b style="font-size:14px;color:'+(grossProfit>=0?'var(--green)':'var(--red)')+'">'+grossProfit.toLocaleString('th-TH',{maximumFractionDigits:0})+'</b></td><td><b style="color:'+(grossProfit>=0?'var(--green)':'var(--red)')+'">'+fmt(grossProfit*days/1e6)+'</b></td></tr>';
-
-  document.getElementById('ee2_profit').textContent=grossProfit.toLocaleString('th-TH',{maximumFractionDigits:0});
-  document.getElementById('ee2_profity').textContent=fmt(grossProfit*days/1e6);
-}
-
-// Steam calc
-function st(){
-  const cane=+document.getElementById('st_cane').value,fib=+document.getElementById('st_fib').value/100,
-  moist=+document.getElementById('st_moist').value/100,beff=+document.getElementById('st_beff').value/100,
-  press=+document.getElementById('st_press').value;
-  const bagasse=cane*fib/(1-moist)*0.95;
-  const gcv=18600*(1-moist)-2257*moist; // kJ/kg approx
-  const steamRatio=press>=40?2.4:press>=25?2.6:2.8;
-  const steam=bagasse*steamRatio*beff;
-  const kwhPerTon=press>=40?110:press>=25?90:70;
-  const power=cane*kwhPerTon;
-  document.getElementById('st_r1').textContent=fmt(bagasse);
-  document.getElementById('st_r2').textContent=fmt(steam);
-  document.getElementById('st_r3').textContent=fmt(power);
-  document.getElementById('st_r4').textContent=kwhPerTon;
-  var si='';
-  var steamPC=cane>0?(steam/cane*100):0;
-  if(steamPC>55) si='<div style="margin-top:8px;padding:8px;border-radius:6px;background:var(--green-bg);border-left:3px solid var(--green)">✅ <b>Steam/Cane '+fmt(steamPC)+'%</b> เพียงพอ (>55%) — มี Surplus ขายไฟได้</div>';
-  else if(steamPC>45) si='<div style="margin-top:8px;padding:8px;border-radius:6px;background:rgba(245,158,11,.1);border-left:3px solid var(--amber)">⚠ <b>Steam/Cane '+fmt(steamPC)+'%</b> พอดี (45-55%) — อาจไม่เหลือขายไฟ ตรวจ Boiler eff + Moisture</div>';
-  else si='<div style="margin-top:8px;padding:8px;border-radius:6px;background:var(--red-bg);border-left:3px solid var(--red)">🔴 <b>Steam/Cane '+fmt(steamPC)+'% ไม่พอ!</b> (<45%) — อาจต้องซื้อเชื้อเพลิงเสริม ลด Moisture, เพิ่ม Boiler eff</div>';
-  if(moist>0.52) si+='<div style="margin-top:4px;padding:8px;border-radius:6px;background:var(--red-bg);border-left:3px solid var(--red)">⚠ Bagasse Moisture '+fmt(moist*100)+'% สูง! ลด 2% → GCV เพิ่ม ~0.4 MJ/kg → Steam เพิ่ม ~'+fmt(bagasse*0.05)+' t/h</div>';
-  if(press<30) si+='<div style="margin-top:4px;padding:8px;border-radius:6px;background:var(--blue-bg);border-left:3px solid var(--blue)">💡 Steam pressure '+press+' bar — ถ้าเพิ่มเป็น 40+ bar จะผลิตไฟฟ้าเพิ่ม ~57% (110 vs 70 kWh/t)</div>';
-  document.getElementById('st_ex').innerHTML='Bagasse GCV ≈'+fmt(gcv/1000)+' MJ/kg | Steam ratio '+steamRatio+' kg steam/kg bagasse | ที่ '+press+' bar → ~'+kwhPerTon+' kWh/t cane'+si;
-}
-
-// Calc: Clarification — Inversion Loss
-function cl1(){
-  const tau=+document.getElementById('cl1_tau').value, ph=+document.getElementById('cl1_ph').value,
-  temp=+document.getElementById('cl1_temp').value, suc=+document.getElementById('cl1_suc').value;
-  const loss=100*(5.79e-5*tau*Math.pow(10,ph-2.68))*(1+0.005*(temp-100));
-  const lossKg=suc*1000*loss/100;
-  document.getElementById('cl1_r1').textContent=fmt(loss);
-  document.getElementById('cl1_r2').textContent=fmt(lossKg);
-  document.getElementById('cl1_r3').textContent=fmt(lossKg*24/1000);
-  const lossDay2=lossKg*24/1000, lossMoney=lossDay2*16000;
-  var ci='';
-  if(loss<0.01) ci='<div style="margin-top:8px;padding:8px;border-radius:6px;background:var(--green-bg);border-left:3px solid var(--green)">✅ <b>ดีมาก!</b> Inversion loss ต่ำมาก — pH และ Residence time เหมาะสม</div>';
-  else if(loss<0.05) ci='<div style="margin-top:8px;padding:8px;border-radius:6px;background:rgba(245,158,11,.1);border-left:3px solid var(--amber)">⚠ <b>ระวัง</b> Inversion loss เริ่มสูง — ตรวจ pH (ควร 7.0-7.2) และลด Residence time</div>';
-  else ci='<div style="margin-top:8px;padding:8px;border-radius:6px;background:var(--red-bg);border-left:3px solid var(--red)">🔴 <b>สูงมาก!</b> สูญเสียน้ำตาลจาก Inversion มาก — ต้องปรับ pH ทันที หรือลดเวลาในถังทำใส</div>';
-  if(ph<6.8) ci+='<div style="margin-top:4px;padding:8px;border-radius:6px;background:var(--red-bg);border-left:3px solid var(--red)">⚠ pH '+ph+' ต่ำเกิน! Inversion จะเร่งขึ้นมาก ต้องเพิ่มปูนขาว</div>';
-  document.getElementById('cl1_ex').innerHTML='ที่ pH '+ph+', '+temp+'°C, '+tau+' นาที → สูญเสีย '+fmt(loss)+' g/100g sucrose | <b style="color:var(--red)">ต่อวัน = '+fmt(lossDay2)+' ตัน = '+fmt(lossMoney/1e6)+' ล้าน฿/วัน ('+fmt(lossMoney*120/1e6)+' ล้าน฿/ปี)</b> | ถ้าลด residence time ครึ่งหนึ่ง → <span style="color:var(--green)">ประหยัด '+fmt(lossMoney/2/1e6)+' ล้าน฿/วัน</span>'+ci;
-}
-
-// Calc: Clarification — SRI Sizing
-function cl2(){
-  const flow=+document.getElementById('cl2_flow').value, uo=+document.getElementById('cl2_uo').value;
-  const A=33.3*flow/uo*2; // design fraction 0.5 means multiply by 2
-  const dia=Math.sqrt(4*A/Math.PI);
-  const resMin=83.3/uo*60*2.5; // simplified
-  document.getElementById('cl2_r1').textContent=fmt(A);
-  document.getElementById('cl2_r2').textContent=fmt(dia);
-  document.getElementById('cl2_r3').textContent=fmt(resMin);
-  document.getElementById('cl2_ex').innerHTML='SRI method: A = 33.3 × Vjc / u₀ / design_fraction | Dia = √(4A/π) | สูง 2.5m → Residence ≈ '+fmt(resMin)+' นาที';
-}
-
-// Calc: Clarification — Lime
-function cl3(){
-  const cane=+document.getElementById('cl3_cane').value, dose=+document.getElementById('cl3_dose').value,
-  p2o5=+document.getElementById('cl3_p2o5').value, jcr=+document.getElementById('cl3_jcr').value;
-  const lime=cane*dose;
-  const juice=cane*jcr;
-  const p2o5_kg=juice*p2o5/1e6*1000;
-  document.getElementById('cl3_r1').textContent=fmt(lime);
-  document.getElementById('cl3_r2').textContent=fmt(lime*24/1000);
-  document.getElementById('cl3_r3').textContent=fmt(p2o5_kg);
-}
-
-// Calc: Evaporation — Heating Area
-function e2(){
-  const evap=+document.getElementById('e2_evap').value, k=+document.getElementById('e2_k').value,
-  dt=+document.getElementById('e2_dt').value, n=+document.getElementById('e2_n').value;
-  const evapPerEffect=evap/n;
-  const Q=evapPerEffect*1000*2257/3600; // kW (latent heat ~2257 kJ/kg)
-  const A=Q/(k*dt);
-  document.getElementById('e2_r1').textContent=fmt(Q);
-  document.getElementById('e2_r2').textContent=fmt(A);
-  document.getElementById('e2_r3').textContent=fmt(A*n);
-  document.getElementById('e2_ex').innerHTML='น้ำระเหย/Effect = '+fmt(evapPerEffect)+' t/h | Q = '+fmt(Q)+' kW | A/Effect = '+fmt(A)+' m² | A total = '+fmt(A*n)+' m²';
-}
-
-// Calc: Crystallization — BHR
-function cr1(){
-  const sp=+document.getElementById('cr1_sp').value, mp=+document.getElementById('cr1_mp').value,
-  sf=+document.getElementById('cr1_sf').value, bx=+document.getElementById('cr1_bx').value;
-  const bhr=(sp-mp)/(100-mp)/sp*10000;
-  const sucInSyrup=sf*bx/100*sp/100;
-  const sugarOut=sucInSyrup*bhr/100;
-  const sugarLost=sucInSyrup-sugarOut;
-  document.getElementById('cr1_r1').textContent=fmt(bhr);
-  document.getElementById('cr1_r2').textContent=fmt(sucInSyrup);
-  document.getElementById('cr1_r3').textContent=fmt(sugarOut);
-  document.getElementById('cr1_r4').textContent=fmt(sugarLost);
-  const lostDay=sugarLost*24, lostMoney=lostDay*16000, bhrTgt=86.04;
-  const extraBHR=sucInSyrup*(bhrTgt/100)-sugarOut, extraDay=extraBHR>0?extraBHR*24:0;
-  var ri='';
-  if(bhr>=86) ri='<div style="margin-top:8px;padding:8px;border-radius:6px;background:var(--green-bg);border-left:3px solid var(--green)">✅ <b>BHR '+fmt(bhr)+'% ดีมาก!</b> (≥86%) — การเคี่ยวมีประสิทธิภาพสูง สูญเสียในโมลาสน้อย</div>';
-  else if(bhr>=80) ri='<div style="margin-top:8px;padding:8px;border-radius:6px;background:rgba(245,158,11,.1);border-left:3px solid var(--amber)">⚠ <b>BHR '+fmt(bhr)+'%</b> (80-86%) — พอใช้ แต่ยังปรับปรุงได้ ลอง: ลด FMP, เพิ่มรอบ C-strike, ปรับ Seed size</div>';
-  else ri='<div style="margin-top:8px;padding:8px;border-radius:6px;background:var(--red-bg);border-left:3px solid var(--red)">🔴 <b>BHR '+fmt(bhr)+'% ต่ำมาก!</b> (<80%) น้ำตาลหายไปในโมลาสเยอะมาก ตรวจ: FMP, การ Seeding, อุณหภูมิ Pan, จำนวน Strike</div>';
-  if(mp>35) ri+='<div style="margin-top:4px;padding:8px;border-radius:6px;background:var(--red-bg);border-left:3px solid var(--red)">⚠ Final Molasses Purity '+mp+'% สูง (>35%) → น้ำตาล recover ไม่ได้เหลือมาก ต้องเพิ่ม C-strike</div>';
-  document.getElementById('cr1_ex').innerHTML='BHR = '+fmt(bhr)+'% | <b style="color:var(--red)">น้ำตาลสูญเสียในโมลาส = '+fmt(sugarLost)+' t/h = '+fmt(lostDay)+' t/d = '+fmt(lostMoney/1e6)+' ล้าน฿/วัน ('+fmt(lostMoney*120/1e6)+' ล้าน฿/ปี)</b>'+(extraDay>0?' | <span style="color:var(--green)">ถ้า BHR=86% → น้ำตาลเพิ่ม '+fmt(extraDay)+' t/d = '+fmt(extraDay*16000/1e6)+' ล้าน฿/วัน</span>':'')+ri;
-}
-
-// Calc: Crystallization — Supersaturation Zone
-function cr2(){
-  const c=+document.getElementById('cr2_c').value, cs=+document.getElementById('cr2_cs').value;
-  const y=c/cs;
-  let zone='', color='';
-  if(y<1.0){zone='Undersaturated — ผลึกละลาย!'; color='var(--blue)';}
-  else if(y<=1.2){zone='✓ Growth Zone — ดี!'; color='var(--green)';}
-  else if(y<=1.3){zone='⚠ Metastable — เริ่มเสี่ยง'; color='var(--amber)';}
-  else{zone='✗ Labile — FALSE GRAIN!'; color='var(--red)';}
-  document.getElementById('cr2_r1').textContent=fmt(y);
-  document.getElementById('cr2_r2').textContent=zone;
-  document.getElementById('cr2_r2').style.color=color;
-}
-
-// Calc: Centrifugal — G-factor
-function cn1(){
-  const n=+document.getElementById('cn1_n').value, d=+document.getElementById('cn1_d').value;
-  const G=5.59e-4*n*n*d/1000;
-  const tipSpeed=Math.PI*d/1000*n/60;
-  const Geff=G*0.816;
-  document.getElementById('cn1_r1').textContent=fmt(G);
-  document.getElementById('cn1_r2').textContent=fmt(tipSpeed);
-  document.getElementById('cn1_r3').textContent=fmt(Geff);
-  let rating='';
-  if(G>=1000&&G<=1500)rating='✓ เหมาะสำหรับ Batch A-massecuite';
-  else if(G>1500&&G<=2700)rating='✓ เหมาะสำหรับ Continuous B/C';
-  else if(G>2700)rating='⚠ สูงมาก — ระวังผลึกแตก!';
-  else rating='⚠ ต่ำเกินไป — แยกไม่สะอาด';
-  document.getElementById('cn1_ex').innerHTML=rating+' | Tip speed '+fmt(tipSpeed)+' m/s'+(tipSpeed>100?' <b style="color:var(--red)">— เกิน 100 m/s ผลึกจะแตก!</b>':'');
-}
-
-// Calc: Centrifugal — Void Fraction
-function cn2(){
-  const e=+document.getElementById('cn2_e').value;
-  const term=Math.pow(e,3)/Math.pow(1-e,2);
-  const baseline=Math.pow(0.40,3)/Math.pow(0.60,2);
-  const pct=(term/baseline-1)*100;
-  document.getElementById('cn2_r1').textContent=fmt(term);
-  document.getElementById('cn2_r2').textContent=(pct>=0?'+':'')+pct.toFixed(1);
-}
-
-// Calc: Centrifugal — Purging
-function cn3(){
-  const mf=+document.getElementById('cn3_mf').value, nsi=+document.getElementById('cn3_nsi').value/100,
-  eta=+document.getElementById('cn3_eta').value, wash=+document.getElementById('cn3_wash').value/1000;
-  const nsIn=mf*nsi;
-  const nsRemoved=nsIn*eta;
-  const nsInSugar=nsIn*(1-eta);
-  document.getElementById('cn3_r1').textContent=fmt(nsRemoved);
-  document.getElementById('cn3_r2').textContent=fmt(nsInSugar);
-  document.getElementById('cn3_r3').textContent=fmt(wash);
-}
-
-// Machine Spec: Evaporator → Output
-function ev3(){
-  const tl=+document.getElementById('ev3_tl').value, td=+document.getElementById('ev3_td').value/1000,
-  nt=+document.getElementById('ev3_nt').value, ne=+document.getElementById('ev3_ne').value,
-  dt=+document.getElementById('ev3_dt').value, k=+document.getElementById('ev3_k').value,
-  cj=+document.getElementById('ev3_cj').value, bi=+document.getElementById('ev3_bi').value/100;
-  const aPerEffect=Math.PI*td*tl*nt;
-  const qPerEffect=k*aPerEffect*dt;
-  const evapPerEffect=qPerEffect*3600/2257/1000;
-  const totalEvap=evapPerEffect*ne;
-  const solids=cj*bi;
-  const syrupOut=cj-totalEvap;
-  const syrupBrix=syrupOut>0?(solids/syrupOut*100):0;
-  document.getElementById('ev3_r1').textContent=fmt(aPerEffect);
-  document.getElementById('ev3_r2').textContent=fmt(totalEvap);
-  document.getElementById('ev3_r3').textContent=fmt(syrupBrix);
-  document.getElementById('ev3_r4').textContent=fmt(syrupOut);
-  document.getElementById('ev3_res').style.display='block';
-  document.getElementById('ev3_ex').innerHTML='Tube area/effect = π×'+fmt(td)+'×'+tl+'×'+nt+' = '+fmt(aPerEffect)+' m² | Q = '+fmt(qPerEffect)+' kW | Evap capacity = '+fmt(totalEvap)+' t/h | <b style="color:var(--amber)">Syrup Brix = '+fmt(syrupBrix)+'%</b>'+(syrupBrix<60?' <span style="color:var(--red)">⚠ ต่ำเกิน! เพิ่ม Effect หรือ Area</span>':(syrupBrix>70?' <span style="color:var(--red)">⚠ สูงเกิน! ระวัง Scaling</span>':' ✓ ปกติ'));
-}
-
-// Machine Spec: Pan → Sugar Output
-function panCalc(){
-  const na=+document.getElementById('pan_na').value, va=+document.getElementById('pan_va').value,
-  ha=+document.getElementById('pan_ha').value, ta=+document.getElementById('pan_ta').value,
-  nb=+document.getElementById('pan_nb').value, vb=+document.getElementById('pan_vb').value,
-  tb=+document.getElementById('pan_tb').value, nc=+document.getElementById('pan_nc').value,
-  vc=+document.getElementById('pan_vc').value, tc=+document.getElementById('pan_tc').value,
-  md=+document.getElementById('pan_md').value, cc=+document.getElementById('pan_cc').value/100;
-  const strikeA=na*(60/ta)*va*md;
-  const strikeB=nb*(60/tb)*vb*md;
-  const strikeC=nc*(60/tc)*vc*md;
-  const totalMass=strikeA+strikeB+strikeC;
-  const aSugar=strikeA*cc;
-  // TCD estimate: ~12% rendement → sugar/day / 0.12
-  const tcd=(aSugar*24)/0.12;
-  document.getElementById('pan_r1').textContent=fmt(strikeA);
-  document.getElementById('pan_r2').textContent=fmt(aSugar);
-  document.getElementById('pan_r3').textContent=fmt(totalMass);
-  document.getElementById('pan_r4').textContent=fmt(tcd);
-  document.getElementById('pan_res').style.display='block';
-  document.getElementById('pan_ex').innerHTML='A-Pan: '+na+'×'+fmt(60/ta)+' strike/h × '+va+' m³ × '+md+' t/m³ = '+fmt(strikeA)+' t/h | B: '+fmt(strikeB)+' t/h | C: '+fmt(strikeC)+' t/h | <b style="color:var(--green)">A-Sugar ~'+fmt(aSugar)+' t/h → ~'+fmt(aSugar*24)+' t/d</b> | <b style="color:var(--amber)">รองรับอ้อยได้ ~'+fmt(tcd)+' TCD</b>';
-}
-
-// Machine Spec: Centrifugal → Throughput
-function cen4(){
-  const na=+document.getElementById('cen4_na').value, vol=+document.getElementById('cen4_vol').value/1000,
-  cyc=+document.getElementById('cen4_cyc').value, dia=+document.getElementById('cen4_dia').value,
-  rpm=+document.getElementById('cen4_rpm').value, nc=+document.getElementById('cen4_nc').value,
-  ct=+document.getElementById('cen4_ct').value;
-  const G=5.59e-4*rpm*rpm*dia/1000;
-  const batchPerH=3600/cyc;
-  const massDensity=1.48;
-  const batchThroughput=na*batchPerH*vol*massDensity;
-  const crystContent=0.5;
-  const aSugar=batchThroughput*crystContent;
-  const contTotal=nc*ct;
-  const tcd=(aSugar*24)/0.12;
-  document.getElementById('cen4_r1').textContent=fmt(aSugar);
-  document.getElementById('cen4_r2').textContent=fmt(G);
-  document.getElementById('cen4_r3').textContent=fmt(contTotal);
-  document.getElementById('cen4_r4').textContent=fmt(tcd);
-  document.getElementById('cen4_res').style.display='block';
-  document.getElementById('cen4_ex').innerHTML='Batch: '+na+'×'+fmt(batchPerH)+' cycle/h × '+fmt(vol)+' m³ = '+fmt(batchThroughput)+' t/h mass | A-Sugar '+fmt(aSugar)+' t/h | G-factor = '+fmt(G)+(G>1500?' ⚠ สูง — ตรวจผลึก':'')+(G<800?' ⚠ ต่ำ — แยกไม่สะอาด':'')+ ' | <b style="color:var(--green)">Continuous B/C: '+fmt(contTotal)+' t/h</b> | <b style="color:var(--amber)">รองรับอ้อย ~'+fmt(tcd)+' TCD</b>';
-}
-
-// Power Selling Calculator
-function pwCalc(){
-  const cane=+document.getElementById('pw_cane').value, hrs=+document.getElementById('pw_hrs').value,
-  days=+document.getElementById('pw_days').value, fib=+document.getElementById('pw_fib').value/100,
-  bagpc=+document.getElementById('pw_bagpc').value/100, moist=+document.getElementById('pw_moist').value/100,
-  beff=+document.getElementById('pw_beff').value/100, press=+document.getElementById('pw_press').value,
-  teff=+document.getElementById('pw_teff').value/100, factory=+document.getElementById('pw_factory').value,
-  sell=+document.getElementById('pw_sell').value, buy=+document.getElementById('pw_buy').value,
-  ppa=+document.getElementById('pw_ppa').value, offm=+document.getElementById('pw_offm').value,
-  offcost=+document.getElementById('pw_offcost').value;
-  const bag=cane*bagpc;
-  const gcv=(18600*(1-moist)-2257*moist)/1000;
-  const steamRatio=press>=40?2.4:press>=25?2.6:2.8;
-  const steam=bag*steamRatio*beff;
-  const enthDrop=press>=40?400:press>=25?300:220;
-  const powerKW=steam*1000*enthDrop/3600*teff;
-  const powerMW=powerKW/1000;
-  const factoryMW=cane*factory/1000;
-  const surplusMW=Math.max(0,powerMW-factoryMW);
-  const exportMW=Math.min(surplusMW,ppa);
-  const revDay=exportMW*1000*hrs*sell;
-  const revYear=revDay*days/1e6;
-  const savDay=factoryMW*1000*hrs*buy;
-  const savYear=savDay*days/1e6;
-  const offRev=offm>0?ppa*1000*24*30*offm*sell/1e6:0;
-  const offCost=offm>0?ppa*1000*24*30*offm*offcost/1e6:0;
-  document.getElementById('pw_r1').textContent=fmt(powerMW);
-  document.getElementById('pw_r2').textContent=fmt(factoryMW);
-  document.getElementById('pw_r3').textContent=fmt(exportMW);
-  document.getElementById('pw_r4').textContent=fmt(revYear+savYear);
-  document.getElementById('pw_res').style.display='block';
-  const tb=document.getElementById('pw_table').querySelector('tbody');
-  tb.innerHTML=
-  '<tr><td>Bagasse ผลิตได้</td><td>'+fmt(bag)+'</td><td>t/h</td><td colspan="2">GCV = '+fmt(gcv)+' MJ/kg (ที่ moisture '+moist*100+'%)</td></tr>'+
-  '<tr><td>Steam ผลิตได้</td><td>'+fmt(steam)+'</td><td>t/h</td><td colspan="2">Ratio '+steamRatio+' kg steam/kg bagasse × eff '+beff*100+'%</td></tr>'+
-  '<tr><td>ไฟฟ้าผลิตรวม</td><td>'+fmt(powerMW)+'</td><td>MW</td><td>'+(powerMW*1000*hrs*sell).toLocaleString('th-TH',{maximumFractionDigits:0})+'</td><td>'+fmt(powerMW*1000*hrs*days*sell/1e6)+'</td></tr>'+
-  '<tr><td>ใช้ในโรงงาน</td><td>'+fmt(factoryMW)+'</td><td>MW</td><td style="color:var(--amber)">ประหยัดค่าไฟ: '+savDay.toLocaleString('th-TH',{maximumFractionDigits:0})+'</td><td style="color:var(--amber)">'+fmt(savYear)+'</td></tr>'+
-  '<tr style="color:var(--green)"><td><b>ขายไฟ Surplus (In-season)</b></td><td>'+fmt(exportMW)+'</td><td>MW</td><td><b>'+revDay.toLocaleString('th-TH',{maximumFractionDigits:0})+'</b></td><td><b>'+fmt(revYear)+'</b></td></tr>'+
-  (offm>0?'<tr style="color:var(--cyan)"><td>ขายไฟ Off-season ('+offm+' เดือน)</td><td>'+ppa+'</td><td>MW</td><td>'+((offRev*1e6)/(offm*30)).toLocaleString('th-TH',{maximumFractionDigits:0})+'</td><td>'+fmt(offRev)+'</td></tr><tr style="color:var(--red)"><td>ต้นทุนเชื้อเพลิง Off-season</td><td>—</td><td></td><td>—</td><td>-('+fmt(offCost)+')</td></tr>':'')+
-  '<tr style="border-top:3px solid var(--bdr)"><td><b style="font-size:14px">รวมรายได้พลังงาน/ปี</b></td><td colspan="2"></td><td colspan="2"><b style="font-size:18px;color:var(--green)">'+fmt(revYear+savYear+offRev-offCost)+' ล้าน฿/ปี</b></td></tr>';
-  document.getElementById('pw_ex').innerHTML='ผลิตไฟ '+fmt(powerMW)+' MW | ใช้เอง '+fmt(factoryMW)+' MW | ขาย '+fmt(exportMW)+' MW @ '+sell+' ฿/kWh | <b style="color:var(--green)">รายได้ขายไฟ '+fmt(revYear)+' ล้าน฿/ปี + ประหยัดค่าไฟ '+fmt(savYear)+' ล้าน฿/ปี = '+fmt(revYear+savYear)+' ล้าน฿/ปี</b>';
-}
-
-
-// === CHARTS: Market & Price ===
-function initCharts(){
-  if(typeof Chart==='undefined'){
-    var s=document.createElement('script');
-    s.src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js';
-    s.onload=function(){drawCharts();};
-    document.head.appendChild(s);
-  } else { drawCharts(); }
-}
-function drawCharts(){
-  // 1. 10-Year Price Chart
-  var ctx1=document.getElementById('priceChart');
-  if(ctx1){
-    new Chart(ctx1,{type:'line',data:{
-      labels:['2015','2016','2017','2018','2019','2020','2021','2022','2023','2024','2025'],
-      datasets:[{
-        label:'NY No.11 Raw Sugar (US¢/lb)',
-        data:[13.2,18.8,14.5,12.3,12.8,12.5,17.8,19.1,24.6,22.4,19.8],
-        borderColor:'#047857',backgroundColor:'rgba(4,120,87,.08)',fill:true,
-        tension:0.3,pointBackgroundColor:'#f59e0b',pointRadius:5,pointHoverRadius:8,
-        borderWidth:3
-      },{
-        label:'London No.5 White Sugar (USD/t ÷10 for scale)',
-        data:[38.5,50.2,36.8,32.5,33.8,35.5,45.2,52.6,68.4,61.8,55.2],
-        borderColor:'#0D9488',backgroundColor:'rgba(13,148,136,.08)',fill:true,
-        tension:0.3,pointBackgroundColor:'#60a5fa',pointRadius:4,pointHoverRadius:7,
-        borderWidth:2,borderDash:[5,3]
-      }]
-    },options:{
-      responsive:true,
-      plugins:{
-        legend:{labels:{color:'#475569',font:{size:11}}},
-        title:{display:true,text:'ICE Sugar Futures — Annual Average Price (2015-2025)',color:'#1e293b',font:{size:14}}
-      },
-      scales:{
-        x:{ticks:{color:'#475569'},grid:{color:'rgba(0,0,0,.06)'}},
-        y:{ticks:{color:'#475569',callback:function(v){return v;}},grid:{color:'rgba(0,0,0,.06)'},
-          title:{display:true,text:'US¢/lb (Raw) | USD/t ÷10 (White)',color:'#475569'}}
-      }
-    }});
-  }
-  // 2. Sugar Type Demand Pie
-  var ctx2=document.getElementById('typeChart');
-  if(ctx2){
-    new Chart(ctx2,{type:'doughnut',data:{
-      labels:['White/Refined (55%)','Raw Sugar VHP (35%)','Plantation White (5%)','Others (5%)'],
-      datasets:[{data:[55,35,5,5],
-        backgroundColor:['#047857','#0D9488','#2563EB','#D97706'],
-        borderColor:'#ffffff',borderWidth:2}]
-    },options:{
-      responsive:true,
-      plugins:{
-        legend:{position:'bottom',labels:{color:'#475569',font:{size:11},padding:12}},
-        title:{display:true,text:'Global Sugar Demand by Type (~180 Mt/yr)',color:'#1e293b',font:{size:13}}
-      }
-    }});
-  }
-  // 3. Top Consumers Bar
-  var ctx3=document.getElementById('consumeChart');
-  if(ctx3){
-    new Chart(ctx3,{type:'bar',data:{
-      labels:['India','EU-27','China','Brazil','USA','Indonesia','Russia','Pakistan','Mexico','Egypt'],
-      datasets:[{
-        label:'Consumption (Million tonnes)',
-        data:[29.5,17.0,16.5,10.5,10.2,7.5,5.8,5.6,4.8,3.5],
-        backgroundColor:['#047857','#059669','#0D9488','#2563EB','#D97706','#EA580C','#0891B2','#DB2777','#7C3AED','#92400E'],
-        borderColor:'#ffffff',borderWidth:1,borderRadius:4
-      }]
-    },options:{
-      responsive:true,indexAxis:'y',
-      plugins:{
-        legend:{display:false},
-        title:{display:true,text:'Top 10 Sugar Consuming Countries (Mt/yr)',color:'#1e293b',font:{size:13}}
-      },
-      scales:{
-        x:{ticks:{color:'#475569'},grid:{color:'rgba(0,0,0,.06)'},title:{display:true,text:'Million tonnes',color:'#475569'}},
-        y:{ticks:{color:'#475569',font:{size:11}},grid:{display:false}}
-      }
-    }});
-  }
-}
-// Load charts when market tab is visible
-var _origOpenSub=openSub;
-openSub=function(btn,id){_origOpenSub(btn,id);if(id==='sug-market')initCharts();};
-var _origOpenTab=openTab;
-// Also try on tab click
-
-
-// Report Simulator
-function simReport(){
-  var tcc=+document.getElementById('sim_tcc').value;
-  var polc=+document.getElementById('sim_polc').value;
-  var brixc=+document.getElementById('sim_brixc').value;
-  var fibc=+document.getElementById('sim_fibc').value;
-  var burnt=+document.getElementById('sim_burnt').value;
-  var pi=+document.getElementById('sim_pi').value;
-  var polbag=+document.getElementById('sim_polbag').value;
-  var moistbag=+document.getElementById('sim_moistbag').value;
-  var mjbx=+document.getElementById('sim_mjbx').value;
-  var mjpol=+document.getElementById('sim_mjpol').value;
-  var phmj=+document.getElementById('sim_phmj').value;
-  var phcj=+document.getElementById('sim_phcj').value;
-  var dcr=+document.getElementById('sim_dcr').value;
-  var vhp=+document.getElementById('sim_vhp').value;
-  var sugpol=+document.getElementById('sim_sugpol').value;
-  var sugmoist=+document.getElementById('sim_sugmoist').value;
-  var icumsa=+document.getElementById('sim_icumsa').value;
-  var fmwt=+document.getElementById('sim_fmwt').value;
-  var fmbx=+document.getElementById('sim_fmbx').value;
-  var fmpur=+document.getElementById('sim_fmpur').value;
-  var steam=+document.getElementById('sim_steam').value;
-  var kwh=+document.getElementById('sim_kwh').value;
-  var kwhuse=+document.getElementById('sim_kwhuse').value;
-  var hrs=+document.getElementById('sim_hrs').value;
-  var hrsavail=+document.getElementById('sim_hrsavail').value;
-  var fcwt=+document.getElementById('sim_fcwt').value;
-  var fcpol=+document.getElementById('sim_fcpol').value;
-  // ===== CALCULATED VALUES =====
-  var ccs=(polc-(brixc-polc)*0.4)*0.74;
-  var purc=brixc>0?(polc/brixc*100):0;
-  var totalSugar=dcr+vhp;
-  var sugarPolWt=totalSugar*sugpol/100;
-  var canePolWt=tcc*polc/100;
-  var bagpc=fibc>0?(fibc/(1-moistbag/100)*0.95/tcc*100*tcc/100):28;
-  // Simplified: Bagasse%Cane ≈ actual from report
-  var bagWt=tcc*0.29; // ~29% typical
-  var mjCane=100+33.7-fibc*0.95; // approx MJ%Cane
-  var mjPur=mjbx>0?(mjpol/mjbx*100):0;
-  var extPol=canePolWt>0?((totalSugar*sugpol/100+fmwt*fmpur*fmbx/10000+fcwt*fcpol/100)/(canePolWt)*100):0;
-  // Simpler extraction
-  var extSimple=canePolWt>0?(mjpol*mjCane/100*tcc/100/(canePolWt)*100):97;
-  extSimple=Math.min(99,extSimple);
-  var overallRecov=canePolWt>0?(sugarPolWt/canePolWt*100):0;
-  var fmCane=tcc>0?(fmwt/tcc*100):0;
-  var lossBag=canePolWt>0?(bagWt*polbag/100/canePolWt*100):0;
-  var lossFC=canePolWt>0?(fcwt*fcpol/100/canePolWt*100):0;
-  var lossFM=canePolWt>0?(fmwt*fmpur/100*fmbx/100/canePolWt*100):0;
-  var totalLoss=100-overallRecov;
-  var lossUD=totalLoss-lossBag-lossFC-lossFM;
-  var bhr_calc=mjPur>0&&fmpur<100?((mjPur-fmpur)/(100-fmpur)/mjPur*10000):0;
-  var sjm=canePolWt>0?(mjpol*mjCane/100*tcc/100/canePolWt*100):0;
-  sjm=Math.min(99,sjm);
-  var tph=hrs>0?(tcc/hrs):0;
-  var steamCane=tcc>0?(steam/tcc*1000):0;
-  var steamSugar=totalSugar>0?(steam/totalSugar*1000):0;
-  var kwhCane=tcc>0?(kwhuse/tcc):0;
-  var lossTime=hrsavail>0?((hrsavail-hrs)/hrsavail*100):0;
-  var timeEff=hrsavail>0?(hrs/hrsavail*100):0;
-  var caneAsS=tcc>0?(totalSugar/tcc*100):0;
-  var caneCCS=ccs>0?(caneAsS/ccs*100*10):0;
-  var gcv=(18600*(1-moistbag/100)-2257*moistbag/100)/1000;
-  // ===== OUTPUT =====
-  function row(label,val,unit,tgt,warn){
-  var cls='ok';var pt='Good';
-  if(warn==='bad'){cls='bad';pt='Low';}
-  else if(warn==='warn'){cls='warn';pt='Watch';}
-  return '<div class="sim-row sr-'+cls+'">'+
-    '<div class="sr-left">'+
-    '<div class="sr-dot"></div>'+
-    '<span class="sr-label">'+label+'</span></div>'+
-    '<div class="sr-right">'+
-    '<span class="sr-val">'+fmt(val)+'</span>'+
-    '<span class="sr-unit">'+unit+'</span>'+
-    (tgt?'<span class="sr-tgt">เป้า: '+tgt+'</span>':'')+
-    '<span class="sr-pill">'+pt+'</span>'+
-    '</div></div>';
-}
-  var o='';
-  o+='<h5 style="color:#059669;margin:14px 0 8px;font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;padding:7px 18px;background:rgba(52,211,153,.06);border-radius:99px;display:inline-block;border:1.5px solid #05966933;box-shadow:0 1px 3px rgba(0,0,0,.04)">🌿 CANE</h5>';
-  o+=row('C.C.S. of Factory',ccs,'%','13.85',ccs<12?'bad':ccs<13?'warn':'ok');
-  o+=row('Purity % Cane',purc,'%','>85',purc<82?'bad':purc<85?'warn':'ok');
-  o+='<h5 style="color:#2563EB;margin:22px 0 10px;font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;padding:7px 18px;background:rgba(96,165,250,.06);border-radius:99px;display:inline-block;border:1.5px solid #2563EB33;box-shadow:0 1px 3px rgba(0,0,0,.04)">⚙️ MILLING</h5>';
-  o+=row('Tons Cane / Hour',tph,'','>297',tph<250?'bad':tph<297?'warn':'ok');
-  o+=row('Bagasse % Cane',bagpc*100/fibc*fibc/100*100,'%','28.5','ok'); // simplified
-  o+=row('Extraction % Pol',extSimple,'%','>97',extSimple<96?'bad':extSimple<97?'warn':'ok');
-  o+=row('Imbibition % Fiber (est)',(mjCane-100+fibc)/fibc*100,'%','280','ok');
-  o+=row('MJ Purity',mjPur,'%','—','ok');
-  o+=row('Milling Loss (Bagasse)',lossBag,'%','<3.0',lossBag>3.5?'bad':lossBag>3?'warn':'ok');
-  o+='<h5 style="color:#D97706;margin:22px 0 10px;font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;padding:7px 18px;background:rgba(251,191,36,.06);border-radius:99px;display:inline-block;border:1.5px solid #D9770633;box-shadow:0 1px 3px rgba(0,0,0,.04)">🍬 SUGAR</h5>';
-  o+=row('Total Sugar Weight',totalSugar,'t','—','ok');
-  o+=row('% Cane as Sugar (Rendement)',caneAsS,'%','>12.16',caneAsS<10?'bad':caneAsS<12?'warn':'ok');
-  o+=row('% CCS Recovery',caneCCS,'%','>87.82',caneCCS<85?'bad':caneCCS<87.82?'warn':'ok');
-  o+='<h5 style="color:#4F46E5;margin:20px 0 10px;font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;padding:6px 16px;background:rgba(129,140,248,.06);border-radius:99px;display:inline-block;border:1px solid #4F46E522">📊 BALANCE & RECOVERY</h5>';
-  o+=row('Overall Recovery',overallRecov,'%','>86',overallRecov<80?'bad':overallRecov<86?'warn':'ok');
-  o+=row('BHR (est.)',bhr_calc,'%','>86',bhr_calc<80?'bad':bhr_calc<86?'warn':'ok');
-  o+=row('SJM (est.)',sjm,'%','>88','ok');
-  o+=row('Loss in Bagasse',lossBag,'%','<3.0',lossBag>3.5?'bad':lossBag>3?'warn':'ok');
-  o+=row('Loss in Filter Cake',lossFC,'%','<0.33',lossFC>0.5?'bad':lossFC>0.33?'warn':'ok');
-  o+=row('Loss in Final Molasses',lossFM,'%','<7.7',lossFM>10?'bad':lossFM>7.7?'warn':'ok');
-  o+=row('Undetermined Loss',lossUD,'%','<5.5',lossUD>8?'bad':lossUD>5.5?'warn':'ok');
-  o+=row('Total Losses',totalLoss,'%','—',totalLoss>20?'bad':totalLoss>15?'warn':'ok');
-  o+='<h5 style="color:#FBBF24;margin:22px 0 10px;font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;padding:7px 18px;background:rgba(251,191,36,.06);border-radius:99px;display:inline-block;border:1.5px solid #92400E33;box-shadow:0 1px 3px rgba(0,0,0,.04)">🫗 FINAL MOLASSES</h5>';
-  o+=row('FM % Cane',fmCane,'%','<4.20',fmCane>5?'bad':fmCane>4.2?'warn':'ok');
-  o+=row('FM Purity',fmpur,'%','<33.1',fmpur>36?'bad':fmpur>33.1?'warn':'ok');
-  o+='<h5 style="color:#EA580C;margin:22px 0 10px;font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;padding:7px 18px;background:rgba(251,146,60,.06);border-radius:99px;display:inline-block;border:1.5px solid #EA580C33;box-shadow:0 1px 3px rgba(0,0,0,.04)">⚡ STEAM & ELECTRICITY</h5>';
-  o+=row('Steam kg/t Cane',steamCane,'','<550',steamCane>600?'bad':steamCane>550?'warn':'ok');
-  o+=row('kWh/t Cane',kwhCane,'','<40',kwhCane>45?'bad':kwhCane>40?'warn':'ok');
-  o+=row('Bagasse GCV',gcv,' MJ/kg','—',gcv<7?'bad':gcv<8?'warn':'ok');
-  o+='<h5 style="color:#0891B2;margin:22px 0 10px;font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;padding:7px 18px;background:rgba(34,211,238,.06);border-radius:99px;display:inline-block;border:1.5px solid #0891B233;box-shadow:0 1px 3px rgba(0,0,0,.04)">⏱️ TIME ACCOUNT</h5>';
-  o+=row('Time Efficiency',timeEff,'%','>95',timeEff<90?'bad':timeEff<95?'warn':'ok');
-  o+=row('Loss Time %',lossTime,'%','<5',lossTime>10?'bad':lossTime>5?'warn':'ok');
-  document.getElementById('simOutput').innerHTML=o;
-  // === PRODUCTION SUMMARY ===
-  var sm='';
-  sm+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px">';
-  sm+='<div class="ee2-kpi-card amber" style="text-align:center"><div class="ct">อ้อยหีบ</div><div class="cv ha" style="font-size:26px">'+fmt(tcc)+'</div><div class="cu">ตัน/วัน</div></div>';
-  sm+='<div class="ee2-kpi-card green" style="text-align:center"><div class="ct">น้ำตาลผลิตได้</div><div class="cv hg" style="font-size:26px">'+fmt(totalSugar)+'</div><div class="cu">ตัน (DCR '+fmt(dcr)+' + VHP '+fmt(vhp)+')</div></div>';
-  sm+='<div class="ee2-kpi-card blue" style="text-align:center"><div class="ct">% Cane as Sugar</div><div class="cv hb" style="font-size:26px">'+fmt(caneAsS)+'%</div><div class="cu">'+(caneAsS>=12?'✅ ดี':'⚠ ต่ำกว่าเป้า 12%')+'</div></div>';
-  sm+='<div class="ee2-kpi-card amber" style="text-align:center"><div class="ct">Overall Recovery</div><div class="cv '+(overallRecov>=86?'hg':'hr')+'" style="font-size:26px">'+fmt(overallRecov)+'%</div><div class="cu">'+(overallRecov>=86?'✅ ดี':'⚠ ต่ำกว่าเป้า 86%')+'</div></div>';
-  sm+='</div>';
-  // Losses summary
-  sm+='<div style="margin-bottom:14px;padding:14px;border-radius:10px;background:var(--red-bg);border:1px solid rgba(220,38,38,.12)">';
-  sm+='<h4 style="color:var(--red);margin:0 0 8px;font-size:13px">⚠ สรุปการสูญเสีย (Total Loss: '+fmt(totalLoss)+'%)</h4>';
-  sm+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;font-size:12px">';
-  sm+='<div style="text-align:center;padding:8px;background:var(--s2);border-radius:8px"><div style="color:var(--txt3)">Bagasse Loss</div><div style="color:var(--red);font-weight:700;font-size:15px">'+fmt(lossBag)+'%</div></div>';
-  sm+='<div style="text-align:center;padding:8px;background:var(--s2);border-radius:8px"><div style="color:var(--txt3)">Filter Cake Loss</div><div style="color:var(--red);font-weight:700;font-size:15px">'+fmt(lossFC)+'%</div></div>';
-  sm+='<div style="text-align:center;padding:8px;background:var(--s2);border-radius:8px"><div style="color:var(--txt3)">Molasses Loss</div><div style="color:var(--red);font-weight:700;font-size:15px">'+fmt(lossFM)+'%</div></div>';
-  sm+='<div style="text-align:center;padding:8px;background:var(--s2);border-radius:8px"><div style="color:var(--txt3)">Undetermined</div><div style="color:'+(lossUD>5.5?'var(--red)':'var(--amber)')+';font-weight:700;font-size:15px">'+fmt(lossUD)+'%</div></div>';
-  sm+='</div></div>';
-  // Energy
-  sm+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">';
-  sm+='<div style="padding:12px;border-radius:10px;background:var(--blue-bg);border:1px solid rgba(37,99,235,.12)">';
-  sm+='<h4 style="color:var(--blue);margin:0 0 6px;font-size:13px">⚡ พลังงาน</h4>';
-  sm+='<div style="font-size:12px;line-height:2">Steam/ตันอ้อย: <b>'+fmt(steamCane)+' kg</b> '+(steamCane<=550?'✅':'⚠')+'<br>kWh/ตันอ้อย: <b>'+fmt(kwhCane)+'</b> '+(kwhCane<=40?'✅':'⚠')+'<br>kWh ผลิตได้: <b>'+fmt(kwh)+'</b> | ใช้: <b>'+fmt(kwhuse)+'</b> | ส่งขาย: <b>'+fmt(kwh-kwhuse)+'</b></div></div>';
-  sm+='<div style="padding:12px;border-radius:10px;background:var(--green-bg);border:1px solid rgba(5,150,105,.12)">';
-  sm+='<h4 style="color:var(--green);margin:0 0 6px;font-size:13px">⏱ ประสิทธิภาพเวลา</h4>';
-  sm+='<div style="font-size:12px;line-height:2">หีบจริง: <b>'+fmt(hrs)+' ชม.</b> / '+fmt(hrsavail)+' ชม.<br>Time Efficiency: <b>'+fmt(timeEff)+'%</b> '+(timeEff>=95?'✅':'⚠')+'<br>Crushing Rate: <b>'+fmt(tph)+' TCH</b> '+(tph>=297?'✅':'⚠')+'</div></div>';
-  sm+='</div>';
-  // Verdict
-  var vGood=0;var vTotal=6;
-  if(caneAsS>=12)vGood++;if(overallRecov>=86)vGood++;if(totalLoss<=15)vGood++;if(steamCane<=550)vGood++;if(timeEff>=95)vGood++;if(kwhCane<=40)vGood++;
-  var vColor=vGood>=5?'var(--green)':vGood>=3?'var(--amber)':'var(--red)';
-  var vMsg=vGood>=5?'ผลการผลิตดีเยี่ยม! ทุกตัวชี้วัดอยู่ในเกณฑ์ — รักษาไว้':vGood>=3?'ผลผลิตปานกลาง มีบางตัวชี้วัดต่ำกว่าเป้า — ควรปรับปรุง':'ผลผลิตต่ำกว่าเป้าหมายหลายด้าน — ต้องวิเคราะห์สาเหตุเร่งด่วน';
-  sm+='<div style="text-align:center;padding:22px 28px;border-radius:20px;background:var(--s1);border:2px solid '+vColor+';box-shadow:0 4px 12px rgba(0,40,20,.06)">';
-  sm+='<div style="font-size:15px;font-weight:800;color:'+vColor+';letter-spacing:-.2px">สรุป: '+vGood+'/'+vTotal+' ผ่านเกณฑ์</div><div style="font-size:12px;color:var(--txt2);margin-top:4px">'+vMsg+'</div></div>';
-
-  document.getElementById('simSummaryContent').innerHTML=sm;
-  document.getElementById('simSummary').style.display='block';
-}
-// Init
-// Calculators now use manual buttons — init only E2E and Steam
-ee2();
-
-// ═══ THEME TOGGLE ═══
-function toggleTheme(){
-  var html=document.documentElement;
-  var sw=document.getElementById('themeSwitch');
-  if(html.getAttribute('data-theme')==='light'){
-    html.removeAttribute('data-theme');
-    sw.classList.remove('light');
-    try{localStorage.setItem('sugar-theme','dark');}catch(e){}
-  } else {
-    html.setAttribute('data-theme','light');
-    sw.classList.add('light');
-    try{localStorage.setItem('sugar-theme','light');}catch(e){}
-  }
-}
-// Init theme from saved preference (default = dark)
-(function(){
-  try{
-    var saved=localStorage.getItem('sugar-theme');
-    if(saved==='light'){
-      document.documentElement.setAttribute('data-theme','light');
-      var sw=document.getElementById('themeSwitch');
-      if(sw)sw.classList.add('light');
-    }
-  }catch(e){}
-})();
-
-// ═══ DAILY REPORT EXCEL PARSER ═══
-// Field mapping: Excel cell (Sheet "Daily (General)", TO-DAY columns D/L/T) → E2E input ID
-var dailyReportMap = {
-  // ── CANE (col D = TO-DAY) ──
-  'D7':  {id:'ee2_tcd_in', transform: function(v){return v;}, label:'Tons Cane Crushed'},
-  'D8':  {id:'ee2_fib', transform: null, label:'Fiber % Cane'},
-  'D9':  {id:'ee2_polc', transform: null, label:'Pol % Cane'},
-  'D10': {id:'ee2_ccs', transform: null, label:'CCS of Factory'},
-  'D11': {id:'ee2_burnt', transform: null, label:'% Burnt Cane'},
-  // ── MILLING (col D = TO-DAY) ──
-  'D66': {id:'ee2_pi', transform: null, label:'Preparation Index'},
-  'D72': {id:'ee2_ext', transform: null, label:'Extraction % Pol'},
-  'D74': {id:'ee2_imb', transform: null, label:'Imbibition % Fiber'},
-  'D69': {id:'ee2_polbag', transform: null, label:'Pol % Bagasse'},
-  'D68': {id:'ee2_bagpc', transform: null, label:'Bagasse % Cane'},
-  'D70': {id:'ee2_bagmoist', transform: null, label:'Moisture % Bagasse'},
-  // ── JUICE (col D = TO-DAY) ──
-  'D76': {id:'ee2_purdrop', transform: null, label:'Purity Drop'},
-  // ── MIXED JUICE (col T = TO-DAY) ──
-  'T37': {id:'ee2_mjbx', transform: null, label:'MJ Brix'},
-  'T39': {id:'ee2_mjpur', transform: null, label:'MJ Purity'},
-  // ── EVAPORATION (col T = TO-DAY) ──
-  'T55': {id:'ee2_sybx', transform: null, label:'Syrup Brix'},
-  // ── MOLASSES & RECOVERY (col D/L = TO-DAY) ──
-  'D58': {id:'ee2_fmp', transform: null, label:'FM Purity'},
-  'D55': {id:'ee2_fmpc', transform: null, label:'FM % Cane'},
-  'L42': {id:'ee2_bhr', transform: null, label:'BHR'},
-  'L38': {id:'ee2_lbag', transform: null, label:'Loss Bagasse'},
-  'L39': {id:'ee2_lfc', transform: null, label:'Loss Filter Cake'},
-  'L40': {id:'ee2_lfm', transform: null, label:'Loss Final Mol.'},
-  'L41': {id:'ee2_lud', transform: null, label:'Undetermined Loss'},
-  // ── STEAM (col L = TO-DAY) ──
-  'L46': {id:null, transform: null, label:'Steam kg/ton cane (info only)'},
-};
-
-// Fields that require manual input (not in Daily Report)
-var ee2ManualFields = [
-  'ee2_price','ee2_molprice','ee2_caneprice','ee2_days',
-  'ee2_beff','ee2_stpress','ee2_elecprice','ee2_elecsell',
-  'ee2_limecost','ee2_chemcost','ee2_neff'
-];
-
-// All required E2E fields
-var ee2AllRequired = [
-  'ee2_tcd_in','ee2_polc','ee2_fib','ee2_ccs','ee2_mjbx','ee2_mjpur','ee2_burnt',
-  'ee2_pi','ee2_ext','ee2_imb','ee2_polbag','ee2_bagpc',
-  'ee2_purdrop','ee2_sybx','ee2_neff',
-  'ee2_fmp','ee2_fmpc','ee2_bhr','ee2_lbag','ee2_lfc','ee2_lfm','ee2_lud',
-  'ee2_price','ee2_molprice','ee2_caneprice','ee2_days',
-  'ee2_beff','ee2_stpress','ee2_bagmoist','ee2_elecprice','ee2_elecsell',
-  'ee2_limecost','ee2_chemcost'
-];
-
-function parseDailyReport(file) {
-  if (!file) return;
-  var status = document.getElementById('uploadStatus');
-  status.className = 'upload-status';
-  status.style.display = 'none';
-
-  var reader = new FileReader();
-  reader.onload = function(e) {
-    try {
-      var data = new Uint8Array(e.target.result);
-      var workbook = XLSX.read(data, {type: 'array'});
-
-      // Find the Daily sheet
-      var sheetName = null;
-      for (var i = 0; i < workbook.SheetNames.length; i++) {
-        var sn = workbook.SheetNames[i];
-        if (sn.indexOf('Daily') >= 0 || sn.indexOf('daily') >= 0) {
-          sheetName = sn;
-          break;
-        }
-      }
-      if (!sheetName) sheetName = workbook.SheetNames[0];
-
-      var ws = workbook.Sheets[sheetName];
-
-      // Extract date
-      var dateCell = ws['D3'];
-      var reportDate = dateCell ? dateCell.v : 'ไม่ทราบวันที่';
-      if (typeof reportDate === 'number') {
-        // Excel serial date
-        var d = new Date((reportDate - 25569) * 86400 * 1000);
-        reportDate = d.toLocaleDateString('th-TH', {year:'numeric',month:'long',day:'numeric'});
-      }
-
-      var autoCount = 0;
-      var autoFields = [];
-      var failedFields = [];
-
-      // Map each cell to input
-      for (var cellRef in dailyReportMap) {
-        var mapping = dailyReportMap[cellRef];
-        if (!mapping.id) continue;
-
-        var cell = ws[cellRef];
-        var rawVal = (function(c){
-          if(!c||c.v===null||c.v===undefined||c.v==='') return NaN;
-          if(typeof c.v==='number') return c.v;
-          var s=String(c.v).trim();
-          var pm=s.match(/^\(([0-9.]+)\)$/);
-          if(pm) return -parseFloat(pm[1]);
-          return parseFloat(s);
-        })(cell);
-        if (!isNaN(rawVal)) {
-          var val = rawVal;
-          if (mapping.transform) val = mapping.transform(val);
-
-          // Round to 2 decimal places
-          val = Math.round(val * 100) / 100;
-
-          var inp = document.getElementById(mapping.id);
-          if (inp) {
-            inp.value = val;
-            inp.classList.add('auto-filled');
-            inp.classList.remove('needs-input');
-            autoCount++;
-            autoFields.push(mapping.label + ' = ' + val);
-          }
-        } else {
-          failedFields.push(mapping.label);
-        }
-      }
-
-      // Count manual fields that need input
-      var manualCount = 0;
-      ee2ManualFields.forEach(function(fid) {
-        var inp = document.getElementById(fid);
-        if (inp && inp.value && inp.value !== '' && !isNaN(inp.value)) {
-          // Has default value, ok
-        } else {
-          manualCount++;
-          if (inp) inp.classList.add('needs-input');
-        }
-      });
-
-      // Show status
-      var totalMapped = Object.keys(dailyReportMap).filter(function(k){return dailyReportMap[k].id;}).length;
-      status.className = 'upload-status success';
-      status.innerHTML = '<div class="us-title">✅ อัพโหลดสำเร็จ — ' + file.name + '</div>' +
-        '<div>📅 วันที่รายงาน: <b>' + reportDate + '</b> | Sheet: <b>' + sheetName + '</b></div>' +
-        '<div class="us-stats">' +
-        '<span class="us-stat us-auto">✓ ดึงอัตโนมัติ ' + autoCount + '/' + totalMapped + ' ค่า</span>' +
-        '<span class="us-stat us-manual">✎ กรอกมือ ' + ee2ManualFields.length + ' ค่า (ราคา/พลังงาน)</span>' +
-        '</div>' +
-        (failedFields.length > 0 ? '<div style="margin-top:8px;font-size:11px;color:var(--txt3)">⚠ ไม่พบค่า: ' + failedFields.join(', ') + '</div>' : '') +
-        '<div style="margin-top:8px;font-size:11px;color:var(--txt3)">💡 ค่าราคาและพลังงานต้องกรอกเอง เพราะไม่มีใน Daily Report</div>';
-
-      validateEE2();
-
-    } catch (err) {
-      status.className = 'upload-status error';
-      status.innerHTML = '<div class="us-title">❌ ไม่สามารถอ่านไฟล์ได้</div>' +
-        '<div>' + err.message + '</div>' +
-        '<div style="margin-top:8px;font-size:11px">กรุณาตรวจสอบว่าเป็นไฟล์ Daily Report (.xlsx) ที่ถูกต้อง</div>';
-    }
-  };
-  reader.readAsArrayBuffer(file);
-}
-
-function validateEE2() {
-  var missing = [];
-  ee2AllRequired.forEach(function(fid) {
-    var inp = document.getElementById(fid);
-    if (!inp) return;
-    var val = inp.value;
-    if (val === '' || val === null || val === undefined || isNaN(parseFloat(val)) || parseFloat(val) === 0) {
-      missing.push(fid);
-      inp.classList.add('needs-input');
-    } else {
-      inp.classList.remove('needs-input');
-    }
-  });
-
-  var valDiv = document.getElementById('ee2Validation');
-  var calcBtn = document.getElementById('ee2CalcBtn');
-
-  if (missing.length > 0) {
-    valDiv.className = 'ee2-validation show';
-    valDiv.innerHTML = '⚠ ยังขาดอีก <b>' + missing.length + '</b> ค่า (ช่องกรอบสีเหลือง) — กรุณากรอกให้ครบก่อนกดคำนวณ';
-    if (calcBtn) {
-      calcBtn.style.opacity = '0.5';
-      calcBtn.style.pointerEvents = 'none';
-    }
-  } else {
-    valDiv.className = 'ee2-validation';
-    valDiv.style.display = 'none';
-    if (calcBtn) {
-      calcBtn.style.opacity = '1';
-      calcBtn.style.pointerEvents = 'auto';
-    }
-  }
-  return missing.length === 0;
-}
-
-// Drag & drop
-(function(){
-  var uz = document.getElementById('uploadZone');
-  if (!uz) return;
-  ['dragenter','dragover'].forEach(function(ev){
-    uz.addEventListener(ev, function(e){ e.preventDefault(); uz.classList.add('dragover'); });
-  });
-  ['dragleave','drop'].forEach(function(ev){
-    uz.addEventListener(ev, function(e){ e.preventDefault(); uz.classList.remove('dragover'); });
-  });
-  uz.addEventListener('drop', function(e){
-    var files = e.dataTransfer.files;
-    if (files.length > 0) parseDailyReport(files[0]);
-  });
-})();
-
-// ═══ LANDING PAGE NAVIGATION ═══
-function enterDashboard() {
-  document.getElementById('landingPage').classList.add('lp-hidden');
-  document.getElementById('dashboardMain').style.display = '';
-}
-function goLanding() {
-  document.getElementById('landingPage').classList.remove('lp-hidden');
-  document.getElementById('dashboardMain').style.display = 'none';
-  window.scrollTo(0,0);
-}
-</script>
 
 </div><!-- /dashboardMain -->
 
