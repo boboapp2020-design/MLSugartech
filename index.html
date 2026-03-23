@@ -1782,7 +1782,7 @@ function ee2(){
   const beff=+document.getElementById('ee2_beff').value/100;
   const stpress=+document.getElementById('ee2_stpress').value;
   const bagmoist=+document.getElementById('ee2_bagmoist').value/100;
-  const elecprice=+document.getElementById('ee2_elecprice').value;
+  const elecprice=0; // ผลิตไฟเอง ไม่มีค่าไฟฟ้า
   const elecsell=+document.getElementById('ee2_elecsell').value;
   const limecost=+document.getElementById('ee2_limecost').value;
   const chemcost=+document.getElementById('ee2_chemcost').value;
@@ -2436,9 +2436,7 @@ function simReport(){
   document.getElementById('simSummaryContent').innerHTML=sm;
   document.getElementById('simSummary').style.display='block';
 }
-// Init
-// Calculators now use manual buttons — init only E2E and Steam
-ee2();
+// Init — calculators use manual buttons, no auto-call
 // ═══ THEME TOGGLE ═══
 function toggleTheme(){
   var html=document.documentElement;
@@ -2757,7 +2755,7 @@ function goLanding() {
 
 <!-- ======== TAB: OVERVIEW ======== -->
 <div class="tab-page active" id="tab-overview">
-<div class="sh" style="border-left-color:var(--pri)"><div class="sh-n" style="background:var(--accent)">0</div><div><h2>ภาพรวมกระบวนการผลิตน้ำตาล</h2><p>Sugar Manufacturing Overview — "จากไร่อ้อยสู่เม็ดน้ำตาล"</p></div></div>
+<div class="sh" style="border-left-color:var(--pri)"><div class="sh-n" style="background:var(--accent)"></div><div><h2>ภาพรวมกระบวนการผลิตน้ำตาล</h2><p>Sugar Manufacturing Overview — "จากไร่อ้อยสู่เม็ดน้ำตาล"</p></div></div>
 
 <div class="c" style="margin-bottom:20px">
 <div class="ct">ขั้นตอนการผลิตน้ำตาลทรายดิบ — กดที่ไอคอนเพื่อไปหน้านั้น</div>
@@ -2813,7 +2811,7 @@ function goLanding() {
 
 <!-- ======== TAB: CANE QUALITY ======== -->
 <div class="tab-page" id="tab-cane">
-<div class="sh" style="border-left-color:var(--c-green)"><div class="sh-n" style="background:var(--c-green)">1</div><div><h2>คุณภาพอ้อย (Cane Quality)</h2><p>จุดเริ่มต้นของทุกอย่าง — "Garbage in, Garbage out"</p></div></div>
+<div class="sh" style="border-left-color:var(--c-green)"><div class="sh-n" style="background:var(--c-green)"></div><div><h2>คุณภาพอ้อย (Cane Quality)</h2><p>จุดเริ่มต้นของทุกอย่าง — "Garbage in, Garbage out"</p></div></div>
 
 <div class="stabs">
 <button class="stab active" onclick="openSub(this,'cane-flow')">🔄 ผังกระบวนการ</button>
@@ -3133,7 +3131,7 @@ Magnet: <b>ดักโลหะก่อนเข้า Knives</b><br>
 
 <!-- ======== TAB: MILLING ======== -->
 <div class="tab-page" id="tab-milling">
-<div class="sh" style="border-left-color:var(--c-teal)"><div class="sh-n" style="background:var(--c-teal)">2</div><div><h2>ลูกหีบ (Milling)</h2><p>หัวใจของการสกัดน้ำอ้อย — บีบ-ชะ-บีบซ้ำ</p></div></div>
+<div class="sh" style="border-left-color:var(--c-teal)"><div class="sh-n" style="background:var(--c-teal)"></div><div><h2>ลูกหีบ (Milling)</h2><p>หัวใจของการสกัดน้ำอ้อย — บีบ-ชะ-บีบซ้ำ</p></div></div>
 
 <div class="stabs">
 <button class="stab active" onclick="openSub(this,'mill-flow')">🔄 ผังกระบวนการ</button>
@@ -3511,7 +3509,7 @@ Moisture%Bag: <b>≤50%</b><br>
 
 <!-- ======== TAB: CLARIFICATION ======== -->
 <div class="tab-page" id="tab-clarification">
-<div class="sh" style="border-left-color:var(--c-purple)"><div class="sh-n" style="background:var(--c-purple)">3</div><div><h2>การทำใส (Clarification)</h2><p>กำจัดสิ่งเจือปนเพื่อให้ได้น้ำอ้อยใสพร้อมระเหย — Peter Rein Ch.8-10</p></div></div>
+<div class="sh" style="border-left-color:var(--c-purple)"><div class="sh-n" style="background:var(--c-purple)"></div><div><h2>การทำใส (Clarification)</h2><p>กำจัดสิ่งเจือปนเพื่อให้ได้น้ำอ้อยใสพร้อมระเหย — Peter Rein Ch.8-10</p></div></div>
 
 <div class="stabs">
 <button class="stab active" onclick="openSub(this,'clr-flow')">🔄 ผังกระบวนการ</button>
@@ -3939,7 +3937,7 @@ Feed: <b>น้ำอ้อยร้อน + Floc เข้าทุกชั้
 
 <!-- ======== TAB: EVAPORATION ======== -->
 <div class="tab-page" id="tab-evaporation">
-<div class="sh" style="border-left-color:var(--c-orange)"><div class="sh-n" style="background:var(--c-orange)">4</div><div><h2>หม้อต้ม (Evaporation)</h2><p>ระเหยน้ำออกจากน้ำอ้อยใส เปลี่ยนเป็นน้ำเชื่อม (Syrup) — Peter Rein Ch.12</p></div></div>
+<div class="sh" style="border-left-color:var(--c-orange)"><div class="sh-n" style="background:var(--c-orange)"></div><div><h2>หม้อต้ม (Evaporation)</h2><p>ระเหยน้ำออกจากน้ำอ้อยใส เปลี่ยนเป็นน้ำเชื่อม (Syrup) — Peter Rein Ch.12</p></div></div>
 
 <div class="stabs">
 <button class="stab active" onclick="openSub(this,'evp-flow')">🔄 ผังกระบวนการ</button>
@@ -4293,7 +4291,7 @@ Temperature: <b>60-90°C</b><br>
 
 <!-- ======== TAB: CRYSTALLIZATION ======== -->
 <div class="tab-page" id="tab-crystallization">
-<div class="sh" style="border-left-color:var(--c-amber)"><div class="sh-n" style="background:var(--c-amber)">5</div><div><h2>หม้อเคี่ยว (Pan Boiling / Crystallization)</h2><p>ศาสตร์ของการเปลี่ยนน้ำเชื่อมเป็นผลึกน้ำตาล — Peter Rein Ch.15-16</p></div></div>
+<div class="sh" style="border-left-color:var(--c-amber)"><div class="sh-n" style="background:var(--c-amber)"></div><div><h2>หม้อเคี่ยว (Pan Boiling / Crystallization)</h2><p>ศาสตร์ของการเปลี่ยนน้ำเชื่อมเป็นผลึกน้ำตาล — Peter Rein Ch.15-16</p></div></div>
 
 <div class="stabs">
 <button class="stab active" onclick="openSub(this,'cry-flow')">🔄 ผังกระบวนการ</button>
@@ -4741,7 +4739,7 @@ FM Brix: <b>85-90%</b>
 
 <!-- ======== TAB: CENTRIFUGAL ======== -->
 <div class="tab-page" id="tab-centrifugal">
-<div class="sh" style="border-left-color:var(--c-cyan)"><div class="sh-n" style="background:var(--c-cyan)">6</div><div><h2>หม้อปั่น (Centrifugals)</h2><p>แยกผลึกน้ำตาลออกจากน้ำเชื่อม (Molasses) — Peter Rein Ch.17</p></div></div>
+<div class="sh" style="border-left-color:var(--c-cyan)"><div class="sh-n" style="background:var(--c-cyan)"></div><div><h2>หม้อปั่น (Centrifugals)</h2><p>แยกผลึกน้ำตาลออกจากน้ำเชื่อม (Molasses) — Peter Rein Ch.17</p></div></div>
 
 <div class="stabs">
 <button class="stab active" onclick="openSub(this,'cen-flow')">🔄 ผังกระบวนการ</button>
@@ -5122,7 +5120,7 @@ Brix: <b>85-90%</b><br>
 
 <!-- ======== TAB: SUGAR ======== -->
 <div class="tab-page" id="tab-sugar">
-<div class="sh" style="border-left-color:var(--c-brown)"><div class="sh-n" style="background:var(--c-brown)">7</div><div><h2>น้ำตาล (Sugar Products & Quality)</h2><p>ประเภทน้ำตาล คุณภาพ การจัดเก็บ มาตรฐาน ICUMSA — Peter Rein Ch.18-19</p></div></div>
+<div class="sh" style="border-left-color:var(--c-brown)"><div class="sh-n" style="background:var(--c-brown)"></div><div><h2>น้ำตาล (Sugar Products & Quality)</h2><p>ประเภทน้ำตาล คุณภาพ การจัดเก็บ มาตรฐาน ICUMSA — Peter Rein Ch.18-19</p></div></div>
 
 <div class="stabs">
 <button class="stab active" onclick="openSub(this,'sug-type')">ประเภทน้ำตาล</button>
@@ -5588,7 +5586,7 @@ Brix: <b>85-90%</b><br>
 </div>
 
 <div class="tab-page" id="tab-calculator">
-<div class="sh" style="border-left-color:var(--c-teal)"><div class="sh-n" style="background:var(--c-teal)">9</div><div><h2>Production Manager — E2E Calculator & Loss Analysis</h2><p>คำนวณครบวงจร: อ้อย → น้ำตาล → เงิน | วิเคราะห์ Loss ทุกจุด | ค่า Default จาก Daily Report</p></div></div>
+<div class="sh" style="border-left-color:var(--c-teal)"><div class="sh-n" style="background:var(--c-teal)"></div><div><h2>Production Manager — E2E Calculator & Loss Analysis</h2><p>คำนวณครบวงจร: อ้อย → น้ำตาล → เงิน | วิเคราะห์ Loss ทุกจุด | ค่า Default จาก Daily Report</p></div></div>
 
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px">
 <div class="th" style="background:linear-gradient(135deg,rgba(245,158,11,.12),rgba(239,68,68,.08));border-color:rgba(245,158,11,.4);margin-bottom:0">
@@ -5723,7 +5721,7 @@ Brix: <b>85-90%</b><br>
 
 <!-- ======== TAB: STEAM ======== -->
 <div class="tab-page" id="tab-steam">
-<div class="sh" style="border-left-color:var(--c-orange)"><div class="sh-n" style="background:var(--c-orange)">10</div><div><h2>สมดุลไอน้ำและพลังงาน (Steam & Energy Balance)</h2><p>โรงงานน้ำตาลผลิตพลังงานเองจากชานอ้อย</p></div></div>
+<div class="sh" style="border-left-color:var(--c-orange)"><div class="sh-n" style="background:var(--c-orange)"></div><div><h2>สมดุลไอน้ำและพลังงาน (Steam & Energy Balance)</h2><p>โรงงานน้ำตาลผลิตพลังงานเองจากชานอ้อย</p></div></div>
 
 <div class="th"><h3>วงจรพลังงานของโรงงานน้ำตาล</h3>
 <div class="fm">Bagasse (เชื้อเพลิง) → Boiler (HP Steam) → Turbine → ไฟฟ้า + Exhaust Steam → หม้อต้ม + หม้อเคี่ยว + Juice Heaters</div>
@@ -5815,7 +5813,7 @@ Brix: <b>85-90%</b><br>
 
 <!-- ======== TAB: GLOSSARY ======== -->
 <div class="tab-page" id="tab-glossary">
-<div class="sh" style="border-left-color:var(--c-indigo)"><div class="sh-n" style="background:var(--c-indigo)">11</div><div><h2>คำศัพท์สำคัญ (Comprehensive Glossary)</h2><p>คำศัพท์ทั้งหมดที่วิศวกรน้ำตาลต้องรู้</p></div></div>
+<div class="sh" style="border-left-color:var(--c-indigo)"><div class="sh-n" style="background:var(--c-indigo)"></div><div><h2>คำศัพท์สำคัญ (Comprehensive Glossary)</h2><p>คำศัพท์ทั้งหมดที่วิศวกรน้ำตาลต้องรู้</p></div></div>
 
 <!-- SECTION 1: การวัดและวิเคราะห์ -->
 <div class="g g2">
@@ -6205,7 +6203,7 @@ Brix: <b>85-90%</b><br>
 
 <!-- ======== TAB: REPORT GUIDE ======== -->
 <div class="tab-page" id="tab-reportguide">
-<div class="sh" style="border-left-color:var(--pri)"><div class="sh-n" style="background:var(--accent)">13</div><div><h2>การอ่านรายงานผลวิเคราะห์ (Daily Report Interpretation)</h2><p>คู่มือเชิงลึกระดับ PhD — อธิบายทุกพารามิเตอร์ใน Daily Processing Status Report โรงงานน้ำตาลดิบ</p></div></div>
+<div class="sh" style="border-left-color:var(--pri)"><div class="sh-n" style="background:var(--accent)"></div><div><h2>การอ่านรายงานผลวิเคราะห์ (Daily Report Interpretation)</h2><p>คู่มือเชิงลึกระดับ PhD — อธิบายทุกพารามิเตอร์ใน Daily Processing Status Report โรงงานน้ำตาลดิบ</p></div></div>
 
 <div class="th">
 <h3>ทำไมต้องอ่านรายงานให้เป็น?</h3>
@@ -6865,7 +6863,7 @@ Brix: <b>85-90%</b><br>
 
 <!-- ======== TAB: BENCHMARKS ======== -->
 <div class="tab-page" id="tab-benchmarks">
-<div class="sh" style="border-left-color:var(--c-pink)"><div class="sh-n" style="background:var(--c-pink)">8</div><div><h2>เกณฑ์เปรียบเทียบประสิทธิภาพ (Benchmarks)</h2><p>เปรียบเทียบค่าของโรงงานคุณกับมาตรฐานสากล</p></div></div>
+<div class="sh" style="border-left-color:var(--c-pink)"><div class="sh-n" style="background:var(--c-pink)"></div><div><h2>เกณฑ์เปรียบเทียบประสิทธิภาพ (Benchmarks)</h2><p>เปรียบเทียบค่าของโรงงานคุณกับมาตรฐานสากล</p></div></div>
 
 <div class="c"><div class="ct">ตาราง Master Benchmark — ทุกกระบวนการ</div>
 <table class="dt"><thead><tr><th>กระบวนการ</th><th>พารามิเตอร์</th><th style="color:var(--green)">ดีเยี่ยม</th><th style="color:var(--amber)">ดี</th><th style="color:var(--red)">แย่</th><th>Core Relationship</th></tr></thead><tbody>
@@ -6939,13 +6937,14 @@ Brix: <b>85-90%</b><br>
 <tr><td><b>Phosphoric Acid (ppm P₂O₅)</b></td><td>0 (P₂O₅ ≥400 natural)</td><td>50-200</td><td>&gt;300</td><td>เสริมถ้า Juice P₂O₅ &lt;300</td></tr>
 <tr><td><b>Caustic Soda (Evap cleaning)</b></td><td>ล้างทุก 14 วัน</td><td>ล้างทุก 7 วัน</td><td>ล้างทุก 3-4 วัน</td><td>ถ้าต้องล้างบ่อย → Scale serious</td></tr>
 </tbody></table></div>
-</div>
 
-<!-- ======== TAB: E2E CALCULATOR ======== -->
+
+
+
 
 
 <!-- ═══ มาตรฐานโรงงานน้ำตาล ═══ -->
-<div class="sh" style="border-left-color:var(--c-purple)"><div class="sh-n" style="background:var(--c-purple)">9</div><div><h2>มาตรฐานระบบจัดการ & ข้อกำหนดกฎหมาย</h2><p>มาตรฐานสากลและกฎหมายที่โรงงานน้ำตาลต้องปฏิบัติตาม</p></div></div>
+<div class="sh" style="border-left-color:var(--c-purple)"><div class="sh-n" style="background:var(--c-purple)"></div><div><h2>มาตรฐานระบบจัดการ & ข้อกำหนดกฎหมาย</h2><p>มาตรฐานสากลและกฎหมายที่โรงงานน้ำตาลต้องปฏิบัติตาม</p></div></div>
 
 <div class="c"><div class="ct">📋 มาตรฐานระบบจัดการ (Management System Standards)</div>
 <table class="dt"><thead><tr><th style="width:18%">มาตรฐาน</th><th style="width:22%">ชื่อเต็ม</th><th style="width:35%">ขอบเขต & ความสำคัญในโรงงานน้ำตาล</th><th style="width:25%">ข้อกำหนดหลัก</th></tr></thead><tbody>
@@ -6999,9 +6998,7 @@ Brix: <b>85-90%</b><br>
 <b>สมัครใจ (Voluntary):</b> ISO 45001, ISO 50001, ISO 17025, Bonsucro, VIVE Sustainable Supply
 </div>
 
-
-
-
+</div><!-- /tab-benchmarks -->
 
 </div><!-- /dashboardMain -->
 
