@@ -2006,6 +2006,155 @@ function panCalc(){
   document.getElementById('pan_res').style.display='block';
   document.getElementById('pan_ex').innerHTML='A-Pan: '+na+'×'+fmt(60/ta)+' strike/h × '+va+' m³ × '+md+' t/m³ = '+fmt(strikeA)+' t/h | B: '+fmt(strikeB)+' t/h | C: '+fmt(strikeC)+' t/h | <b style="color:var(--green)">A-Sugar ~'+fmt(aSugar)+' t/h → ~'+fmt(aSugar*24)+' t/d</b> | <b style="color:var(--amber)">รองรับอ้อยได้ ~'+fmt(tcd)+' TCD</b>';
 }
+// ═══════════════════════════════════════════════════
+// CRYSTALLIZATION CALCULATORS (จากเอกสาร BVP Course)
+// ═══════════════════════════════════════════════════
+
+// 1. Crystal Content Calculator
+function crystalContent(){
+  var purMass=+document.getElementById('cc_purMass').value;
+  var purMol=+document.getElementById('cc_purMol').value;
+  var bxMass=+document.getElementById('cc_bxMass').value;
+  if(purMass<=purMol){document.getElementById('cc_res').innerHTML='<span style="color:var(--red)">Purity Mass ต้องมากกว่า Purity Mol!</span>';return;}
+  var cc=((purMass-purMol)/(100-purMol))*bxMass;
+  var ccPct=((purMass-purMol)/(100-purMol))*100;
+  var grade='',color='';
+  if(purMass>=83){grade='A-Massecuite';color='var(--green)';}
+  else if(purMass>=72){grade='B-Massecuite';color='var(--amber)';}
+  else{grade='C-Massecuite';color='var(--red)';}
+  var bench='';
+  if(grade==='A-Massecuite'){bench=cc>=55?'✅ ดี (≥55%)':'⚠ ต่ำกว่ามาตรฐาน (<55%)';}
+  else if(grade==='B-Massecuite'){bench=cc>=45?'✅ ดี (≥45%)':'⚠ ต่ำกว่ามาตรฐาน (<45%)';}
+  else{bench=cc>=35?'✅ ดี (≥35%)':'⚠ ต่ำกว่ามาตรฐาน (<35%)';}
+  document.getElementById('cc_res').innerHTML=
+    '<div style="display:flex;gap:18px;flex-wrap:wrap">'+
+    '<div><div class="cres-l">Crystal Content</div><div class="cres-v" style="color:var(--green)">'+fmt(cc)+' %</div></div>'+
+    '<div><div class="cres-l">%ผลึก (dry basis)</div><div class="cres-v">'+fmt(ccPct)+' %</div></div>'+
+    '<div><div class="cres-l">เกรด</div><div class="cres-v" style="color:'+color+'">'+grade+'</div></div>'+
+    '</div>'+
+    '<div style="margin-top:12px;padding:12px;border-radius:12px;background:var(--card)">'+
+    '<b>การประเมิน:</b> '+bench+
+    '<br><b>สูตร:</b> CC = (Purity_Mass − Purity_Mol) / (100 − Purity_Mol) × Brix_Mass'+
+    '<br><b>ที่มา:</b> Purity Mass='+purMass+'%, Purity Mol='+purMol+'%, Brix Mass='+bxMass+
+    '</div>';
+}
+
+// 2. Exhaustion Calculator
+function exhaustionCalc(){
+  var purMass=+document.getElementById('ex_purMass').value;
+  var purMol=+document.getElementById('ex_purMol').value;
+  if(purMass<=0){document.getElementById('ex_res').innerHTML='<span style="color:var(--red)">กรุณาใส่ค่า</span>';return;}
+  var exhaust=((purMass-purMol)*10000)/((100-purMol)*purMass);
+  var rating='',color='';
+  if(exhaust>=65){rating='✅ ดีเยี่ยม (≥65%)';color='var(--green)';}
+  else if(exhaust>=60){rating='✓ ดี (60-65%)';color='var(--cyan)';}
+  else if(exhaust>=55){rating='⚠ พอใช้ (55-60%)';color='var(--amber)';}
+  else{rating='✗ ต้องปรับปรุง (<55%)';color='var(--red)';}
+  document.getElementById('ex_res').innerHTML=
+    '<div style="display:flex;gap:18px;flex-wrap:wrap">'+
+    '<div><div class="cres-l">%Exhaustion</div><div class="cres-v" style="color:'+color+'">'+fmt(exhaust)+' %</div></div>'+
+    '<div><div class="cres-l">ระดับ</div><div class="cres-v" style="color:'+color+';font-size:16px">'+rating+'</div></div>'+
+    '</div>'+
+    '<div style="margin-top:12px;padding:12px;border-radius:12px;background:var(--card)">'+
+    '<b>สูตร:</b> Exhaustion = (Purity_Mass − Purity_Mol) × 10,000 / ((100 − Purity_Mol) × Purity_Mass)'+
+    '<br><b>เป้าหมาย:</b> ≥ 60% (ค่ามาตรฐาน BVP)'+
+    '<br><b>หมายเหตุ:</b> ยิ่ง Exhaustion สูง แสดงว่าสกัดน้ำตาลออกจากน้ำเชื่อมได้มากขึ้น'+
+    '</div>';
+}
+
+// 3. Purity Drop Calculator
+function purityDropCalc(){
+  var purMass=+document.getElementById('pd_purMass').value;
+  var purMol=+document.getElementById('pd_purMol').value;
+  var pd=purMass-purMol;
+  var rating='',color='';
+  if(pd>=25){rating='✅ ดีเยี่ยม (≥25)';color='var(--green)';}
+  else if(pd>=20){rating='✓ ดี (20-25)';color='var(--cyan)';}
+  else if(pd>=15){rating='⚠ พอใช้ (15-20)';color='var(--amber)';}
+  else{rating='✗ ต่ำ ต้องปรับปรุง (<15)';color='var(--red)';}
+  document.getElementById('pd_res').innerHTML=
+    '<div style="display:flex;gap:18px;flex-wrap:wrap">'+
+    '<div><div class="cres-l">Purity Drop</div><div class="cres-v" style="color:'+color+'">'+fmt(pd)+'</div></div>'+
+    '<div><div class="cres-l">ระดับ</div><div class="cres-v" style="color:'+color+';font-size:16px">'+rating+'</div></div>'+
+    '</div>'+
+    '<div style="margin-top:12px;padding:12px;border-radius:12px;background:var(--card)">'+
+    '<b>สูตร:</b> Purity Drop = Purity Massecuite − Purity Molasses'+
+    '<br><b>เป้าหมาย:</b> A-mass: >20 | B-mass: >23 | C-mass: >26'+
+    '</div>';
+}
+
+// 4. Seed Quantity Calculator (True Seeding Method)
+function seedQtyCalc(){
+  var panVol=+document.getElementById('sq_panVol').value;
+  var density=+document.getElementById('sq_density').value;
+  var ccPct=+document.getElementById('sq_cc').value;
+  var targetSize=+document.getElementById('sq_targetSize').value;
+  var seedSize=+document.getElementById('sq_seedSize').value;
+  if(seedSize<=0||targetSize<=0){document.getElementById('sq_res').innerHTML='<span style="color:var(--red)">กรุณาใส่ค่า</span>';return;}
+  var totalCrystalWt=panVol*density*(ccPct/100)*1000000;
+  var singleCrystalWt=1.11*Math.pow(targetSize/10,3);
+  var numCrystals=totalCrystalWt/singleCrystalWt;
+  var singleSeedWt=1.11*Math.pow(seedSize/10000,3);
+  var seedWt=numCrystals*singleSeedWt;
+  var slurryVol=seedWt*4;
+  document.getElementById('sq_res').innerHTML=
+    '<div style="display:flex;gap:14px;flex-wrap:wrap">'+
+    '<div><div class="cres-l">น้ำหนักรวมผลึก</div><div class="cres-v">'+fmt(totalCrystalWt/1000000)+' ตัน</div></div>'+
+    '<div><div class="cres-l">จำนวนเม็ดผลึก</div><div class="cres-v" style="color:var(--blue)">'+Number((numCrystals/1000000).toFixed(2)).toLocaleString()+' ล้านเม็ด</div></div>'+
+    '<div><div class="cres-l">เชื้อผงที่ต้องใช้</div><div class="cres-v" style="color:var(--green)">'+fmt(seedWt)+' กรัม</div></div>'+
+    '<div><div class="cres-l">ปริมาตร Slurry</div><div class="cres-v" style="color:var(--amber)">'+fmt(slurryVol)+' มล.</div></div>'+
+    '</div>'+
+    '<div style="margin-top:12px;padding:12px;border-radius:12px;background:var(--card)">'+
+    '<b>สูตร:</b> จำนวนเม็ด = (Vol × Density × CC% × 10⁶) / (1.11 × (Size_mm/10)³)<br>'+
+    '<b>เชื้อผง</b> = จำนวนเม็ด × 1.11 × (SeedSize_cm)³ กรัม<br>'+
+    '<b>Slurry</b> = เชื้อผง × 4 (อัตราส่วน 1:3 เชื้อ:แอลกอฮอล์)<br>'+
+    '<b>ที่มา:</b> Real Soluplus BVP Training Course-05'+
+    '</div>';
+}
+
+// 5. Cobenze Diagram Calculator (สัดส่วนวัตถุดิบ)
+function cobenzeCalc(){
+  var purSyrup=+document.getElementById('cb_purSyrup').value;
+  var purSeed=+document.getElementById('cb_purSeed').value;
+  var purMol=+document.getElementById('cb_purMol').value;
+  if(purSyrup===purMol){document.getElementById('cb_res').innerHTML='<span style="color:var(--red)">Purity น้ำเชื่อมและโมลาสต้องไม่เท่ากัน!</span>';return;}
+  var syrupRatio=((purSeed-purMol)/(purSyrup-purMol))*100;
+  var molRatio=((purSyrup-purSeed)/(purSyrup-purMol))*100;
+  document.getElementById('cb_res').innerHTML=
+    '<div style="display:flex;gap:18px;flex-wrap:wrap">'+
+    '<div><div class="cres-l">สัดส่วนน้ำเชื่อม</div><div class="cres-v" style="color:var(--green)">'+fmt(syrupRatio)+' %</div></div>'+
+    '<div><div class="cres-l">สัดส่วนโมลาส</div><div class="cres-v" style="color:var(--amber)">'+fmt(molRatio)+' %</div></div>'+
+    '</div>'+
+    '<div style="margin-top:12px;padding:12px;border-radius:12px;background:var(--card)">'+
+    '<b>Cobenze Diagram:</b><br>'+
+    '<span style="font-size:13px">น้ำเชื่อม (Pty '+purSyrup+') — <b>'+fmt(syrupRatio)+'%</b> → เชื้อ ซี (Pty '+purSeed+') ← <b>'+fmt(molRatio)+'%</b> — โมลาส (Pty '+purMol+')</span>'+
+    '<br><b>สูตร:</b> น้ำเชื่อม% = (Pty_Seed − Pty_Mol) / (Pty_Syrup − Pty_Mol) × 100'+
+    '</div>';
+}
+
+// 6. Crystal Seed Size Calculator
+function seedSizeCalc(){
+  var seedSize=+document.getElementById('ss_seedSize').value;
+  var factor=Math.pow(3,1/3);
+  var crystalSize=seedSize*factor;
+  document.getElementById('ss_res').innerHTML=
+    '<div style="display:flex;gap:14px;flex-wrap:wrap">'+
+    '<div><div class="cres-l">ขนาด Seed</div><div class="cres-v">'+fmt(seedSize)+' mm</div></div>'+
+    '<div><div class="cres-l">ขนาดผลึก M.A.</div><div class="cres-v" style="color:var(--green)">'+fmt(crystalSize)+' mm</div></div>'+
+    '<div><div class="cres-l">ตัวคูณ 3^(1/3)</div><div class="cres-v">'+fmt(factor)+'</div></div>'+
+    '</div>'+
+    '<table class="dt" style="margin-top:14px;font-size:13px"><thead><tr><th>ขั้นตอน</th><th>Footings (mm)</th><th>ผลึกสุดท้าย M.A. (mm)</th></tr></thead><tbody>'+
+    '<tr><td>C-strike grain footings</td><td>0.243</td><td>0.350</td></tr>'+
+    '<tr><td>C-Sugar & C-magma</td><td>0.350</td><td>0.506</td></tr>'+
+    '<tr><td>Primary footings (B-Seed)</td><td>0.506</td><td>0.730</td></tr>'+
+    '<tr><td>Secondary footings (B-Magma)</td><td>0.730</td><td>1.050</td></tr>'+
+    '<tr style="font-weight:bold;color:var(--green)"><td>Commercial Sugar (A-Sugar)</td><td>—</td><td>1.050</td></tr>'+
+    '</tbody></table>'+
+    '<div style="margin-top:10px;padding:10px;border-radius:10px;background:var(--card)">'+
+    '<b>สูตร:</b> M.A. = Size of seeding × 3^(1/3) = Size × 1.4423'+
+    '</div>';
+}
+
 
 // Machine Spec: Centrifugal → Throughput
 function cen4(){
@@ -4168,6 +4317,8 @@ Temperature: <b>60-90°C</b><br>
 <button class="stab" onclick="openSub(this,'cry-perf')">ประสิทธิภาพ</button>
 <button class="stab" onclick="openSub(this,'cry-prob')">ปัญหาที่พบบ่อย</button>
 <button class="stab" onclick="openSub(this,'cry-calc')">เครื่องคำนวณ</button>
+<button class="stab" onclick="openSub(this,'cry-bvp')">🧪 คำนวณ BVP</button>
+<button class="stab" onclick="openSub(this,'cry-param')">📊 Parameters</button>
 </div>
 
 <div class="spage active" id="sp-cry-flow">
@@ -4601,6 +4752,147 @@ FM Brix: <b>85-90%</b>
 </div></div>
 </div>
 </div>
+<!-- ═══ BVP Crystallization Calculators ═══ -->
+<div class="spage" id="sp-cry-bvp">
+<div class="th"><div class="th-t">🧪 เครื่องคำนวณ BVP Crystallization</div>
+<div class="th-d">สูตรคำนวณจากคอร์ส Excellent Sugar Crystallization for Batch Vacuum Pan — Real Soluplus</div></div>
+
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:20px;margin-top:16px">
+
+<!-- Crystal Content -->
+<div class="c">
+<div class="ct" style="color:var(--green)">1. Crystal Content — %ผลึกน้ำตาลใน Massecuite</div>
+<p style="font-size:12px;color:var(--txt3);margin-bottom:10px">CC = (Purity_Mass − Purity_Mol) / (100 − Purity_Mol) × Brix_Mass</p>
+<div class="cr"><label>Purity Massecuite (%)<input type="number" id="cc_purMass" value="86" step="0.1"></label></div>
+<div class="cr"><label>Purity Molasses (%)<input type="number" id="cc_purMol" value="65" step="0.1"></label></div>
+<div class="cr"><label>Brix Massecuite (%)<input type="number" id="cc_bxMass" value="93" step="0.1"></label></div>
+<button class="btn-calc" onclick="crystalContent()">🔢 คำนวณ Crystal Content</button>
+<div class="cres" id="cc_res"></div>
+</div>
+
+<!-- Exhaustion -->
+<div class="c">
+<div class="ct" style="color:var(--cyan)">2. %Exhaustion — ประสิทธิภาพการสกัดผลึก</div>
+<p style="font-size:12px;color:var(--txt3);margin-bottom:10px">Exhaustion = (Pty_Mass − Pty_Mol) × 10,000 / ((100 − Pty_Mol) × Pty_Mass) — เป้าหมาย ≥ 60%</p>
+<div class="cr"><label>Purity Massecuite (%)<input type="number" id="ex_purMass" value="86" step="0.1"></label></div>
+<div class="cr"><label>Purity Molasses (%)<input type="number" id="ex_purMol" value="35" step="0.1"></label></div>
+<button class="btn-calc" onclick="exhaustionCalc()">🔢 คำนวณ Exhaustion</button>
+<div class="cres" id="ex_res"></div>
+</div>
+
+<!-- Purity Drop -->
+<div class="c">
+<div class="ct" style="color:var(--amber)">3. Purity Drop — ค่าความบริสุทธิ์ที่ลดลง</div>
+<p style="font-size:12px;color:var(--txt3);margin-bottom:10px">Purity Drop = Purity Massecuite − Purity Molasses (Nutsch)</p>
+<div class="cr"><label>Purity Massecuite (%)<input type="number" id="pd_purMass" value="86" step="0.1"></label></div>
+<div class="cr"><label>Purity Molasses (%)<input type="number" id="pd_purMol" value="65" step="0.1"></label></div>
+<button class="btn-calc" onclick="purityDropCalc()">🔢 คำนวณ Purity Drop</button>
+<div class="cres" id="pd_res"></div>
+</div>
+
+<!-- Seed Quantity -->
+<div class="c">
+<div class="ct" style="color:var(--blue)">4. Seed Quantity — ปริมาณเชื้อหม้อเคี่ยว (True Seeding)</div>
+<p style="font-size:12px;color:var(--txt3);margin-bottom:10px">คำนวณน้ำหนักเชื้อผงและปริมาตร Slurry ที่ต้องใช้ตามขนาดหม้อเคี่ยว</p>
+<div class="cr"><label>ปริมาตรหม้อ (m³)<input type="number" id="sq_panVol" value="95" step="1"></label></div>
+<div class="cr"><label>ความหนาแน่น (t/m³)<input type="number" id="sq_density" value="1.5" step="0.01"></label></div>
+<div class="cr"><label>Crystal Content (%)<input type="number" id="sq_cc" value="55" step="1"></label></div>
+<div class="cr"><label>ขนาดผลึกเป้าหมาย (mm)<input type="number" id="sq_targetSize" value="0.5" step="0.01"></label></div>
+<div class="cr"><label>ขนาดเชื้อ (ไมครอน)<input type="number" id="sq_seedSize" value="5" step="0.5"></label></div>
+<button class="btn-calc" onclick="seedQtyCalc()">🔢 คำนวณปริมาณเชื้อ</button>
+<div class="cres" id="sq_res"></div>
+</div>
+
+<!-- Cobenze Diagram -->
+<div class="c">
+<div class="ct" style="color:var(--purple)">5. Cobenze Diagram — สัดส่วนวัตถุดิบเคี่ยว</div>
+<p style="font-size:12px;color:var(--txt3);margin-bottom:10px">คำนวณสัดส่วนน้ำเชื่อมและโมลาสที่ต้องใช้ในการเคี่ยว</p>
+<div class="cr"><label>Purity น้ำเชื่อม (%)<input type="number" id="cb_purSyrup" value="78" step="0.1"></label></div>
+<div class="cr"><label>Purity เชื้อ C-Seed (%)<input type="number" id="cb_purSeed" value="70" step="0.1"></label></div>
+<div class="cr"><label>Purity โมลาส A (%)<input type="number" id="cb_purMol" value="65" step="0.1"></label></div>
+<button class="btn-calc" onclick="cobenzeCalc()">🔢 คำนวณ Cobenze</button>
+<div class="cres" id="cb_res"></div>
+</div>
+
+<!-- Crystal Seed Size -->
+<div class="c">
+<div class="ct" style="color:var(--red)">6. Crystal Seed Size — ขนาดผลึกจากเชื้อ</div>
+<p style="font-size:12px;color:var(--txt3);margin-bottom:10px">M.A. = Size of seeding × 3^(1/3) = Size × 1.4423</p>
+<div class="cr"><label>ขนาด Seed (mm)<input type="number" id="ss_seedSize" value="0.73" step="0.01"></label></div>
+<button class="btn-calc" onclick="seedSizeCalc()">🔢 คำนวณขนาดผลึก</button>
+<div class="cres" id="ss_res"></div>
+</div>
+
+</div>
+</div>
+
+<!-- ═══ Boiling Parameters Reference Table ═══ -->
+<div class="spage" id="sp-cry-param">
+<div class="th"><div class="th-t">📊 Parameters ควบคุมการเคี่ยวน้ำตาล</div>
+<div class="th-d">ค่ามาตรฐานจาก Real Soluplus BVP Training — ใช้สำหรับอ้างอิงในการควบคุมคุณภาพการเคี่ยว</div></div>
+
+<div class="c" style="margin-top:16px">
+<div class="ct">🔬 Parameters ควบคุมการเคี่ยว A-B-C Massecuite</div>
+<table class="dt"><thead><tr>
+<th>Parameter</th><th>%Brix</th><th>%Purity</th><th>Purity Drop</th><th>%Crystal Content</th><th>เวลา (ชม.)</th><th>Exhaustion</th>
+</tr></thead><tbody>
+<tr><td><b>A-Seed</b></td><td>91-92</td><td>>85</td><td>—</td><td>—</td><td>2.5-3</td><td>—</td></tr>
+<tr style="background:rgba(76,175,80,.08)"><td><b style="color:var(--green)">A-Massecuite</b></td><td>93.5-94</td><td>83-85</td><td>> 20</td><td>>55</td><td>3-4</td><td>60-65</td></tr>
+<tr><td><b>B-Magma</b></td><td>>90</td><td>>90</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>B-Seed</b></td><td>91±0.5</td><td>>83</td><td>—</td><td>—</td><td>2.5-3</td><td>—</td></tr>
+<tr style="background:rgba(255,152,0,.08)"><td><b style="color:var(--amber)">B-Massecuite</b></td><td>94.5-95.5</td><td>72-73</td><td>> 23</td><td>>45</td><td>3-4</td><td>60-65</td></tr>
+<tr><td><b>C-Magma</b></td><td>>90</td><td>>90</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+<tr><td><b>C-Seed</b></td><td>91±0.5</td><td>65-67</td><td>—</td><td>—</td><td>4-5</td><td>—</td></tr>
+<tr style="background:rgba(244,67,54,.08)"><td><b style="color:var(--red)">C-Massecuite</b></td><td>>97</td><td>55</td><td>> 26</td><td>>35</td><td>6-7</td><td>60-65</td></tr>
+</tbody></table>
+</div>
+
+<div class="c" style="margin-top:16px">
+<div class="ct">⚖ เปรียบเทียบระบบเคี่ยว (Boiling Schemes)</div>
+<table class="dt"><thead><tr>
+<th>หัวข้อ</th><th>2 Boiling</th><th>3 Boiling (2½)</th><th>Double Einwurf</th><th>VHP 3 Boiling</th>
+</tr></thead><tbody>
+<tr><td><b>Raw Syrup Purity</b></td><td>&lt;80</td><td>80-85</td><td>&gt;85</td><td>&gt;85</td></tr>
+<tr><td><b>ควบคุม</b></td><td>ง่าย</td><td>ระวัง</td><td>ปกติ</td><td>ปกติ</td></tr>
+<tr><td><b>ต้นทุนอุปกรณ์</b></td><td>ต่ำ</td><td>กลาง</td><td>สูง</td><td>สูง</td></tr>
+<tr><td><b>ปริมาณ Massecuite</b></td><td>138</td><td>133</td><td>174</td><td>153</td></tr>
+<tr><td><b>Steam (t/100 TDS)</b></td><td>90</td><td>88</td><td>100</td><td>99</td></tr>
+<tr><td><b>เกรดน้ำตาล</b></td><td>A-sugar</td><td>A&B-sugar</td><td>A-sugar</td><td>VHP</td></tr>
+<tr><td><b>%Pol น้ำตาล</b></td><td>98-99</td><td>98-99(A), 97-98(B)</td><td>99</td><td>99.5</td></tr>
+</tbody></table>
+</div>
+
+<div class="c" style="margin-top:16px">
+<div class="ct">🎯 เกณฑ์ CV (Coefficient of Variation) — ความสม่ำเสมอของผลึก</div>
+<table class="dt"><thead><tr><th>CV</th><th>เกณฑ์</th><th>คำอธิบาย</th></tr></thead><tbody>
+<tr style="background:rgba(76,175,80,.08)"><td><b style="color:var(--green)">≤ 20%</b></td><td>ดีเยี่ยม</td><td>ผลึกขนาดสม่ำเสมอมาก เหมาะสำหรับน้ำตาลคุณภาพสูง (True Seeding)</td></tr>
+<tr style="background:rgba(255,152,0,.08)"><td><b style="color:var(--amber)">20-30%</b></td><td>พอใช้</td><td>ผลึกขนาดค่อนข้างสม่ำเสมอ (Shock Seeding)</td></tr>
+<tr style="background:rgba(244,67,54,.08)"><td><b style="color:var(--red)">> 30%</b></td><td>ต่ำกว่ามาตรฐาน</td><td>ผลึกหลายขนาด ปั่นแยกยาก ส่งผลต่อคุณภาพน้ำตาล (Waiting Method)</td></tr>
+</tbody></table>
+</div>
+
+<div class="c" style="margin-top:16px">
+<div class="ct">🌡 Supersaturation Zones — โซนการตกผลึก</div>
+<table class="dt"><thead><tr><th>Zone</th><th>ค่า SC</th><th>คำอธิบาย</th></tr></thead><tbody>
+<tr><td><b>Stable (Undersaturated)</b></td><td>&lt; 1.00</td><td>ผลึกละลาย ไม่สามารถเกิดผลึกใหม่</td></tr>
+<tr style="background:rgba(76,175,80,.08)"><td><b style="color:var(--green)">Metastable</b></td><td>1.00 - 1.20</td><td>โซนที่เหมาะสม ผลึกเติบโตอย่างสม่ำเสมอ ไม่เกิดผลึกใหม่</td></tr>
+<tr style="background:rgba(255,152,0,.08)"><td><b style="color:var(--amber)">Intermediate</b></td><td>1.20 - 1.30</td><td>เสี่ยง! ผลึกเล็กใหม่อาจเกิดได้ ถ้าไม่ควบคุมดี</td></tr>
+<tr style="background:rgba(244,67,54,.08)"><td><b style="color:var(--red)">Labile</b></td><td>&gt; 1.30</td><td>อันตราย! เกิด False Grain ควบคุมไม่ได้ หลีกเลี่ยง!</td></tr>
+</tbody></table>
+</div>
+
+<div class="c" style="margin-top:16px">
+<div class="ct">🏭 ความถี่ในการล้างหม้อเคี่ยว (Boil-out/Cleaning)</div>
+<table class="dt"><thead><tr><th>เกรด Massecuite</th><th>Purity Range</th><th>Cleaning Interval</th><th>แนวโน้มตะกรัน</th></tr></thead><tbody>
+<tr><td><b>A-Massecuite (เกรดสูง)</b></td><td>85-90%</td><td>2-4 สัปดาห์</td><td>สูงมาก (เกิดเร็ว)</td></tr>
+<tr><td><b>B-Massecuite (เกรดกลาง)</b></td><td>80-84%</td><td>4-8 สัปดาห์</td><td>ปานกลาง</td></tr>
+<tr><td><b>C-Massecuite (เกรดต่ำ)</b></td><td>64-68%</td><td>60-100 วัน</td><td>ต่ำ</td></tr>
+</tbody></table>
+</div>
+
+<p style="text-align:center;color:var(--txt3);font-size:11px;margin-top:16px">อ้างอิง: <b>Real Soluplus — Course-05 Excellent Sugar Crystallization for BVP</b> | <b>Peter Rein (2007)</b> | <b>Thieme's Table</b></p>
+</div>
+
 </div>
 
 <!-- ======== TAB: CENTRIFUGAL ======== -->
@@ -6060,6 +6352,29 @@ Brix: <b>85-90%</b><br>
 <tr><td><b>Evaporation Rate</b></td><td>= Juice × (1 − Brix_in/Brix_out)</td><td>น้ำที่ต้องระเหย</td></tr>
 <tr><td><b>Sugar Produced</b></td><td>= Cane × CCS/100 × Recovery/100</td><td>ประมาณน้ำตาลที่ผลิตได้</td></tr>
 <tr><td><b>Loss → Money</b></td><td>= Loss(t) × Sugar Price(฿/t)</td><td>แปลงทุก Loss เป็นเงิน</td></tr>
+</tbody></table></div>
+
+<div class="g g2"><div class="c">
+<div class="ct">🧪 หมวด 16 — การตกผลึก BVP ขั้นสูง (Advanced Crystallization — BVP)</div>
+<table class="dt"><thead><tr><th>คำศัพท์</th><th>ความหมาย</th><th>สำคัญเพราะ/หมายเหตุ</th></tr></thead><tbody>
+<tr><td><b class="ho">Crystal Content (CC)</b></td><td>เปอร์เซ็นต์ผลึกน้ำตาลที่อยู่ใน Massecuite สูตร: (Pty_Mass − Pty_Mol) / (100 − Pty_Mol) × Brix_Mass</td><td>ค่าควบคุมสำคัญ: A ≥55%, B ≥45%, C ≥35% — ยิ่งสูง ยิ่งสกัดน้ำตาลได้มาก</td></tr>
+<tr><td><b class="ho">Exhaustion</b></td><td>%น้ำตาลที่สามารถดึงออกจากกากน้ำตาลได้ วัดประสิทธิภาพ Crystallization</td><td>เป้าหมาย ≥ 60% — สูตร: (Pty_Mass − Pty_Mol) × 10,000 / ((100−Pty_Mol) × Pty_Mass)</td></tr>
+<tr><td><b class="ho">Supersaturation Coefficient (SC)</b></td><td>ค่าสัมประสิทธิ์ความอิ่มตัวยิ่งยวด = ปริมาณน้ำตาล/ปริมาณน้ำ ÷ ค่าอิ่มตัวที่อุณหภูมิเดียวกัน</td><td>ต้องรักษาให้อยู่ 1.05-1.20 (Metastable zone) — สูงเกินจะเกิด False Grain</td></tr>
+<tr><td><b class="ho">Metastable Zone</b></td><td>โซนที่น้ำเชื่อมมีความเข้มข้นเหนือจุดอิ่มตัว แต่ยังไม่เกิดผลึกใหม่ SC 1.00-1.20</td><td>โซนที่เหมาะสมที่สุดสำหรับการเลี้ยงผลึกให้โต ควบคุมให้อยู่ในโซนนี้ตลอดเวลา</td></tr>
+<tr><td><b class="ho">Intermediate Zone</b></td><td>โซนกึ่งกลาง SC 1.20-1.30 อาจเกิดผลึกเล็กใหม่ (nucleation) ได้</td><td>เสี่ยงต่อการเกิด False Grain — ต้องควบคุมอย่างระมัดระวัง</td></tr>
+<tr><td><b class="hr">Labile Zone</b></td><td>โซนอันตราย SC > 1.30 ผลึกเกิดขึ้นเองโดยธรรมชาติ ควบคุมไม่ได้</td><td>หลีกเลี่ยงเด็ดขาด! เกิด False Grain จำนวนมาก ทำให้ผลึกหลายขนาด</td></tr>
+<tr><td><b class="ho">CV (Coefficient of Variation)</b></td><td>ค่าสัมประสิทธิ์การแปรผัน วัดความสม่ำเสมอของขนาดเม็ดผลึก</td><td>ดีเยี่ยม ≤20% | พอใช้ 20-30% | ต่ำ >30% — True Seeding ให้ CV ต่ำสุด</td></tr>
+<tr><td><b class="ho">True Seeding</b></td><td>วิธีเตรียมเชื้อที่ดีที่สุด ใช้ Slurry Seed (น้ำตาลบดละเอียด+แอลกอฮอล์) เติมลงหม้อโดยตรง</td><td>ให้ CV <20% ควบคุมจำนวนผลึกได้แม่นยำ เร็วกว่า และประสิทธิภาพสูงกว่าวิธีอื่น</td></tr>
+<tr><td><b class="ho">Shock Seeding</b></td><td>วิธีใช้การเปลี่ยนแปลงกะทันหัน (sudden shock) เพื่อกระตุ้นการตกผลึก</td><td>CV 25-30% ดีกว่า Waiting แต่ยังควบคุมไม่ดีเท่า True Seeding</td></tr>
+<tr><td><b class="ho">Waiting Method</b></td><td>วิธีดั้งเดิม ปล่อยให้น้ำเชื่อมเข้มข้นจนผลึกเกิดเอง (spontaneous nucleation)</td><td>ล้าสมัย CV >30% ควบคุมยาก ไม่นิยมในปัจจุบัน</td></tr>
+<tr><td><b class="ho">Cobenze Diagram</b></td><td>แผนภาพคำนวณสัดส่วนวัตถุดิบ (น้ำเชื่อม/โมลาส) สำหรับเคี่ยวแต่ละครั้ง</td><td>สูตร: น้ำเชื่อม% = (Pty_Seed − Pty_Mol) / (Pty_Syrup − Pty_Mol) × 100</td></tr>
+<tr><td><b class="ho">Purity Drop</b></td><td>ค่าความบริสุทธิ์ที่ลดลงจากการเคี่ยว = Purity Massecuite − Purity Molasses</td><td>A >20 | B >23 | C >26 — ยิ่งสูง แสดงว่าสกัดน้ำตาลได้ดี</td></tr>
+<tr><td><b class="ho">Seed/Mass Ratio</b></td><td>อัตราส่วนเชื้อต่อ Massecuite มีผลต่อขนาดผลึกสุดท้าย</td><td>35%, 45%, 60% — ยิ่ง Ratio สูง ผลึกยิ่งเล็ก</td></tr>
+<tr><td><b class="ho">Dilute Molasses</b></td><td>ระบบเจือจางโมลาสด้วยน้ำร้อน ลด Brix ก่อนเข้าหม้อเคี่ยว</td><td>ลด False Grain, ช่วยควบคุม Brix 75-78 ก่อนเข้าหม้อ, ลดการใช้น้ำร้อนล้างผลึก</td></tr>
+<tr><td><b class="ho">Strike Height</b></td><td>ระดับการเคี่ยวเต็มหม้อ ควรอยู่ 1.25-1.50 ม. เหนือ Calandria tube</td><td>เคี่ยวสูงเกินจะเกิด Hydrostatic ทำให้ BPE สูง อุณหภูมิสูง ผลึกละลาย</td></tr>
+<tr><td><b class="ho">Boil-out / Cleaning</b></td><td>การล้างอบหม้อเคี่ยว เพื่อขจัดตะกรัน (encrustation) ที่เกาะท่อ Calandria</td><td>A-pan: ทุก 2-4 สัปดาห์ | B-pan: 4-8 สัปดาห์ | C-pan: 60-100 วัน</td></tr>
+<tr><td><b class="ho">Nutsch Test</b></td><td>การทดสอบโดยกรองแยก Massecuite เพื่อวิเคราะห์ Purity ของ Mass และ Mol แยกกัน</td><td>ใช้ตรวจสอบ Purity Drop และ Crystal Content จากห้องวิเคราะห์</td></tr>
+<tr><td><b class="ho">Thieme's Table</b></td><td>ตารางความสามารถในการละลายของซูโครสที่ Purity และอุณหภูมิต่างๆ</td><td>ใช้คำนวณ SC: ดูค่า Solubility Concentration จากตารางนี้</td></tr>
 </tbody></table></div>
 
 <div class="c" style="margin-top:20px;text-align:center">
