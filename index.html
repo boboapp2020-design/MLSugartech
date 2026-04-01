@@ -1351,6 +1351,15 @@ function openTab(id){
   if(el){
     if(el.classList.contains('tab-page')) { el.classList.add('active'); el.style.display=''; }
     else { el.style.display=''; }
+    // Reset sub-tabs: show first sub-page, activate first stab button
+    var spages = el.querySelectorAll('.spage');
+    var stabs = el.querySelectorAll('.stab');
+    if(spages.length > 0){
+      spages.forEach(function(sp){ sp.classList.remove('active'); });
+      stabs.forEach(function(sb){ sb.classList.remove('active'); });
+      spages[0].classList.add('active');
+      if(stabs.length > 0) stabs[0].classList.add('active');
+    }
   }
 
   // Activate the clicked button
@@ -1366,6 +1375,15 @@ function goTab(id){
   if(el){
     if(el.classList.contains('tab-page')) { el.classList.add('active'); el.style.display=''; }
     else { el.style.display=''; }
+    // Reset sub-tabs: show first sub-page, activate first stab button
+    var spages = el.querySelectorAll('.spage');
+    var stabs = el.querySelectorAll('.stab');
+    if(spages.length > 0){
+      spages.forEach(function(sp){ sp.classList.remove('active'); });
+      stabs.forEach(function(sb){ sb.classList.remove('active'); });
+      spages[0].classList.add('active');
+      if(stabs.length > 0) stabs[0].classList.add('active');
+    }
   }
   var btns=document.querySelectorAll('.tab-btn');
   var tabNames={cane:'คุณภาพอ้อย',milling:'ลูกหีบ',clarification:'การทำใส',evaporation:'หม้อต้ม',crystallization:'หม้อเคี่ยว',centrifugal:'หม้อปั่น',sugar:'น้ำตาล'};
@@ -2781,6 +2799,90 @@ function centRecovCalc(){
     '<b>ควบคุม:</b> Washing time, Wash water temp(80°C), Speed(1000-1200 rpm), Cycle time</div>';
 }
 
+
+// ========== PhD MODULE CALCULATORS ==========
+function calcRevImpact(){
+  var tcd=+document.getElementById('rev_tcd').value;
+  var days=+document.getElementById('rev_days').value;
+  var pol=+document.getElementById('rev_pol').value;
+  var or1=+document.getElementById('rev_or').value;
+  var or2=+document.getElementById('rev_or2').value;
+  var price=+document.getElementById('rev_price').value;
+  var totalCane=tcd*days;
+  var sugar1=totalCane*(pol/100)*(or1/100);
+  var sugar2=totalCane*(pol/100)*(or2/100);
+  var diff=sugar2-sugar1;
+  var money=diff*price;
+  var d=document.getElementById('rev_result');
+  d.style.display='block';
+  d.innerHTML='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px">'+
+    '<div class="c"><div class="ct">อ้อยรวม (ตัน/ฤดู)</div><div class="cv ha">'+Math.round(totalCane).toLocaleString()+'</div></div>'+
+    '<div class="c"><div class="ct">น้ำตาลเดิม (ตัน)</div><div class="cv">'+Math.round(sugar1).toLocaleString()+'</div></div>'+
+    '<div class="c"><div class="ct">น้ำตาลใหม่ (ตัน)</div><div class="cv hg">'+Math.round(sugar2).toLocaleString()+'</div></div>'+
+    '<div class="c"><div class="ct">น้ำตาลที่ได้เพิ่ม (ตัน)</div><div class="cv" style="color:'+(diff>0?'var(--green)':'var(--red)')+'">'+Math.round(diff).toLocaleString()+'</div></div>'+
+    '</div>'+
+    '<div class="c" style="margin-top:14px;border-left:4px solid '+(money>0?'var(--green)':'var(--red)')+'"><div class="ct">💰 ผลกระทบต่อรายได้ต่อฤดู</div>'+
+    '<div class="cv" style="font-size:28px;color:'+(money>0?'var(--green)':'var(--red)')+'">'+
+    (money>0?'+':'')+Math.round(money).toLocaleString()+' บาท</div>'+
+    '<div class="cn">= '+(money>0?'+':'')+Math.round(money/1000000).toLocaleString()+' ล้านบาท | Recovery เปลี่ยน '+(or2-or1).toFixed(1)+'%</div></div>';
+}
+
+function calcDowntime(){
+  var rate=+document.getElementById('dt_rate').value;
+  var hrs=+document.getElementById('dt_hours').value;
+  var ccs=+document.getElementById('dt_ccs').value;
+  var price=+document.getElementById('dt_price').value;
+  var caneLost=rate*hrs;
+  var sugarLost=caneLost*(ccs/100)*0.87;
+  var moneyLost=sugarLost*price;
+  var d=document.getElementById('dt_result');
+  d.style.display='block';
+  d.innerHTML='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">'+
+    '<div class="c"><div class="ct">อ้อยที่หีบไม่ได้ (ตัน)</div><div class="cv hr">'+Math.round(caneLost).toLocaleString()+'</div></div>'+
+    '<div class="c"><div class="ct">น้ำตาลที่สูญเสีย (ตัน)</div><div class="cv hr">'+Math.round(sugarLost).toLocaleString()+'</div></div>'+
+    '<div class="c"><div class="ct">มูลค่าที่เสียไป (บาท)</div><div class="cv hr">'+Math.round(moneyLost).toLocaleString()+'</div></div>'+
+    '</div>'+
+    '<div class="ins" style="margin-top:10px"><b>เทียบ:</b> ทุกชั่วโมง downtime = <b class="hr">'+Math.round(moneyLost/hrs).toLocaleString()+' บาท</b> | '+
+    'ต่อนาที = <b class="hr">'+Math.round(moneyLost/hrs/60).toLocaleString()+' บาท</b></div>';
+}
+
+function calcCCS(){
+  var pol=+document.getElementById('ccs_pol').value;
+  var brix=+document.getElementById('ccs_brix').value;
+  var fib=+document.getElementById('ccs_fib').value;
+  var trash=+document.getElementById('ccs_trash').value;
+  var ccs=1.5*pol*(1-(fib+5)/100)-0.5*brix*(1-(fib+3)/100);
+  var cleanPol=pol*(1+trash/100);
+  var cleanCCS=1.5*cleanPol*(1-(fib*0.9+5)/100)-0.5*(brix*(1+trash/100))*(1-(fib*0.9+3)/100);
+  var d=document.getElementById('ccs_result');
+  d.style.display='block';
+  d.innerHTML='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">'+
+    '<div class="c"><div class="ct">CCS (ปัจจุบัน)</div><div class="cv ha">'+ccs.toFixed(2)+'</div></div>'+
+    '<div class="c"><div class="ct">CCS (ถ้าไม่มี Trash)</div><div class="cv hg">'+cleanCCS.toFixed(2)+'</div></div>'+
+    '<div class="c"><div class="ct">CCS ที่หายจาก Trash</div><div class="cv hr">'+(cleanCCS-ccs).toFixed(2)+'</div></div>'+
+    '</div>'+
+    '<div class="ins" style="margin-top:10px">สำหรับ 8,000 TCD × 120 วัน: Trash '+trash+'% ทำให้สูญเสีย <b class="hr">~'+
+    Math.round((cleanCCS-ccs)/100*8000*120*18000).toLocaleString()+' บาท/ฤดู</b></div>';
+}
+
+function calcScale(){
+  var h1=+document.getElementById('sc_htc1').value;
+  var h2=+document.getElementById('sc_htc2').value;
+  var cost=+document.getElementById('sc_cost').value;
+  var reduction=((h1-h2)/h1*100);
+  var steamIncrease=reduction*0.4;
+  var dailyCost=steamIncrease/100*500*24*cost;
+  var d=document.getElementById('sc_result');
+  d.style.display='block';
+  d.innerHTML='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">'+
+    '<div class="c"><div class="ct">HTC ลดลง</div><div class="cv hr">'+reduction.toFixed(1)+'%</div></div>'+
+    '<div class="c"><div class="ct">Steam เพิ่มขึ้น (ประมาณ)</div><div class="cv hr">'+steamIncrease.toFixed(1)+'%</div></div>'+
+    '<div class="c"><div class="ct">ค่าใช้จ่ายเพิ่ม/วัน</div><div class="cv hr">'+Math.round(dailyCost).toLocaleString()+' บาท</div></div>'+
+    '</div>'+
+    '<div class="ins" style="margin-top:10px">ถ้าไม่ล้าง Scale ตลอดฤดู (120 วัน): <b class="hr">'+Math.round(dailyCost*120).toLocaleString()+' บาท</b> ที่เสียไปเปล่าๆ!</div>';
+}
+
+
 // Init — calculators use manual buttons, no auto-call
 // ═══ THEME TOGGLE ═══
 function toggleTheme(){
@@ -3029,6 +3131,106 @@ function goLanding() {
   window.scrollTo(0,0);
 }
 
+
+
+// Sugar Quality Score Calculator
+function calcSQS(){
+  var ic=+document.getElementById('sq_icumsa').value;
+  var mo=+document.getElementById('sq_moist').value;
+  var pol=+document.getElementById('sq_pol').value;
+  var ash=+document.getElementById('sq_ash').value;
+  var cv=+document.getElementById('sq_cv').value;
+  var ma=+document.getElementById('sq_ma').value;
+  // Score components (0-100 each)
+  var sColor=Math.max(0,Math.min(100,(1200-ic)/12));
+  var sMoist=Math.max(0,Math.min(100,(0.1-mo)/0.001));
+  var sPol=Math.max(0,Math.min(100,(pol-99.0)*100));
+  var sAsh=Math.max(0,Math.min(100,(0.06-ash)/0.0006));
+  var sCV=Math.max(0,Math.min(100,(40-cv)/0.4));
+  var sMA=ma>=0.6&&ma<=1.2?100:Math.max(0,100-Math.abs(ma-0.9)*200);
+  var score=(sColor*0.30+sMoist*0.15+sPol*0.20+sAsh*0.15+sCV*0.10+sMA*0.10);
+  document.getElementById('sq_score').textContent=score.toFixed(1);
+  var grade,color,premium;
+  if(score>=85){grade='🟢 Premium';color='var(--green)';premium='+80-120';}
+  else if(score>=70){grade='🟡 Standard';color='var(--amber)';premium='+20-40';}
+  else if(score>=50){grade='🟠 Below Avg';color='var(--c-orange)';premium='0';}
+  else{grade='🔴 Poor';color='var(--red)';premium='-20-40';}
+  document.getElementById('sq_score').style.color=color;
+  document.getElementById('sq_grade').innerHTML=grade;
+  document.getElementById('sq_grade').style.color=color;
+  document.getElementById('sq_premium').textContent=premium;
+}
+
+// Cogeneration Economics Calculator
+function calcCogen(){
+  var tcd=+document.getElementById('cg_tcd').value;
+  var pres=+document.getElementById('cg_pres').value;
+  var price=+document.getElementById('cg_price').value;
+  var days=+document.getElementById('cg_days').value;
+  var bag=+document.getElementById('cg_bag').value;
+  var need=+document.getElementById('cg_need').value;
+  // Estimate power generation based on pressure
+  var kwh_tc;
+  if(pres<=25) kwh_tc=18;
+  else if(pres<=45) kwh_tc=35;
+  else if(pres<=70) kwh_tc=90;
+  else kwh_tc=130;
+  // Adjust for bagasse availability
+  kwh_tc=kwh_tc*(bag/28);
+  var surplus=kwh_tc-need;
+  if(surplus<0) surplus=0;
+  var rev=surplus*tcd*days*price/1e6;
+  var mw=surplus*tcd/24/1000;
+  document.getElementById('cg_total').textContent=kwh_tc.toFixed(0);
+  document.getElementById('cg_surplus').textContent=surplus.toFixed(0);
+  document.getElementById('cg_rev').textContent=rev.toFixed(2);
+  document.getElementById('cg_mw').textContent=mw.toFixed(1);
+}
+
+// Traffic Light Benchmark Checker
+function calcBenchmark(){
+  var params=[
+    {id:'bm_or',name:'Overall Recovery',unit:'%',green:87.5,amber:85,val:0},
+    {id:'bm_bhr',name:'Boiling House Recovery',unit:'%',green:91,amber:88,val:0},
+    {id:'bm_me',name:'Mill Extraction',unit:'%',green:97,amber:96,val:0},
+    {id:'bm_steam',name:'Steam % on Cane',unit:'%',green:45,amber:50,val:0,inv:true},
+    {id:'bm_polbag',name:'Pol % Bagasse',unit:'%',green:1.5,amber:2.0,val:0,inv:true},
+    {id:'bm_molpur',name:'Molasses Purity',unit:'%',green:34,amber:38,val:0,inv:true},
+    {id:'bm_icu',name:'ICUMSA Color',unit:'IU',green:600,amber:1000,val:0,inv:true},
+    {id:'bm_cv',name:'Crystal CV',unit:'%',green:20,amber:30,val:0,inv:true},
+    {id:'bm_crush',name:'Crushing Rate',unit:'% design',green:95,amber:90,val:0}
+  ];
+  var h='<table class="dt"><thead><tr><th>Parameter</th><th>Your Value</th><th>Status</th><th>Target</th><th>Recommendation</th></tr></thead><tbody>';
+  var greens=0,ambers=0,reds=0;
+  for(var i=0;i<params.length;i++){
+    var p=params[i];
+    p.val=+document.getElementById(p.id).value;
+    var status,color,rec;
+    if(p.inv){
+      if(p.val<=p.green){status='🟢 World-class';color='rgba(76,175,80,.15)';rec='รักษาระดับนี้ไว้';greens++;}
+      else if(p.val<=p.amber){status='🟡 Acceptable';color='rgba(255,193,7,.15)';rec='ปรับปรุงได้อีก '+(p.val-p.green).toFixed(1)+' '+p.unit;ambers++;}
+      else{status='🔴 Needs Action';color='rgba(244,67,54,.15)';rec='เร่งแก้ไข! ห่างจากเป้า '+(p.val-p.green).toFixed(1)+' '+p.unit;reds++;}
+    }else{
+      if(p.val>=p.green){status='🟢 World-class';color='rgba(76,175,80,.15)';rec='รักษาระดับนี้ไว้';greens++;}
+      else if(p.val>=p.amber){status='🟡 Acceptable';color='rgba(255,193,7,.15)';rec='ปรับปรุงได้อีก '+(p.green-p.val).toFixed(1)+' '+p.unit;ambers++;}
+      else{status='🔴 Needs Action';color='rgba(244,67,54,.15)';rec='เร่งแก้ไข! ห่างจากเป้า '+(p.green-p.val).toFixed(1)+' '+p.unit;reds++;}
+    }
+    h+='<tr style="background:'+color+'"><td><b>'+p.name+'</b></td><td>'+p.val+' '+p.unit+'</td><td>'+status+'</td><td>'+(p.inv?'≤':'≥')+p.green+' '+p.unit+'</td><td>'+rec+'</td></tr>';
+  }
+  h+='</tbody></table>';
+  h+='<div style="margin-top:15px;padding:15px;border-radius:12px;background:rgba(233,30,99,.06);text-align:center">';
+  h+='<b style="font-size:18px">Factory Score Card: </b>';
+  h+='<span style="color:var(--green);font-weight:700">🟢 '+greens+'</span> &nbsp;';
+  h+='<span style="color:var(--amber);font-weight:700">🟡 '+ambers+'</span> &nbsp;';
+  h+='<span style="color:var(--red);font-weight:700">🔴 '+reds+'</span>';
+  if(reds>=3) h+='<br><b style="color:var(--red)">⚠️ หลายตัวชี้วัดวิกฤต — ต้องทำ Improvement Plan ด่วน</b>';
+  else if(reds>=1) h+='<br><b style="color:var(--amber)">⚡ มีจุดที่ต้องปรับปรุง — Focus ที่ตัวแดงก่อน</b>';
+  else if(ambers>=3) h+='<br><b style="color:var(--amber)">👍 ใกล้ World-class แล้ว — Fine-tune เพิ่ม</b>';
+  else h+='<br><b style="color:var(--green)">🏆 World-class Factory! Maintain & Optimize</b>';
+  h+='</div>';
+  document.getElementById('bm_results').innerHTML=h;
+}
+
 </script>
 </head>
 <body>
@@ -3149,6 +3351,74 @@ function goLanding() {
 <tr><td><b>หม้อเคี่ยว</b></td><td>Syrup (Brix~65%)</td><td>Massecuite (ผลึก+น้ำเชื่อม)</td><td>Supersaturation, Crystal Size</td><td>y=1.1-1.2, Size 0.5-1.0mm</td><td>y สูงเกิน → False Grain!</td></tr>
 <tr><td><b>หม้อปั่น</b></td><td>Massecuite</td><td>Sugar + Molasses</td><td>Purging Efficiency</td><td>η = 0.85-0.95</td><td>G-force ↑ → แยกดีขึ้น</td></tr>
 </tbody></table>
+
+<div class="th" style="background:linear-gradient(135deg,rgba(239,68,68,.06),rgba(245,158,11,.06));border-color:rgba(239,68,68,.15)">
+<h3 style="color:var(--red)">💰 Revenue Impact — ทำไมทุก 1% ของ Recovery ถึงสำคัญ</h3>
+<p>ในอุตสาหกรรมน้ำตาล ทุก 1% ที่เพิ่มหรือลดมีมูลค่ามหาศาล เครื่องมือด้านล่างจะช่วยให้เห็นภาพ "เงิน" ที่ซ่อนอยู่ในตัวเลขทางเทคนิค</p>
+</div>
+<div class="calc" style="border-color:rgba(245,158,11,.3)">
+<h3 style="color:var(--amber)">🏭 Revenue Impact Calculator</h3>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
+<div class="cr"><label>อัตราหีบ (ตัน/วัน):</label><input type="number" id="rev_tcd" value="8000" step="100"></div>
+<div class="cr"><label>วันหีบ/ฤดู:</label><input type="number" id="rev_days" value="120" step="5"></div>
+<div class="cr"><label>Pol% Cane:</label><input type="number" id="rev_pol" value="13" step="0.1"></div>
+<div class="cr"><label>Overall Recovery ปัจจุบัน (%):</label><input type="number" id="rev_or" value="86" step="0.5"></div>
+<div class="cr"><label>Recovery ที่ปรับปรุง (%):</label><input type="number" id="rev_or2" value="87" step="0.5"></div>
+<div class="cr"><label>ราคาน้ำตาล (บาท/ตัน):</label><input type="number" id="rev_price" value="18000" step="500"></div>
+</div>
+<div style="margin:12px 0"><button onclick="calcRevImpact()" style="background:linear-gradient(135deg,#f59e0b,#ea580c);color:#fff;border:none;padding:10px 28px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer">💰 คำนวณผลกระทบต่อรายได้</button></div>
+<div id="rev_result" style="display:none;margin-top:14px"></div>
+</div>
+
+<div class="th" style="background:linear-gradient(135deg,rgba(59,130,246,.06),rgba(139,92,246,.06));border-color:rgba(59,130,246,.15)">
+<h3 style="color:var(--blue)">🌍 World-Class Benchmarks — เทียบชั้นโรงงานระดับโลก</h3>
+<p>ข้อมูลจาก Peter Rein, Hugot, ISSCT, และงานวิจัยจาก Brazil/Australia/South Africa — ค่าเหล่านี้คือ "เป้าหมายสูงสุด" ที่โรงงานระดับ PhD ควรพุ่งเป้า</p>
+</div>
+<div class="c">
+<div class="ct">เปรียบเทียบ KPI ระดับโลก</div>
+<table class="dt"><thead><tr><th>KPI</th><th>🇹🇭 ไทย (เฉลี่ย)</th><th>🇧🇷 Brazil</th><th>🇦🇺 Australia</th><th>🇿🇦 S.Africa</th><th style="color:var(--green)">🏆 World-Class</th></tr></thead><tbody>
+<tr><td><b>Mill Extraction (%)</b></td><td>95-97</td><td>96-97</td><td>96-98</td><td>96-97</td><td class="hg"><b>>97</b></td></tr>
+<tr><td><b>Boiling House Recovery (%)</b></td><td>85-90</td><td>88-92</td><td>89-92</td><td>88-91</td><td class="hg"><b>>91</b></td></tr>
+<tr><td><b>Overall Recovery (%)</b></td><td>82-87</td><td>86-90</td><td>87-92</td><td>85-89</td><td class="hg"><b>>87.5</b></td></tr>
+<tr><td><b>Pol% Bagasse</b></td><td>1.5-2.5</td><td>1.2-1.8</td><td>1.0-1.5</td><td>1.3-2.0</td><td class="hg"><b><1.5</b></td></tr>
+<tr><td><b>Final Molasses Purity</b></td><td>33-38</td><td>32-36</td><td>35-40</td><td>33-37</td><td class="hg"><b><35</b></td></tr>
+<tr><td><b>Steam on Cane (kg/tc)</b></td><td>500-600</td><td>400-500</td><td>400-480</td><td>450-550</td><td class="hg"><b><450</b></td></tr>
+<tr><td><b>Surplus Power (kWh/tc)</b></td><td>0-30</td><td>60-100</td><td>50-80</td><td>40-70</td><td class="hg"><b>>80</b></td></tr>
+<tr><td><b>Availability (%)</b></td><td>88-93</td><td>92-96</td><td>93-97</td><td>90-95</td><td class="hg"><b>>95</b></td></tr>
+</tbody></table>
+</div>
+
+<div class="th" style="background:linear-gradient(135deg,rgba(239,68,68,.08),rgba(245,158,11,.04));border-color:rgba(239,68,68,.15)">
+<h3 style="color:var(--red)">🔍 Loss Anatomy — น้ำตาลหายไปไหน?</h3>
+<p>จาก Peter Rein: น้ำตาลที่สูญเสียแบ่งเป็น 2 ประเภท — <b class="ha">Determined Loss</b> (วัดได้จาก Lab: Bagasse, Filter Cake, Final Molasses) และ <b class="hr">Undetermined Loss</b> (คำนวณจาก mass balance: chemical destruction, entrainment, leaks) โรงงานที่ดีต้องทำ Undetermined Loss ให้ <b>ต่ำกว่า 2%</b></p>
+</div>
+<div class="c" style="border-left:4px solid var(--red)">
+<div class="ct">สัดส่วน Loss ที่เกิดขึ้นในแต่ละกระบวนการ (กรณีตัวอย่าง: โรงงาน 8,000 TCD)</div>
+<table class="dt"><thead><tr><th>แหล่ง Loss</th><th>ค่าควบคุม (%cane)</th><th>เทียบเท่า (ตัน/ฤดู)</th><th>มูลค่า (ล้านบาท/ฤดู)</th><th>ลำดับความสำคัญ</th></tr></thead><tbody>
+<tr><td>🟤 <b>Bagasse</b> (Pol ในชาน)</td><td>≤3.0%</td><td>~2,880</td><td>~51.8</td><td style="color:var(--red)"><b>#1 สูงสุด</b></td></tr>
+<tr><td>🟠 <b>Final Molasses</b></td><td>≤7.7%</td><td>~7,392</td><td>~133.1</td><td style="color:var(--red)"><b>#2</b></td></tr>
+<tr><td>🟡 <b>Filter Cake</b></td><td>≤0.33%</td><td>~317</td><td>~5.7</td><td>ต่ำ</td></tr>
+<tr><td>⚫ <b>Undetermined</b></td><td>≤5.5%</td><td>~5,280</td><td>~95.0</td><td style="color:var(--amber)"><b>#3</b></td></tr>
+</tbody></table>
+<div class="ins" style="margin-top:12px"><b>PhD Insight:</b> ถ้าลด Undetermined Loss เหลือ 3% (จาก 5.5%) = ประหยัดได้ ~2,400 ตัน/ฤดู = <b class="hg">~43 ล้านบาท/ฤดู!</b> นี่คือจุดที่ Factory Manager ต้องให้ความสำคัญ</div>
+</div>
+
+<div class="th" style="background:linear-gradient(135deg,rgba(16,185,129,.08),rgba(6,182,212,.06));border-color:rgba(16,185,129,.15)">
+<h3 style="color:var(--green)">⏱ Downtime Cost Calculator — ทุกนาทีที่หยุดคือเงินที่หายไป</h3>
+<p>Downtime ไม่ใช่แค่ "เครื่องไม่ทำงาน" แต่คือ <b>อ้อยที่เน่าเสียระหว่างรอ</b> + <b>ค่าใช้จ่ายคงที่ที่ยังต้องจ่าย</b></p>
+</div>
+<div class="calc" style="border-color:rgba(16,185,129,.3)">
+<h3 style="color:var(--green)">⏱ Downtime Impact Calculator</h3>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px">
+<div class="cr"><label>อัตราหีบ (ตัน/ชม.):</label><input type="number" id="dt_rate" value="350" step="10"></div>
+<div class="cr"><label>ชั่วโมงที่หยุด:</label><input type="number" id="dt_hours" value="4" step="0.5"></div>
+<div class="cr"><label>CCS:</label><input type="number" id="dt_ccs" value="13" step="0.5"></div>
+<div class="cr"><label>ราคาน้ำตาล (บาท/ตัน):</label><input type="number" id="dt_price" value="18000" step="500"></div>
+</div>
+<div style="margin:12px 0"><button onclick="calcDowntime()" style="background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;padding:10px 28px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer">⏱ คำนวณต้นทุน Downtime</button></div>
+<div id="dt_result" style="display:none;margin-top:14px"></div>
+</div>
+
 </div>
 </div>
 
@@ -3165,6 +3435,7 @@ function goLanding() {
 <button class="stab" onclick="openSub(this,'cane-formula')">สูตรน้ำตาลที่ได้</button>
 <button class="stab" onclick="openSub(this,'cane-prob')">ปัญหาที่พบบ่อย</button>
 <button class="stab" onclick="openSub(this,'cane-calc')">ตารางคำนวณ</button>
+<button class="stab" onclick="openSub(this,'cane-phd')">🎓 PhD: Loss จากอ้อย</button>
 </div>
 
 <div class="spage active" id="sp-cane-flow">
@@ -3472,6 +3743,48 @@ Magnet: <b>ดักโลหะก่อนเข้า Knives</b><br>
 
 </div>
 
+
+<div class="spage" id="sp-cane-phd">
+<div class="th" style="background:linear-gradient(135deg,rgba(239,68,68,.08),rgba(245,158,11,.06));border-color:rgba(239,68,68,.15)">
+<h3 style="color:var(--red)">🎓 PhD Module: ผลกระทบของคุณภาพอ้อยต่อ Productivity ทั้งระบบ</h3>
+<p>จาก Peter Rein: <i>"Cane quality is the single most important factor determining factory performance"</i> — ทุก 1% ของ Trash, Fiber, และ Pol ส่งผลเป็นทอดๆ ตลอดทั้งสายการผลิต</p>
+</div>
+
+<div class="c" style="border-left:4px solid var(--red)">
+<div class="ct">🔬 Chain Reaction: Trash ทุก 1% ที่เพิ่มขึ้นส่งผลอย่างไร</div>
+<table class="dt"><thead><tr><th>ผลกระทบ</th><th>ค่าที่เปลี่ยน</th><th>เหตุผล</th></tr></thead><tbody>
+<tr><td>Fiber % เพิ่ม</td><td>+0.5-0.8%</td><td>Trash มี Fiber สูง</td></tr>
+<tr><td>Pol % Cane ลด</td><td>-0.2 ถึง -0.3%</td><td>สิ่งเจือปนเจือจาง Sucrose</td></tr>
+<tr><td>Mill Extraction ลด</td><td>-0.1 ถึง -0.3%</td><td>Fiber loading สูงขึ้น</td></tr>
+<tr><td>Juice Purity ลด</td><td>-0.3 ถึง -0.5%</td><td>Non-sucrose จาก Trash</td></tr>
+<tr><td>Steam consumption เพิ่ม</td><td>+2-4%</td><td>น้ำเพิ่ม ต้องระเหยมากขึ้น</td></tr>
+<tr><td>Filter cake เพิ่ม</td><td>+10-15%</td><td>ดินและใบที่ต้องกรอง</td></tr>
+<tr><td><b style="color:var(--red)">Overall Recovery ลด</b></td><td><b>-0.15 ถึง -0.25%</b></td><td>ผลรวมทุกข้อข้างต้น</td></tr>
+</tbody></table>
+</div>
+
+<div class="calc" style="border-color:rgba(16,185,129,.3)">
+<h3 style="color:var(--green)">📊 CCS Calculator — Commercial Cane Sugar (Australian Formula)</h3>
+<p>สูตร CCS ใช้ประเมินคุณภาพอ้อยและคำนวณส่วนแบ่งรายได้ระหว่างชาวไร่กับโรงงาน</p>
+<div class="fm" style="margin:12px 0">CCS = Pol% Cane × [1 − (Fiber + 5) / 100] − 0.5 × Brix% × [1 − (Fiber + 3) / 100] × (1 − Pol/Brix)<br><small>สูตรเต็ม: CCS = 3P/2 [1 − (F+5)/100] − B/2 [1 − (F+3)/100]</small></div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px">
+<div class="cr"><label>Pol % Cane:</label><input type="number" id="ccs_pol" value="14.5" step="0.1"></div>
+<div class="cr"><label>Brix % Cane:</label><input type="number" id="ccs_brix" value="18.0" step="0.1"></div>
+<div class="cr"><label>Fiber % Cane:</label><input type="number" id="ccs_fib" value="13.0" step="0.1"></div>
+<div class="cr"><label>Trash % (สิ่งเจือปน):</label><input type="number" id="ccs_trash" value="5" step="0.5"></div>
+</div>
+<div style="margin:12px 0"><button onclick="calcCCS()" style="background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;padding:10px 28px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer">📊 คำนวณ CCS & มูลค่าผลกระทบ</button></div>
+<div id="ccs_result" style="display:none"></div>
+</div>
+
+<div class="th">
+<h3>📌 กฎ 3 ข้อของคุณภาพอ้อย (PhD Summary)</h3>
+<p><b class="ha">1.</b> Trash ทุก 1% ที่ลด = Recovery เพิ่ม ~0.2% = <b>เงินเพิ่มหลายล้านบาท/ฤดู</b></p>
+<p><b class="hg">2.</b> อ้อยสดดีกว่าอ้อยเผาเสมอ: CCS สูงกว่า 0.5-1.0, Purity สูงกว่า, สีอ่อนกว่า, Dextran ต่ำ</p>
+<p><b class="hb">3.</b> Stale cane (อ้อยค้าง >24 ชม.) = Inversion + Dextran + Reducing sugar ↑ = Loss เพิ่มอย่างน้อย 0.5-1.0% ของ Recovery</p>
+</div>
+</div>
+
 <!-- ======== TAB: MILLING ======== -->
 <div class="tab-page" id="tab-milling">
 <div class="sh" style="border-left-color:var(--c-teal)"><div class="sh-n" style="background:var(--c-teal)"></div><div><h2>ลูกหีบ (Milling)</h2><p>หัวใจของการสกัดน้ำอ้อย — บีบ-ชะ-บีบซ้ำ</p></div></div>
@@ -3485,6 +3798,7 @@ Magnet: <b>ดักโลหะก่อนเข้า Knives</b><br>
 <button class="stab" onclick="openSub(this,'mill-perf')">ประสิทธิภาพ</button>
 <button class="stab" onclick="openSub(this,'mill-prob')">ปัญหาที่พบบ่อย</button>
 <button class="stab" onclick="openSub(this,'mill-calc')">คำนวณ</button>
+<button class="stab" onclick="openSub(this,'mill-phd')">🎓 PhD: Loss & RCA</button>
 </div>
 
 <div class="spage active" id="sp-mill-flow">
@@ -3892,6 +4206,62 @@ Moisture%Bag: <b>≤50%</b><br>
 </div></div>
 
 
+
+<div class="spage" id="sp-mill-phd">
+<div class="th" style="background:linear-gradient(135deg,rgba(239,68,68,.08),rgba(245,158,11,.06));border-color:rgba(239,68,68,.15)">
+<h3 style="color:var(--red)">🎓 PhD Module: Root Cause Analysis — ทำไม Pol ใน Bagasse สูง?</h3>
+<p>Bagasse Loss คือ Loss อันดับ 1 ที่ควบคุมได้ — ใช้ Decision Tree ด้านล่างวินิจฉัยปัญหา (จาก Hugot Ch.36, Peter Rein Ch.6)</p>
+</div>
+
+<div class="c" style="border-left:4px solid var(--red)">
+<div class="ct">🌳 Decision Tree: วินิจฉัย Pol% Bagasse สูง</div>
+<table class="dt"><thead><tr><th>ตรวจสอบ</th><th>ค่าปกติ</th><th>ถ้าผิดปกติ → สาเหตุ</th><th>วิธีแก้</th></tr></thead><tbody>
+<tr><td><b>1. Preparation Index</b></td><td>>90%</td><td style="color:var(--red)">PI ต่ำ → เซลล์ไม่เปิด</td><td>ตรวจ Knives/Shredder, ลับใบมีด, ปรับ tip speed</td></tr>
+<tr><td><b>2. Imbibition %</b></td><td>250-300% on fiber</td><td style="color:var(--red)">ต่ำเกิน → ชะ sucrose ไม่หมด</td><td>เพิ่ม imbibition water, ตรวจปั๊ม/valve</td></tr>
+<tr><td><b>3. Imbibition Temp</b></td><td>70-80°C</td><td style="color:var(--red)">เย็นเกิน → ชะได้น้อย</td><td>ใช้ condensate ร้อนจาก evaporator</td></tr>
+<tr><td><b>4. Fiber Loading</b></td><td>ตาม Hugot table</td><td style="color:var(--red)">สูงเกิน → บีบไม่ทัน</td><td>ลดอัตราหีบ หรือเพิ่มความเร็วลูกหีบ</td></tr>
+<tr><td><b>5. Roller condition</b></td><td>Grooving ชัด</td><td style="color:var(--red)">สึก → grip ไม่ดี</td><td>Hardfacing, ปรับ Donnelly chute</td></tr>
+<tr><td><b>6. Hydraulic pressure</b></td><td>ตาม Hugot formula</td><td style="color:var(--red)">ต่ำ → บีบไม่แน่น</td><td>ตรวจ hydraulic system, accumulator</td></tr>
+<tr><td><b>7. Mill speed ratio</b></td><td>ลดลง 30-50% จากชุดแรก</td><td style="color:var(--red)">เร็วเกิน → เวลาบีบน้อย</td><td>ปรับ speed ให้เหมาะกับ fiber loading</td></tr>
+</tbody></table>
+</div>
+
+<div class="g g2">
+<div class="c" style="border-left:4px solid var(--green)">
+<div class="ct">⚡ Milling vs Diffuser — เปรียบเทียบเทคโนโลยี</div>
+<table class="dt"><thead><tr><th>คุณสมบัติ</th><th>Milling Tandem</th><th>Diffuser</th></tr></thead><tbody>
+<tr><td>Extraction</td><td>95-97%</td><td class="hg"><b>97-98.5%</b></td></tr>
+<tr><td>Pol% Bagasse</td><td>1.5-2.5%</td><td class="hg"><b>0.8-1.5%</b></td></tr>
+<tr><td>Power consumption</td><td class="hg"><b>ต่ำกว่า</b></td><td>สูงกว่า 20-30%</td></tr>
+<tr><td>Capital cost</td><td class="hg"><b>ต่ำกว่า</b></td><td>สูงกว่า</td></tr>
+<tr><td>Maintenance</td><td>สูง (roller wear)</td><td class="hg"><b>ต่ำ</b></td></tr>
+<tr><td>Color น้ำอ้อย</td><td class="hg"><b>อ่อนกว่า</b></td><td>เข้มกว่า</td></tr>
+<tr><td>Imbibition water</td><td>น้อยกว่า</td><td>มากกว่า</td></tr>
+</tbody></table>
+</div>
+
+<div class="c" style="border-left:4px solid var(--amber)">
+<div class="ct">🔧 Predictive Maintenance — ลด Downtime ลูกหีบ</div>
+<table class="dt"><thead><tr><th>รายการ</th><th>ความถี่</th><th>ผลลัพธ์</th></tr></thead><tbody>
+<tr><td>Hardfacing rollers</td><td>ทุก 200,000 tc</td><td>+2% extraction</td></tr>
+<tr><td>Knife sharpening</td><td>ทุก 7 วัน</td><td>รักษา PI >90%</td></tr>
+<tr><td>Bearing temp check</td><td>ทุก shift</td><td>ป้องกัน seizure</td></tr>
+<tr><td>Hydraulic pressure</td><td>ทุก shift</td><td>รักษา drainage</td></tr>
+<tr><td>Donnelly chute level</td><td>ทุก shift</td><td>ป้องกัน slip/choke</td></tr>
+<tr><td>Trash plate clearance</td><td>ทุกสัปดาห์</td><td>ป้องกัน reabsorption</td></tr>
+</tbody></table>
+<div class="ins"><b>ROI:</b> Predictive maintenance ลด unscheduled downtime ได้ 30-50% (Tractian, 2024) — สำหรับโรงงาน 8,000 TCD = ประหยัด <b class="hg">15-30 ล้านบาท/ฤดู</b></div>
+</div>
+</div>
+
+<div class="th">
+<h3>📌 กฎ 3 ข้อของลูกหีบ (PhD Summary)</h3>
+<p><b class="ha">1.</b> Imbibition ≥250% on Fiber คือ "ตัวเลขทองคำ" — ต่ำกว่านี้ทุก 10% = Pol Bagasse เพิ่ม ~0.1%</p>
+<p><b class="hg">2.</b> Preparation Index >92% คือเป้าขั้นต่ำ — PI ลดทุก 1% = Extraction ลด ~0.2%</p>
+<p><b class="hb">3.</b> Fiber Loading ต้องตาม Hugot table — เกินขีด = "bottleneck" ทั้งสายผลิต</p>
+</div>
+</div>
+
 <!-- ======== TAB: CLARIFICATION ======== -->
 <div class="tab-page" id="tab-clarification">
 <div class="sh" style="border-left-color:var(--c-purple)"><div class="sh-n" style="background:var(--c-purple)"></div><div><h2>การทำใส (Clarification)</h2><p>กำจัดสิ่งเจือปนเพื่อให้ได้น้ำอ้อยใสพร้อมระเหย — Peter Rein Ch.8-10</p></div></div>
@@ -3905,6 +4275,7 @@ Moisture%Bag: <b>≤50%</b><br>
 <button class="stab" onclick="openSub(this,'clr-perf')">ประสิทธิภาพ</button>
 <button class="stab" onclick="openSub(this,'clr-prob')">ปัญหาที่พบบ่อย</button>
 <button class="stab" onclick="openSub(this,'clr-calc')">เครื่องคำนวณ</button>
+<button class="stab" onclick="openSub(this,'clr-phd')">🎓 PhD: NS Removal & Loss</button>
 </div>
 
 <div class="spage active" id="sp-clr-flow">
@@ -4322,6 +4693,45 @@ Feed: <b>น้ำอ้อยร้อน + Floc เข้าทุกชั้
 
 
 
+
+<div class="spage" id="sp-clr-phd">
+<div class="th" style="background:linear-gradient(135deg,rgba(139,92,246,.08),rgba(96,165,250,.06));border-color:rgba(139,92,246,.15)">
+<h3 style="color:var(--purple)">🎓 PhD Module: Non-Sucrose Removal & Sucrose Inversion Prevention</h3>
+<p>การทำใสไม่ใช่แค่ "ทำให้ใส" แต่คือ <b>การกำจัด Non-Sucrose ให้มากที่สุด โดยสูญเสีย Sucrose น้อยที่สุด</b> — สมดุลนี้คือศาสตร์ระดับ PhD</p>
+</div>
+
+<div class="g g2">
+<div class="c" style="border-left:4px solid var(--purple)">
+<div class="ct">🔬 Non-Sucrose Removal Efficiency</div>
+<div class="fm">NSR (%) = (NS_MJ − NS_CJ) / NS_MJ × 100<br><small>NS = Non-Sucrose = Brix − Pol</small></div>
+<table class="dt" style="margin-top:10px"><thead><tr><th>ระดับ</th><th>NSR %</th><th>สถานะ</th></tr></thead><tbody>
+<tr><td style="color:var(--green)">ยอดเยี่ยม</td><td>>20%</td><td>NS ถูกกำจัดมาก → Purity สูง → Recovery สูง</td></tr>
+<tr><td style="color:var(--amber)">พอใช้</td><td>15-20%</td><td>มาตรฐานทั่วไป</td></tr>
+<tr><td style="color:var(--red)">ต่ำ</td><td><15%</td><td>NS ผ่านไป → Final Molasses Purity สูง → Loss เพิ่ม</td></tr>
+</tbody></table>
+<div class="ins"><b>ผลกระทบ:</b> NSR เพิ่ม 5% → Molasses Purity ลด ~1% → BHR เพิ่ม ~0.5% → เงินเพิ่ม ~10 ล้านบาท/ฤดู!</div>
+</div>
+
+<div class="c" style="border-left:4px solid var(--red)">
+<div class="ct">⚠ Sucrose Inversion — ศัตรูตัวร้ายของการทำใส</div>
+<div class="fm">Sucrose + H₂O → Glucose + Fructose<br><small>(เกิดจาก pH ต่ำ + อุณหภูมิสูง + เวลานาน)</small></div>
+<table class="dt" style="margin-top:10px"><thead><tr><th>ปัจจัย</th><th>ค่าควบคุม</th><th>อันตราย</th></tr></thead><tbody>
+<tr><td>pH น้ำอ้อย</td><td><b>7.0-7.5</b></td><td style="color:var(--red)"><6.5 → Inversion รุนแรง</td></tr>
+<tr><td>อุณหภูมิ</td><td><b>103-105°C</b></td><td style="color:var(--red)">>110°C → Inversion + Color</td></tr>
+<tr><td>Retention time</td><td><b>30-45 นาที</b></td><td style="color:var(--red)">>90 min → Inversion สะสม</td></tr>
+<tr><td>Reducing sugar</td><td><b><1.5%</b></td><td style="color:var(--red)">>2.5% → Molasses Purity ↑</td></tr>
+</tbody></table>
+</div>
+</div>
+
+<div class="th">
+<h3>📌 กฎ 3 ข้อของการทำใส (PhD Summary)</h3>
+<p><b class="ha">1.</b> pH คือ "กุญแจ" — ต่ำเกิน = Inversion, สูงเกิน = สี เข้ม + Scale → pH 7.0-7.2 คือจุดสมดุล</p>
+<p><b class="hg">2.</b> NSR >15% คือเป้าขั้นต่ำ — ถ้าทำได้ >20% จะส่งผลดีมหาศาลต่อ Boiling House Recovery</p>
+<p><b class="hb">3.</b> Filter Cake Pol <2% — ถ้าสูงกว่านี้ = mud filter ทำงานไม่ดี ต้องตรวจ vacuum, ผ้ากรอง, อัตรา feed</p>
+</div>
+</div>
+
 <!-- ======== TAB: EVAPORATION ======== -->
 <div class="tab-page" id="tab-evaporation">
 <div class="sh" style="border-left-color:var(--c-orange)"><div class="sh-n" style="background:var(--c-orange)"></div><div><h2>หม้อต้ม (Evaporation)</h2><p>ระเหยน้ำออกจากน้ำอ้อยใส เปลี่ยนเป็นน้ำเชื่อม (Syrup) — Peter Rein Ch.12</p></div></div>
@@ -4335,6 +4745,7 @@ Feed: <b>น้ำอ้อยร้อน + Floc เข้าทุกชั้
 <button class="stab" onclick="openSub(this,'evp-perf')">ประสิทธิภาพ</button>
 <button class="stab" onclick="openSub(this,'evp-prob')">ปัญหาที่พบบ่อย</button>
 <button class="stab" onclick="openSub(this,'evp-calc')">เครื่องคำนวณ</button>
+<button class="stab" onclick="openSub(this,'evp-phd')">🎓 PhD: Steam Economy</button>
 </div>
 
 <div class="spage active" id="sp-evp-flow">
@@ -4696,6 +5107,54 @@ Temperature: <b>60-90°C</b><br>
 
 
 
+
+<div class="spage" id="sp-evp-phd">
+<div class="th" style="background:linear-gradient(135deg,rgba(249,115,22,.08),rgba(239,68,68,.06));border-color:rgba(249,115,22,.15)">
+<h3 style="color:var(--orange)">🎓 PhD Module: Steam Economy & Vapor Bleeding Strategy</h3>
+<p>จาก Hugot: หม้อต้มเป็น "หัวใจ" ของสมดุลพลังงานทั้งโรงงาน — การเพิ่ม Effect 1 ตัว = ลดใช้ steam ~20%</p>
+</div>
+
+<div class="c" style="border-left:4px solid var(--orange)">
+<div class="ct">📊 Steam Economy เทียบจำนวน Effect</div>
+<table class="dt"><thead><tr><th>จำนวน Effect</th><th>Steam Economy (kg water/kg steam)</th><th>Steam on Cane (kg/tc)</th><th>Surplus Power</th></tr></thead><tbody>
+<tr><td>Triple (3)</td><td>2.5-2.8</td><td>550-650</td><td>น้อย/ไม่มี</td></tr>
+<tr><td>Quadruple (4)</td><td>3.0-3.5</td><td>450-550</td><td>พอมี</td></tr>
+<tr><td style="color:var(--green)"><b>Quintuple (5)</b></td><td><b>3.5-4.0</b></td><td><b>380-450</b></td><td style="color:var(--green)"><b>มาก (80+ kWh/tc)</b></td></tr>
+<tr><td>Sextuple (6)</td><td>4.0-4.5</td><td>350-400</td><td>มากที่สุด</td></tr>
+</tbody></table>
+</div>
+
+<div class="c" style="border-left:4px solid var(--green)">
+<div class="ct">💡 Vapor Bleeding Strategy — เทคนิคประหยัดพลังงานขั้นสูง</div>
+<p>หลักการ: ดึงไอน้ำจาก Effect ก่อนหน้า (ที่มีอุณหภูมิสูงกว่า) ไปใช้แทน Live Steam</p>
+<table class="dt"><thead><tr><th>ใช้ Vapor จาก</th><th>แทนที่</th><th>ประหยัดได้</th></tr></thead><tbody>
+<tr><td>1st Effect vapor</td><td>Raw juice heater</td><td>5-8% ของ steam</td></tr>
+<tr><td>2nd Effect vapor</td><td>Clear juice heater</td><td>3-5% ของ steam</td></tr>
+<tr><td>3rd Effect vapor</td><td>Pan crystallization</td><td>8-12% ของ steam</td></tr>
+</tbody></table>
+<div class="ins"><b>MBA Insight:</b> ลด steam 10% สำหรับโรงงาน 8,000 TCD = ส่งออกไฟฟ้าเพิ่ม ~8 MW = <b class="hg">~20-30 ล้านบาท/ฤดู</b> จากขายไฟ!</div>
+</div>
+
+<div class="calc" style="border-color:rgba(249,115,22,.3)">
+<h3 style="color:var(--orange)">🔥 Scaling Impact Calculator — ค่าใช้จ่ายจาก Scale</h3>
+<p>Scale ใน evaporator tubes ลด Heat Transfer Coefficient → ต้องใช้ steam มากขึ้น → ต้นทุนพลังงานสูง</p>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
+<div class="cr"><label>HTC ปกติ (W/m²K):</label><input type="number" id="sc_htc1" value="2500" step="100"></div>
+<div class="cr"><label>HTC ปัจจุบัน (W/m²K):</label><input type="number" id="sc_htc2" value="1800" step="100"></div>
+<div class="cr"><label>Steam cost (บาท/ตัน):</label><input type="number" id="sc_cost" value="500" step="50"></div>
+</div>
+<div style="margin:12px 0"><button onclick="calcScale()" style="background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;border:none;padding:10px 28px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer">🔥 คำนวณผลกระทบ Scale</button></div>
+<div id="sc_result" style="display:none"></div>
+</div>
+
+<div class="th">
+<h3>📌 กฎ 3 ข้อของหม้อต้ม (PhD Summary)</h3>
+<p><b class="ha">1.</b> Syrup Brix ≥65% คือเป้า — ต่ำกว่านี้ = Pan ต้องระเหยน้ำเพิ่มเอง = เปลืองไอน้ำ + เวลาเคี่ยวนาน</p>
+<p><b class="hg">2.</b> Purity Drop ในหม้อต้ม <1.5% — สูงกว่านี้ = Inversion จาก pH ต่ำ หรือ retention time นานเกินไป</p>
+<p><b class="hb">3.</b> ล้าง Scale ทุก 7-14 วัน — Scale หนา 1 mm ลด HTC ~25% = เสียเงินวันละหลายแสนบาท</p>
+</div>
+</div>
+
 <!-- ======== TAB: CRYSTALLIZATION ======== -->
 <div class="tab-page" id="tab-crystallization">
 <div class="sh" style="border-left-color:var(--c-amber)"><div class="sh-n" style="background:var(--c-amber)"></div><div><h2>หม้อเคี่ยว (Pan Boiling / Crystallization)</h2><p>ศาสตร์ของการเปลี่ยนน้ำเชื่อมเป็นผลึกน้ำตาล — Peter Rein Ch.15-16</p></div></div>
@@ -4711,6 +5170,7 @@ Temperature: <b>60-90°C</b><br>
 <button class="stab" onclick="openSub(this,'cry-calc')">เครื่องคำนวณ</button>
 <button class="stab" onclick="openSub(this,'cry-bvp')">🧪 คำนวณ BVP</button>
 <button class="stab" onclick="openSub(this,'cry-param')">📊 Parameters</button>
+<button class="stab" onclick="openSub(this,'cry-phd')">🎓 PhD: Boiling Schemes</button>
 </div>
 
 <div class="spage active" id="sp-cry-flow">
@@ -5315,6 +5775,82 @@ FM Brix: <b>85-90%</b>
 
 </div>
 
+
+<div class="spage" id="sp-cry-phd">
+<div class="th" style="background:linear-gradient(135deg,rgba(245,158,11,.08),rgba(239,68,68,.06));border-color:rgba(245,158,11,.15)">
+<h3 style="color:var(--amber)">🎓 PhD Module: Boiling Scheme Selection & Supersaturation Mastery</h3>
+<p>จาก BVP Training Course (Real Soluplus) + Peter Rein Ch.15: การเลือกระบบเคี่ยวคือ "กลยุทธ์หลัก" ที่กำหนด Recovery และคุณภาพน้ำตาล</p>
+</div>
+
+<div class="c" style="border-left:4px solid var(--amber)">
+<div class="ct">📊 เปรียบเทียบ Boiling Scheme (จาก BVP Training Slide 11)</div>
+<table class="dt"><thead><tr><th>คุณสมบัติ</th><th>2-Boiling</th><th>3-Boiling (2½)</th><th>Double Einwurf</th><th style="color:var(--green)">VHP 3-Boiling</th></tr></thead><tbody>
+<tr><td><b>Raw Syrup Purity</b></td><td>&lt;80</td><td>80-85</td><td>&gt;85</td><td>&gt;85</td></tr>
+<tr><td><b>Operation Control</b></td><td>Simple</td><td>Careful</td><td>Normal</td><td>Normal</td></tr>
+<tr><td><b>Equipment Cost</b></td><td class="hg">Low</td><td>Medium</td><td>High</td><td>High</td></tr>
+<tr><td><b>Massecuite Volume</b></td><td>138</td><td>133</td><td>174</td><td style="color:var(--green)"><b>153</b></td></tr>
+<tr><td><b>Steam (t/100TDS)</b></td><td>90</td><td style="color:var(--green)"><b>88</b></td><td>100</td><td>99</td></tr>
+<tr><td><b>Sugar Type</b></td><td>A-sugar</td><td>A&B-sugar</td><td>A-sugar</td><td style="color:var(--green)"><b>VHP (99.5%pol)</b></td></tr>
+<tr><td><b>Sugar Quality (%pol)</b></td><td>98-99</td><td>98-99(A), 97-98(B)</td><td>99</td><td style="color:var(--green)"><b>99.5</b></td></tr>
+</tbody></table>
+<div class="ins"><b>PhD Insight:</b> โรงงานไทยส่วนใหญ่ใช้ 3-Boiling scheme เพราะ Raw Syrup Purity อยู่ที่ 80-85 — แต่ถ้าปรับปรุง Clarification ให้ Purity >85 สามารถเปลี่ยนเป็น VHP ซึ่งให้ yield สูงกว่าและขายได้ราคาพรีเมียม</div>
+</div>
+
+<div class="c" style="border-left:4px solid var(--purple)">
+<div class="ct">🔬 Supersaturation Zones — หัวใจของการเคี่ยว (จาก BVP Slide 48-49)</div>
+<table class="dt"><thead><tr><th>Zone</th><th>SC Range</th><th>สถานะ</th><th>การใช้งาน</th></tr></thead><tbody>
+<tr style="background:rgba(16,185,129,.06)"><td><b>Metastable</b></td><td>1.00-1.20</td><td>ผลึกที่มีอยู่โตได้ แต่ผลึกใหม่ไม่เกิด</td><td style="color:var(--green)"><b>⭐ Zone ที่ต้องรักษาไว้ตลอด</b></td></tr>
+<tr style="background:rgba(245,158,11,.06)"><td><b>Intermediate</b></td><td>1.20-1.30</td><td>ผลึกเล็กอาจเกิดได้ (false grain)</td><td style="color:var(--amber)">⚠ อันตราย — ต้องควบคุมให้ไม่เข้า zone นี้นาน</td></tr>
+<tr style="background:rgba(239,68,68,.06)"><td><b>Labile</b></td><td>1.30-1.40</td><td>ผลึกเกิดเองไม่ควบคุม (spontaneous nucleation)</td><td style="color:var(--red)">❌ ห้ามเข้า zone นี้เด็ดขาด</td></tr>
+</tbody></table>
+<div class="ins" style="margin-top:8px"><b>เทคนิค:</b> การรักษา SC ให้อยู่ใน Metastable zone (~1.05-1.20) คือ <b>"ศิลปะ"</b> ที่แยก ช่างเคี่ยวมือดีออกจากมือใหม่ — ต้องควบคุม Brix, Vacuum, Steam, Feed rate พร้อมกัน</div>
+</div>
+
+<div class="c" style="border-left:4px solid var(--cyan)">
+<div class="ct">🧪 Parameters ควบคุมหม้อเคี่ยว ทุกขั้น (จาก BVP Slide 57)</div>
+<table class="dt"><thead><tr><th>Parameter</th><th>A-Seed</th><th>A-Mass</th><th>B-Magma</th><th>B-Seed</th><th>B-Mass</th><th>C-Magma</th><th>C-Seed</th><th>C-Mass</th></tr></thead><tbody>
+<tr><td><b>%Brix</b></td><td>91-92</td><td>93.5-94</td><td>&gt;90</td><td>91±0.5</td><td>94.5-95.5</td><td>&gt;90</td><td>91±0.5</td><td>&gt;97</td></tr>
+<tr><td><b>%Purity</b></td><td>&gt;85</td><td>83-85</td><td>&gt;90</td><td>&gt;83</td><td>72-73</td><td>&gt;90</td><td>65-67</td><td>55</td></tr>
+<tr><td><b>Purity Drop</b></td><td>—</td><td>&gt;20</td><td>—</td><td>—</td><td>&gt;23</td><td>—</td><td>—</td><td>&gt;26</td></tr>
+<tr><td><b>%Crystal Content</b></td><td>—</td><td>&gt;55</td><td>—</td><td>—</td><td>&gt;45</td><td>—</td><td>—</td><td>&gt;35</td></tr>
+<tr><td><b>เวลา (ชม.)</b></td><td>2.5-3</td><td>3-4</td><td>—</td><td>2.5-3</td><td>3-4</td><td>—</td><td>4-5</td><td>6-7</td></tr>
+<tr><td><b>Exhaustion</b></td><td>—</td><td>60-65</td><td>—</td><td>—</td><td>60-65</td><td>—</td><td>—</td><td>60-65</td></tr>
+</tbody></table>
+</div>
+
+<div class="g g3">
+<div class="c" style="border-left:4px solid var(--green)">
+<div class="ct">✅ Seeding Methods (จาก BVP Slide 25-28)</div>
+<table class="dt"><thead><tr><th>วิธี</th><th>CV</th><th>คุณภาพ</th></tr></thead><tbody>
+<tr><td><b style="color:var(--green)">True Seeding</b></td><td style="color:var(--green)"><b>&lt;20%</b></td><td>⭐⭐⭐ ดีที่สุด</td></tr>
+<tr><td>Shock Seeding</td><td style="color:var(--amber)">~25%</td><td>⭐⭐ พอใช้</td></tr>
+<tr><td>Waiting Method</td><td style="color:var(--red)">&gt;30%</td><td>⭐ ไม่แนะนำ</td></tr>
+</tbody></table>
+</div>
+<div class="c" style="border-left:4px solid var(--amber)">
+<div class="ct">🌡 ปัจจัยควบคุม (BVP Slide 15)</div>
+<p><b>อุณหภูมิ:</b> 65-68°C</p>
+<p><b>สุญญากาศ:</b> -630 ถึง -660 mmHg</p>
+<p><b>SC เป้าหมาย:</b> 1.05-1.20</p>
+<p><b>Strike height:</b> 1.25-1.50 m</p>
+</div>
+<div class="c" style="border-left:4px solid var(--red)">
+<div class="ct">⚠ ปัญหาที่พบบ่อย</div>
+<p><b>False Grain:</b> SC สูงเกิน</p>
+<p><b>Conglomerate:</b> ผลึกติดกัน → CV สูง</p>
+<p><b>Balled Crystal:</b> กลมมน → ปั่นยาก</p>
+<p><b>Long boiling:</b> >4 ชม. → สีเข้ม</p>
+</div>
+</div>
+
+<div class="th">
+<h3>📌 กฎ 3 ข้อของหม้อเคี่ยว (PhD Summary)</h3>
+<p><b class="ha">1.</b> Supersaturation 1.05-1.20 ตลอดเวลา — สูงกว่านี้ = False grain, ต่ำกว่า = ผลึกละลาย</p>
+<p><b class="hg">2.</b> True Seeding + Slurry = CV <20% = คุณภาพผลึกดีที่สุด = แยกจากโมลาสง่าย = Recovery สูง</p>
+<p><b class="hb">3.</b> Crystal Content A-Mass >55%, B-Mass >45%, C-Mass >35% — ต่ำกว่านี้ = capacity ลด + steam เปลือง</p>
+</div>
+</div>
+
 <!-- ======== TAB: CENTRIFUGAL ======== -->
 <div class="tab-page" id="tab-centrifugal">
 <div class="sh" style="border-left-color:var(--c-cyan)"><div class="sh-n" style="background:var(--c-cyan)"></div><div><h2>หม้อปั่น (Centrifugals)</h2><p>แยกผลึกน้ำตาลออกจากน้ำเชื่อม (Molasses) — Peter Rein Ch.17</p></div></div>
@@ -5328,6 +5864,7 @@ FM Brix: <b>85-90%</b>
 <button class="stab" onclick="openSub(this,'cen-quality')">คุณภาพน้ำตาล</button>
 <button class="stab" onclick="openSub(this,'cen-prob')">ปัญหาที่พบบ่อย</button>
 <button class="stab" onclick="openSub(this,'cen-calc')">เครื่องคำนวณ</button>
+<button class="stab" onclick="openSub(this,'cen-phd')">🎓 PhD: Recovery & CV</button>
 </div>
 
 <div class="spage active" id="sp-cen-flow">
@@ -5698,6 +6235,43 @@ Brix: <b>85-90%</b><br>
 
 
 
+<div class="spage" id="sp-cen-phd">
+<div class="th" style="background:linear-gradient(135deg,rgba(6,182,212,.08),rgba(59,130,246,.06));border-color:rgba(6,182,212,.15)">
+<h3 style="color:var(--cyan)">🎓 PhD Module: Crystal Quality, Washing Efficiency & CV Control</h3>
+<p>จาก BVP Training: คุณภาพการปั่นคือ "ด่านสุดท้าย" ก่อนได้น้ำตาล — Purity Rise ที่สูงเกินไปหมายถึงล้างโมลาสไม่ออก (ไม่ดี) หรือล้างมากจนผลึกละลาย (แย่กว่า)</p>
+</div>
+
+<div class="g g2">
+<div class="c" style="border-left:4px solid var(--cyan)">
+<div class="ct">📊 CV (Coefficient of Variation) — ตัวชี้วัดคุณภาพผลึก</div>
+<div class="fm">CV = (Standard Deviation / Mean Crystal Size) × 100</div>
+<table class="dt" style="margin-top:10px"><thead><tr><th>CV (%)</th><th>ระดับ</th><th>ผลต่อการปั่น</th></tr></thead><tbody>
+<tr style="background:rgba(16,185,129,.06)"><td style="color:var(--green)"><b>&lt;20</b></td><td>⭐ ยอดเยี่ยม</td><td>ปั่นง่าย แยกสะอาด ล้างน้อย</td></tr>
+<tr style="background:rgba(245,158,11,.06)"><td style="color:var(--amber)">20-30</td><td>พอใช้</td><td>ปั่นได้แต่ต้องล้างมากขึ้น</td></tr>
+<tr style="background:rgba(239,68,68,.06)"><td style="color:var(--red)"><b>&gt;30</b></td><td>ต่ำกว่ามาตรฐาน</td><td>ผลึกเล็กลอดตะแกรง สูญเสียสูง Purity Rise สูง</td></tr>
+</tbody></table>
+</div>
+
+<div class="c" style="border-left:4px solid var(--green)">
+<div class="ct">💧 Washing Efficiency — สมดุลระหว่าง Clean กับ Loss</div>
+<table class="dt"><thead><tr><th>พารามิเตอร์</th><th>เป้า</th><th>ผล</th></tr></thead><tbody>
+<tr><td>Purity Rise (A)</td><td><b>&lt;1.5%</b></td><td>น้อย = ล้างพอดี</td></tr>
+<tr><td>น้ำล้าง (% on massecuite)</td><td><b>3-5%</b></td><td>มาก = ผลึกละลาย</td></tr>
+<tr><td>Sugar Pol</td><td><b>&gt;99.5%</b></td><td>สูง = น้ำตาลขาวสะอาด</td></tr>
+<tr><td>Sugar Moisture</td><td><b>&lt;0.06%</b></td><td>ต่ำ = เก็บได้นาน</td></tr>
+</tbody></table>
+<div class="ins"><b>⚠ ล้างมากเกิน:</b> ทุก 1% ของน้ำล้างที่เพิ่ม = ผลึกละลาย ~0.5-1.0% = น้ำตาลหาย + Purity Rise สูง + ต้องเคี่ยวซ้ำ</div>
+</div>
+</div>
+
+<div class="th">
+<h3>📌 กฎ 3 ข้อของหม้อปั่น (PhD Summary)</h3>
+<p><b class="ha">1.</b> CV <20% คือเป้าสูงสุด — ต้องเริ่มจาก Seeding ที่ดีในหม้อเคี่ยว (True Seeding + Slurry control)</p>
+<p><b class="hg">2.</b> Purity Rise <1.5% สำหรับ A-sugar — มากกว่านี้ตรวจสอบ: น้ำล้างมากไป? Screen เล็กไป? Cycle time สั้นไป?</p>
+<p><b class="hb">3.</b> ดูแล Screen mesh อย่างสม่ำเสมอ — screen ที่อุดตันหรือฉีก = Loss เพิ่มทันที</p>
+</div>
+</div>
+
 <!-- ======== TAB: SUGAR ======== -->
 <div class="tab-page" id="tab-sugar">
 <div class="sh" style="border-left-color:var(--c-brown)"><div class="sh-n" style="background:var(--c-brown)"></div><div><h2>น้ำตาล (Sugar Products & Quality)</h2><p>ประเภทน้ำตาล คุณภาพ การจัดเก็บ มาตรฐาน ICUMSA — Peter Rein Ch.18-19</p></div></div>
@@ -5710,6 +6284,7 @@ Brix: <b>85-90%</b><br>
 <button class="stab" onclick="openSub(this,'sug-byproduct')">ผลพลอยได้</button>
 <button class="stab" onclick="openSub(this,'sug-prob')">ปัญหาที่พบบ่อย</button>
 <button class="stab" onclick="openSub(this,'sug-market')">ตลาด & ราคา</button>
+<button class="stab" onclick="openSub(this,'sug-phd')">🎓 PhD: Quality Engineering</button>
 </div>
 
 <!-- Sub: Types -->
@@ -6318,10 +6893,105 @@ Brix: <b>85-90%</b><br>
 </div>
 </div>
 
+
+<!-- PhD: Sugar Quality Engineering -->
+<div class="spage" id="sp-sug-phd">
+<div class="th" style="background:linear-gradient(135deg,rgba(121,85,72,.12),rgba(121,85,72,.03));border-left:4px solid var(--c-brown)">
+<h3>🎓 PhD Module: Sugar Quality Engineering & Defect Root Cause Analysis</h3>
+<p><i>"The quality of sugar is determined not in the sugar end, but in every preceding station. The final product merely reveals cumulative process failures." — Peter Rein, Ch.18</i></p>
+</div>
+
+<div class="th"><h3>📊 ICUMSA Color System — PhD Deep Dive</h3>
+<p>ICUMSA (International Commission for Uniform Methods of Sugar Analysis) กำหนดมาตรฐานสีเป็น <b>IU (ICUMSA Units)</b> วัดที่ 420nm ค่ายิ่งต่ำ = น้ำตาลยิ่งขาว</p>
+<table class="dt"><thead><tr><th>เกรด</th><th>ICUMSA (IU)</th><th>ลักษณะ</th><th>ราคา Premium</th><th>ตลาดหลัก</th></tr></thead><tbody>
+<tr style="background:rgba(76,175,80,.08)"><td><b class="hg">Refined White</b></td><td>&lt;45</td><td>ขาวใส ไม่มีสี</td><td>+$80-120/ton</td><td>EU, Japan, Middle East</td></tr>
+<tr style="background:rgba(33,150,243,.08)"><td><b class="hb">Plantation White</b></td><td>45-150</td><td>ขาวนวล</td><td>+$40-60/ton</td><td>Direct consumption Asia</td></tr>
+<tr><td><b class="ha">VHP Raw</b></td><td>600-1200</td><td>สีน้ำตาลอ่อน</td><td>Base price</td><td>โรงรีไฟน์ทั่วโลก</td></tr>
+<tr><td><b class="hw">DCR Raw</b></td><td>1200-3000</td><td>สีน้ำตาลเข้ม</td><td>-$20-40/ton</td><td>บริโภคตรง (limited)</td></tr>
+<tr><td><b>Muscovado</b></td><td>3000-10000+</td><td>สีเข้มมาก</td><td>Premium niche</td><td>Organic/Specialty</td></tr>
+</tbody></table>
+<div class="ins"><b>💡 PhD Insight:</b> การลดสี 100 IU → เพิ่มราคาได้ ~$10-15/ton ดังนั้นโรงงาน 10,000 TCD ที่ลด ICUMSA จาก 1000→700 = <b>~$4.5M revenue/season</b></div>
+</div>
+
+<div class="th"><h3>🔬 Sugar Defect Root Cause Decision Tree</h3>
+<p>เมื่อน้ำตาลไม่ผ่านมาตรฐาน ต้องวิเคราะห์สาเหตุอย่างเป็นระบบ:</p>
+<table class="dt"><thead><tr><th>ปัญหา (Defect)</th><th>สาเหตุที่ 1</th><th>สาเหตุที่ 2</th><th>สาเหตุที่ 3</th><th>แก้ไข</th></tr></thead><tbody>
+<tr><td><b class="ha">สีเข้มเกิน</b><br>(High Color)</td><td>Caramelization จาก pH ต่ำ+อุณหภูมิสูง</td><td>Melanoidins จาก Amino acid + reducing sugar</td><td>Iron contamination จากอุปกรณ์</td><td>ควบคุม pH>6.8 ใน Evap, ลด Residence time, ตรวจ Fe content</td></tr>
+<tr><td><b class="ha">ความชื้นสูง</b><br>(High Moisture)</td><td>Centrifugal ปั่นไม่แห้ง — screen ตัน</td><td>Dryer อุณหภูมิต่ำ/เวลาสั้น</td><td>Crystal ไม่สม่ำเสมอ (CV สูง)</td><td>ตรวจ screen, เพิ่ม drying time, ปรับ Boiling scheme</td></tr>
+<tr><td><b class="ha">Turbidity สูง</b><br>(Hazy Solution)</td><td>Starch จากอ้อย (&gt;200 ppm)</td><td>Dextran จาก Leuconostoc bacteria</td><td>Wax/Fat ไม่ถูกกำจัด</td><td>เพิ่ม α-amylase, ลดเวลารอหีบ, ปรับ Clarification</td></tr>
+<tr><td><b class="ha">Crystal ไม่สม่ำเสมอ</b><br>(Poor CV)</td><td>Seeding ไม่ดี — grain ไม่สม่ำเสมอ</td><td>Supersaturation swing เกินไป</td><td>Circulation ไม่ดี ใน Pan</td><td>ใช้ True Seeding (CV&lt;20%), คุม SS 1.05-1.15, ตรวจ Calandria</td></tr>
+<tr><td><b class="ha">Ash สูง</b><br>(&gt;0.04%)</td><td>K₂O จากอ้อยคุณภาพต่ำ</td><td>Clarification กำจัด NS ไม่หมด</td><td>Washing ใน Centrifugal ไม่พอ</td><td>ปรับ Lime dosing, เพิ่ม Wash water, ควบคุม Cane quality</td></tr>
+</tbody></table>
+</div>
+
+<div class="th"><h3>📈 Quality Impact Chain — จาก Field สู่ Customer</h3>
+<p>สิ่งที่เกิดขึ้นในทุกขั้นตอนส่งผลต่อคุณภาพน้ำตาลสุดท้าย:</p>
+<div class="fm">
+Cane Quality → [Trash% ↑ → Color ↑ + Ash ↑]<br>
+Milling → [Extraction ↑ → NS ในน้ำอ้อย ↑ → Color ↑]<br>
+Clarification → [pH Control ดี → Color ↓, NS Removal ↑]<br>
+Evaporation → [T°C ↑ + Residence Time ↑ → Caramelization → Color ↑↑]<br>
+Crystallization → [CV ดี → Washing efficient → Color ↓, Moisture ↓]<br>
+Centrifugal → [Wash Water พอดี → Color ↓ BUT Yield ↓ → ต้อง Optimize]<br>
+Drying → [T°C + Time → Moisture ↓ → Shelf life ↑]
+</div>
+</div>
+
+<div class="th"><h3>🧮 Sugar Quality Calculator</h3>
+<p>คำนวณ Sugar Quality Score (SQS) — composite index สำหรับประเมินคุณภาพรวม</p>
+<div class="calc">
+<div class="g g3">
+<div><label>ICUMSA Color (IU)</label><input type="number" id="sq_icumsa" value="800" oninput="calcSQS()"></div>
+<div><label>Moisture (%)</label><input type="number" id="sq_moist" value="0.06" step="0.01" oninput="calcSQS()"></div>
+<div><label>Pol (% by pol)</label><input type="number" id="sq_pol" value="99.6" step="0.1" oninput="calcSQS()"></div>
+</div>
+<div class="g g3" style="margin-top:10px">
+<div><label>Ash (%)</label><input type="number" id="sq_ash" value="0.03" step="0.01" oninput="calcSQS()"></div>
+<div><label>CV (%)</label><input type="number" id="sq_cv" value="25" oninput="calcSQS()"></div>
+<div><label>M.A. (mm)</label><input type="number" id="sq_ma" value="0.8" step="0.1" oninput="calcSQS()"></div>
+</div>
+<div class="g g3" style="margin-top:15px">
+<div style="background:rgba(121,85,72,.08);border-radius:14px;padding:18px;text-align:center">
+<div class="cres-l">Sugar Quality Score</div><div class="cres-v" id="sq_score" style="font-size:32px;color:var(--c-brown)">—</div><div class="cres-l">/100</div>
+</div>
+<div style="background:rgba(76,175,80,.08);border-radius:14px;padding:18px;text-align:center">
+<div class="cres-l">เกรด</div><div class="cres-v" id="sq_grade" style="font-size:28px">—</div>
+</div>
+<div style="background:rgba(33,150,243,.08);border-radius:14px;padding:18px;text-align:center">
+<div class="cres-l">Price Premium</div><div class="cres-v" id="sq_premium" style="font-size:24px">—</div><div class="cres-l">$/ton vs VHP</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="th"><h3>🏪 Storage Science — ปัจจัยที่ทำลายคุณภาพน้ำตาลระหว่างเก็บ</h3>
+<table class="dt"><thead><tr><th>ปัจจัย</th><th>กลไก</th><th>ผลกระทบ</th><th>ป้องกัน</th></tr></thead><tbody>
+<tr><td><b>ความชื้นสัมพัทธ์</b></td><td>RH &gt; 65% → น้ำตาลดูดความชื้น → ละลายผิว</td><td>Caking, Microbial growth, Color increase</td><td>คุม RH &lt; 60%, ระบาย air</td></tr>
+<tr><td><b>อุณหภูมิ</b></td><td>T &gt; 35°C → Maillard reaction เร่งขึ้น</td><td>Color +50-100 IU/เดือน</td><td>คุม T &lt; 30°C, insulate roof</td></tr>
+<tr><td><b>Reducing Sugars</b></td><td>Glucose+Fructose + amino acids → Melanoidins</td><td>Browning, caking, off-flavor</td><td>RS &lt; 0.04% for White Sugar</td></tr>
+<tr><td><b>Microorganisms</b></td><td>Moisture &gt; 0.1% → Yeasts, molds grow</td><td>Off-odor, visible mold on surface</td><td>Dry to &lt; 0.05% moisture</td></tr>
+</tbody></table>
+<div class="ins"><b>📌 PhD Rule of Thumb:</b> น้ำตาลเก็บได้นาน ≤2 ปี ถ้า: Moisture &lt;0.06%, Pol &gt;99.6%, ICUMSA &lt;1000, RH &lt;60%, T &lt;30°C</div>
+</div>
+
+<div class="th">
+<h3>📌 กฎ 3 ข้อของ Sugar Quality (PhD Summary)</h3>
+<p><b class="ha">1.</b> <b>Color is cumulative</b> — สีเกิดจากทุกขั้นตอน ตั้งแต่ไร่ถึงคลัง ต้องควบคุมทั้ง chain ไม่ใช่แค่ปลายทาง</p>
+<p><b class="hg">2.</b> <b>CV determines everything downstream</b> — Crystal ที่สม่ำเสมอ (CV&lt;20%) → ปั่นง่าย → ล้างสีได้ดี → แห้งเร็ว → เก็บได้นาน</p>
+<p><b class="hb">3.</b> <b>Premium pays for itself</b> — การลงทุนปรับปรุงคุณภาพ (ลด ICUMSA 300 IU) คืนทุนใน 1 season สำหรับโรงงาน &gt;5,000 TCD</p>
+</div>
+</div>
+
 <!-- ======== TAB: STEAM ======== -->
 <div class="tab-page" id="tab-steam">
 <div class="sh" style="border-left-color:var(--c-orange)"><div class="sh-n" style="background:var(--c-orange)"></div><div><h2>สมดุลไอน้ำและพลังงาน (Steam & Energy Balance)</h2><p>โรงงานน้ำตาลผลิตพลังงานเองจากชานอ้อย</p></div></div>
 
+<div class="stabs">
+<button class="stab active" onclick="openSub(this,'stm-basics')">พื้นฐานไอน้ำ</button>
+<button class="stab" onclick="openSub(this,'stm-phd')">🎓 PhD: Cogeneration & Pinch</button>
+</div>
+
+<div class="spage active" id="sp-stm-basics">
 <div class="th"><h3>วงจรพลังงานของโรงงานน้ำตาล</h3>
 <div class="fm">Bagasse (เชื้อเพลิง) → Boiler (HP Steam) → Turbine → ไฟฟ้า + Exhaust Steam → หม้อต้ม + หม้อเคี่ยว + Juice Heaters</div>
 <p>โรงงานน้ำตาลที่มีประสิทธิภาพสามารถ <b class="hg">ส่งออกไฟฟ้า 100-110 kWh/ตัน อ้อย</b> (ที่ steam 45-82 bar)</p></div>
@@ -6408,6 +7078,110 @@ Brix: <b>85-90%</b><br>
 <div id="pw_ex" style="font-size:12px;color:var(--txt2);margin-top:10px"></div>
 </div>
 </div>
+</div>
+</div><!-- /sp-stm-basics -->
+
+<!-- PhD: Cogeneration & Energy Optimization -->
+<div class="spage" id="sp-stm-phd">
+<div class="th" style="background:linear-gradient(135deg,rgba(255,152,0,.12),rgba(255,152,0,.03));border-left:4px solid var(--c-orange)">
+<h3>🎓 PhD Module: Cogeneration Economics & Energy Optimization</h3>
+<p><i>"A well-designed cogeneration system makes a sugar factory not just self-sufficient in energy, but a net power exporter. The economics of bagasse have fundamentally changed the industry." — Hugot, Ch.40</i></p>
+</div>
+
+<div class="th"><h3>⚡ Cogeneration System Design — Comparison</h3>
+<table class="dt"><thead><tr><th>Configuration</th><th>Steam Pressure</th><th>Power Output</th><th>Steam/tc</th><th>Surplus Power</th><th>Investment</th></tr></thead><tbody>
+<tr><td><b>Traditional LP</b></td><td>20-22 bar</td><td>15-20 kWh/tc</td><td>550-600 kg/tc</td><td>0 (deficit)</td><td>Low</td></tr>
+<tr style="background:rgba(255,152,0,.06)"><td><b>Medium Pressure</b></td><td>42-45 bar</td><td>30-40 kWh/tc</td><td>450-500 kg/tc</td><td>10-20 kWh/tc</td><td>Medium</td></tr>
+<tr style="background:rgba(76,175,80,.08)"><td><b class="hg">High Pressure</b></td><td>65-67 bar</td><td>80-100 kWh/tc</td><td>380-420 kg/tc</td><td>50-70 kWh/tc</td><td>High</td></tr>
+<tr style="background:rgba(33,150,243,.08)"><td><b class="hb">Ultra HP (CEST)</b></td><td>82-105 bar</td><td>120-150 kWh/tc</td><td>340-380 kg/tc</td><td>80-120 kWh/tc</td><td>Very High</td></tr>
+</tbody></table>
+<div class="ins"><b>💡 PhD Insight:</b> การอัพเกรดจาก 22 bar → 67 bar สำหรับโรงงาน 10,000 TCD → ขายไฟฟ้าได้ ~60 kWh/tc × 10,000 tc/day × $0.08/kWh = <b>$48,000/day หรือ ~$7.2M/season</b></div>
+</div>
+
+<div class="th"><h3>🔥 Steam Economy by Evaporator Configuration</h3>
+<p>จำนวน Effect ของหม้อต้มกำหนด Steam Economy ทั้งระบบ:</p>
+<table class="dt"><thead><tr><th>Configuration</th><th>Effects</th><th>Steam Economy</th><th>Steam % on Cane</th><th>Vapor Bleeding</th></tr></thead><tbody>
+<tr><td>Single Effect</td><td>1</td><td>1.0</td><td>~100%</td><td>ไม่มี</td></tr>
+<tr><td>Triple Effect</td><td>3</td><td>2.5-2.8</td><td>~50%</td><td>Limited</td></tr>
+<tr><td>Quadruple Effect</td><td>4</td><td>3.2-3.5</td><td>~40%</td><td>Standard</td></tr>
+<tr style="background:rgba(76,175,80,.08)"><td><b class="hg">Quintuple Effect</b></td><td>5</td><td>4.0-4.5</td><td>~33%</td><td>Optimized</td></tr>
+<tr style="background:rgba(33,150,243,.08)"><td><b class="hb">Sextuple (ดีเยี่ยม)</b></td><td>6</td><td>5.0-5.5</td><td>~28%</td><td>Maximum</td></tr>
+</tbody></table>
+<div class="fm">Steam Economy = kg water evaporated / kg live steam used<br>
+เป้าหมาย: Steam % on Cane &lt; 40% (ดี), &lt; 35% (ดีเยี่ยม), &lt; 30% (World-class)</div>
+</div>
+
+<div class="th"><h3>🌡️ Pinch Analysis — หลักการ Energy Integration</h3>
+<p><b>Pinch Analysis</b> คือเทคนิคทาง Thermodynamics สำหรับหาจุดที่ใช้พลังงานน้อยที่สุด:</p>
+<div class="g g2">
+<div class="c"><div class="ct">Pinch Analysis Steps</div>
+<p><b>1. Stream Data:</b> ระบุ Hot streams (ต้องทำให้เย็น) และ Cold streams (ต้องทำให้ร้อน)</p>
+<p><b>2. Composite Curves:</b> พล็อต T vs Enthalpy ของ Hot/Cold streams</p>
+<p><b>3. Pinch Point:</b> จุดที่ ΔT ระหว่าง Hot-Cold น้อยที่สุด (ΔT_min = 10-15°C)</p>
+<p><b>4. Design Rules:</b><br>
+— ห้ามส่ง Heat ข้ามผ่าน Pinch<br>
+— ห้ามใช้ Utility เย็น เหนือ Pinch<br>
+— ห้ามใช้ Utility ร้อน ใต้ Pinch</p>
+</div>
+<div class="c"><div class="ct">Sugar Factory Application</div>
+<p><b>Hot Streams:</b> Condensate returns, Exhaust condenser, Molasses cooling</p>
+<p><b>Cold Streams:</b> Juice heating (4 stages), Syrup heating, Pan feed heating</p>
+<p><b>ผลลัพธ์ทั่วไป:</b></p>
+<p>— ลด Live Steam ได้ 5-15%</p>
+<p>— ลด Cooling Water ได้ 10-20%</p>
+<p>— Payback period: 1-3 ปี</p>
+<p><b>Case Study:</b> โรงงาน Brazil 15,000 TCD ใช้ Pinch Analysis ลด steam จาก 480 → 380 kg/tc = <b>ประหยัด $3.2M/ปี</b></p>
+</div>
+</div>
+</div>
+
+<div class="th"><h3>🧮 Cogeneration Economics Calculator</h3>
+<div class="calc">
+<div class="g g3">
+<div><label>Crushing Rate (TCD)</label><input type="number" id="cg_tcd" value="10000" oninput="calcCogen()"></div>
+<div><label>Boiler Pressure (bar)</label><input type="number" id="cg_pres" value="67" oninput="calcCogen()"></div>
+<div><label>Electricity Price ($/kWh)</label><input type="number" id="cg_price" value="0.08" step="0.01" oninput="calcCogen()"></div>
+</div>
+<div class="g g3" style="margin-top:10px">
+<div><label>Crushing Days/Season</label><input type="number" id="cg_days" value="150" oninput="calcCogen()"></div>
+<div><label>Bagasse % Cane</label><input type="number" id="cg_bag" value="28" oninput="calcCogen()"></div>
+<div><label>Factory Power Need (kWh/tc)</label><input type="number" id="cg_need" value="30" oninput="calcCogen()"></div>
+</div>
+<div class="g g2" style="margin-top:15px">
+<div class="c" style="text-align:center"><div class="ct">Total Generation</div>
+<div class="cres-v hg" id="cg_total" style="font-size:32px">—</div><div class="cres-l">kWh/tc</div></div>
+<div class="c" style="text-align:center"><div class="ct">Surplus for Export</div>
+<div class="cres-v hb" id="cg_surplus" style="font-size:32px">—</div><div class="cres-l">kWh/tc</div></div>
+</div>
+<div class="g g2" style="margin-top:10px">
+<div style="background:rgba(76,175,80,.08);border-radius:14px;padding:18px;text-align:center">
+<div class="cres-l">Revenue/Season</div><div class="cres-v hg" id="cg_rev" style="font-size:28px">—</div><div class="cres-l">Million $</div>
+</div>
+<div style="background:rgba(255,152,0,.08);border-radius:14px;padding:18px;text-align:center">
+<div class="cres-l">MW Export Capacity</div><div class="cres-v ha" id="cg_mw" style="font-size:28px">—</div><div class="cres-l">MW</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="th"><h3>💧 Vapor Bleeding Strategy — ลดไอน้ำสด</h3>
+<table class="dt"><thead><tr><th>Vapor Source</th><th>ใช้กับ</th><th>ผลประหยัด</th><th>ข้อจำกัด</th></tr></thead><tbody>
+<tr><td><b>V1 (1st Effect Vapor)</b></td><td>Juice Heater สุดท้าย</td><td>ลด Live Steam 5-8%</td><td>T°C ต้อง &gt; Juice Temp ที่ต้องการ</td></tr>
+<tr><td><b>V2 (2nd Effect)</b></td><td>Juice Heater กลาง, Pan A/B</td><td>ลด Live Steam 8-12%</td><td>Pan ต้องทำงานที่ Vacuum ต่ำกว่า</td></tr>
+<tr><td><b>V3 (3rd Effect)</b></td><td>Juice Heater แรก, Pan C</td><td>ลด Live Steam 3-5%</td><td>T°C ต่ำ จำกัดการใช้งาน</td></tr>
+<tr><td><b>Condensate Flash</b></td><td>Pre-heating juice/water</td><td>ลด 2-3%</td><td>ต้องมี Flash tank</td></tr>
+</tbody></table>
+<div class="ins"><b>💡 Best Practice:</b> โรงงาน World-class ใช้ Vapor Bleeding จาก V1+V2 สำหรับ Pans ทั้งหมด และ V3 สำหรับ Juice Heating → ลด Live Steam สู่ &lt;380 kg/tc</div>
+</div>
+
+<div class="th">
+<h3>📌 กฎ 3 ข้อของ Energy Optimization (PhD Summary)</h3>
+<p><b class="ha">1.</b> <b>High Pressure = High Profit</b> — ทุก 10 bar ที่เพิ่ม → ผลิตไฟฟ้าได้ +15-20 kWh/tc → รายได้ขายไฟเพิ่ม</p>
+<p><b class="hg">2.</b> <b>Bleed before you burn</b> — ใช้ Vapor จากหม้อต้มให้สุดก่อน ก่อนใช้ Live Steam → ลด Steam consumption 15-25%</p>
+<p><b class="hb">3.</b> <b>Don't cross the Pinch</b> — Pinch Analysis ช่วยหาจุดที่เสีย Energy โดยไม่จำเป็น → ประหยัด 5-15% ของพลังงานทั้งหมด</p>
+</div>
+</div>
+
 </div>
 
 <!-- ======== TAB: GLOSSARY ======== -->
@@ -6822,6 +7596,38 @@ Brix: <b>85-90%</b><br>
 <p style="color:var(--txt3);font-size:11px">อ้างอิง: <b>Peter Rein — Cane Sugar Engineering (2007)</b> | <b>Hugot — Handbook of Cane Sugar Engineering (1986)</b> | <b>ICUMSA Methods Book</b> | <b>Chen & Chou — Cane Sugar Handbook (1993)</b><br>Dashboard จัดทำเพื่อการศึกษา — ค่าตัวเลขเป็นค่าเฉลี่ยจากตำราอ้างอิง ค่าจริงแตกต่างตามสภาพโรงงาน</p>
 </div>
 </div>
+
+<!-- BVP Advanced Glossary -->
+<div class="c" style="margin-top:20px"><div class="ct">🎓 หมวดพิเศษ — คำศัพท์ขั้นสูง BVP Crystallization</div>
+<table class="dt"><thead><tr><th>คำศัพท์</th><th>ความหมาย</th><th>ค่ามาตรฐาน</th></tr></thead><tbody>
+<tr><td><b class="ha">Supersaturation (SS)</b></td><td>อัตราส่วนความเข้มข้นจริง/ความเข้มข้นอิ่มตัว — กำหนดว่าผลึกจะเกิดหรือละลาย</td><td>Boiling zone: 1.05-1.15</td></tr>
+<tr><td><b class="hg">CV (Coefficient of Variation)</b></td><td>ค่าวัดความสม่ำเสมอของผลึก = (SD/Mean)×100</td><td>&lt;20% ดีเยี่ยม, &lt;25% ดี, &gt;35% ไม่ผ่าน</td></tr>
+<tr><td><b class="hb">M.A. (Mean Aperture)</b></td><td>ขนาดเฉลี่ยผลึก วัดจาก Sieve Analysis</td><td>0.6-1.0 mm (VHP), 0.8-1.2 mm (White)</td></tr>
+<tr><td><b>Crystal Content (%)</b></td><td>% ผลึกในมวลเคี่ยว = Brix × (1 - Mother liquor purity/Massecuite purity)</td><td>A-strike: 45-55%, C-strike: 25-35%</td></tr>
+<tr><td><b>Exhaustion</b></td><td>การสกัดน้ำตาลออกจาก Molasses = (Purity Feed - Purity Molasses)/Purity Feed × 100</td><td>A: 55-65%, C: 25-35%, Overall: 87-92%</td></tr>
+<tr><td><b class="ha">Cobenze Diagram</b></td><td>กราฟแสดงเขต Metastable/Labile ของสารละลายน้ำตาล — ใช้กำหนด Operating Zone</td><td>ต้อง operate ใน Metastable zone เท่านั้น</td></tr>
+<tr><td><b>Massecuite</b></td><td>ส่วนผสมของผลึกน้ำตาล + Mother liquor ที่ออกจากหม้อเคี่ยว</td><td>A: 92-94 Bx, B: 94-96 Bx, C: 96-100 Bx</td></tr>
+<tr><td><b class="hg">Seed Slurry</b></td><td>ผลึกน้ำตาลบดละเอียด (5-10 μm) แขวนลอยใน Isopropanol ใช้เป็นจุดเริ่มต้นผลึก</td><td>150-200 g/100 mL IPA</td></tr>
+<tr><td><b>Magma</b></td><td>ส่วนผสมน้ำตาลผลึก + Syrup ใช้เป็น Seed สำหรับ Strike ถัดไป</td><td>B-magma purity: 85-88%</td></tr>
+<tr><td><b>Proof Brix</b></td><td>Brix ที่ใช้ตรวจสอบว่า Grain ทำเสร็จแล้ว (ก่อน Tightening)</td><td>75-78 Bx สำหรับ A-Strike</td></tr>
+<tr><td><b class="hb">Calandria</b></td><td>ชุดท่อให้ความร้อนในหม้อเคี่ยว — ไอน้ำด้านนอกท่อ มวลเคี่ยวด้านใน</td><td>Tube: ⌀100-115mm, L: 800-1200mm</td></tr>
+<tr><td><b>Mother Liquor</b></td><td>น้ำเชื่อมที่ล้อมรอบผลึกในมวลเคี่ยว</td><td>Purity ลดลงตลอดการเคี่ยว</td></tr>
+</tbody></table>
+</div>
+
+<div class="c" style="margin-top:20px"><div class="ct">🎓 หมวดพิเศษ — คำศัพท์ Steam & Energy</div>
+<table class="dt"><thead><tr><th>คำศัพท์</th><th>ความหมาย</th><th>ค่าอ้างอิง</th></tr></thead><tbody>
+<tr><td><b class="ha">CEST</b></td><td>Condensing-Extraction Steam Turbine — ผลิตไฟฟ้าสูงสุดโดยควบแน่นไอน้ำ exhaust</td><td>120-150 kWh/tc</td></tr>
+<tr><td><b class="hg">BPST</b></td><td>Back Pressure Steam Turbine — ใช้ไอน้ำ exhaust สำหรับกระบวนการ</td><td>20-40 kWh/tc</td></tr>
+<tr><td><b>Steam Economy</b></td><td>kg น้ำที่ระเหย / kg Live Steam ที่ใช้</td><td>4.0-5.5 (Quintuple-Sextuple)</td></tr>
+<tr><td><b>Vapor Bleeding</b></td><td>การดึง Vapor จาก Effect ก่อนหน้าไปใช้แทน Live Steam</td><td>ประหยัด 15-25% of Steam</td></tr>
+<tr><td><b class="hb">Pinch Point</b></td><td>จุดที่ ΔT ระหว่าง Hot/Cold stream น้อยที่สุด — จุดคอขวดของ Heat Integration</td><td>ΔT_min = 10-15°C</td></tr>
+<tr><td><b>NCG (Non-Condensable Gas)</b></td><td>ก๊าซที่ไม่ควบแน่น (Air, CO₂) สะสมใน Calandria → ลดประสิทธิภาพ</td><td>ต้อง vent สม่ำเสมอ</td></tr>
+<tr><td><b>Bagasse Moisture</b></td><td>ความชื้นในชานอ้อย — ส่งผลต่อ Calorific Value โดยตรง</td><td>48-52% (target &lt;50%)</td></tr>
+<tr><td><b>GCV/NCV</b></td><td>Gross/Net Calorific Value ของ Bagasse</td><td>GCV≈9,600 kJ/kg (dry), NCV≈7,500 kJ/kg (50% moist)</td></tr>
+</tbody></table>
+</div>
+
 </div><!-- /tab-glossary -->
 
 <!-- ======== TAB: REPORT GUIDE ======== -->
@@ -6844,6 +7650,7 @@ Brix: <b>85-90%</b><br>
 <button class="stab" onclick="openSub(this,'rg-energy')">พลังงาน & เวลา</button>
 <button class="stab" onclick="openSub(this,'rg-product')">คุณภาพน้ำตาล</button>
 <button class="stab" onclick="openSub(this,'rg-relations')">แผนที่ความสัมพันธ์</button>
+<button class="stab" onclick="openSub(this,'rg-phd')">🎓 PhD: DMR Analysis</button>
 <button class="stab" onclick="openSub(this,'rg-sim')" style="background:var(--c-teal);color:#fff;border:none">🧪 จำลองรายงาน</button>
 </div>
 
@@ -7482,11 +8289,95 @@ Brix: <b>85-90%</b><br>
 </div>
 
 </div>
+
+<!-- PhD: DMR Analysis Methodology -->
+<div class="spage" id="sp-rg-phd">
+<div class="th" style="background:linear-gradient(135deg,rgba(0,150,136,.12),rgba(0,150,136,.03));border-left:4px solid var(--c-teal)">
+<h3>🎓 PhD Module: Daily Manufacturing Report (DMR) Analysis</h3>
+<p><i>"The DMR is the factory's daily health check. A trained engineer can diagnose process problems from the DMR alone, just as a doctor reads vital signs." — Peter Rein, Ch.26</i></p>
+</div>
+
+<div class="th"><h3>📋 DMR Reading Framework — 5-Step Method</h3>
+<table class="dt"><thead><tr><th>Step</th><th>ดูอะไร</th><th>ค่าวิกฤต</th><th>ถ้าผิดปกติ → ตรวจอะไร</th></tr></thead><tbody>
+<tr><td><b class="ha">1. Throughput</b></td><td>TCD, TC stopped, Hours lost</td><td>TCD &lt; 85% capacity</td><td>Downtime log → สาเหตุหยุด (Cane supply? Mechanical? Process?)</td></tr>
+<tr><td><b class="hg">2. Extraction</b></td><td>Pol % Bagasse, Imbibition %, Mill Extraction</td><td>Pol% Bagasse &gt; 2.0</td><td>Prep Index, Mill setting, Imbibition rate, Roller condition</td></tr>
+<tr><td><b class="hb">3. Losses</b></td><td>Bagasse loss, Filter loss, Molasses loss, Undetermined</td><td>Total loss &gt; 14% Pol in Cane</td><td>แยกดูแต่ละ loss → E2E Calculator</td></tr>
+<tr><td><b class="hw">4. Recovery</b></td><td>Boiling House Recovery, Overall Recovery</td><td>BHR &lt; 88%, OR &lt; 85%</td><td>Molasses purity, Crystal quality, Clarification efficiency</td></tr>
+<tr><td><b class="ha">5. Quality</b></td><td>Pol, Moisture, Color, Ash, CV, M.A.</td><td>Pol &lt; 99.5, ICUMSA &gt; target</td><td>Pan operation, Centrifugal, Drying</td></tr>
+</tbody></table>
+</div>
+
+<div class="th"><h3>📊 Red Flag Pattern Recognition</h3>
+<p>รูปแบบที่บ่งบอกปัญหาเชิงระบบ:</p>
+<table class="dt"><thead><tr><th>Pattern ที่เห็นใน DMR</th><th>วินิจฉัย</th><th>Root Cause ที่เป็นไปได้</th><th>Action</th></tr></thead><tbody>
+<tr><td>Purity drop ต่อเนื่อง 3+ วัน</td><td>อ้อยเสื่อมคุณภาพ</td><td>Delayed cane, Stale cane &gt;24h</td><td>ตรวจ Cane age, ปรับ Harvest schedule</td></tr>
+<tr><td>Undetermined Loss สูง (&gt;2%)</td><td>Sucrose inversion</td><td>pH ต่ำ + อุณหภูมิสูง ใน Process</td><td>ตรวจ pH ทุกจุด, ลด Retention time</td></tr>
+<tr><td>BHR ต่ำ + Molasses purity สูง</td><td>Crystallization ไม่มีประสิทธิภาพ</td><td>Boiling scheme ไม่เหมาะสม, Poor C-strike</td><td>Review boiling scheme, ตรวจ Vacuum, ปรับ Seed</td></tr>
+<tr><td>High Extraction + High Total Loss</td><td>Loss ในกระบวนการ ไม่ใช่ Milling</td><td>Clarification loss หรือ Evap degradation</td><td>ตรวจ Filter cake Pol, Condensate Brix</td></tr>
+<tr><td>Steam % on Cane สูงขึ้นเรื่อยๆ</td><td>Scaling / Fouling</td><td>Evaporator tube scale, Juice heater fouling</td><td>Chemical cleaning schedule, ตรวจ ΔT</td></tr>
+<tr><td>ICUMSA trending up</td><td>Color formation เพิ่ม</td><td>pH excursion, Iron contamination, Stale cane</td><td>Full color balance survey, pH audit</td></tr>
+</tbody></table>
+</div>
+
+<div class="th"><h3>🔢 Key Ratio Watchlist</h3>
+<div class="g g2">
+<div class="c"><div class="ct">Ratios ที่ดีเยี่ยม (Green)</div>
+<p><b>Pol % Bagasse / Fiber %:</b> &lt; 0.035</p>
+<p><b>Molasses / Pol in Cane:</b> &lt; 9.5%</p>
+<p><b>Filter Loss / Pol in Cane:</b> &lt; 0.5%</p>
+<p><b>Undetermined / Pol in Cane:</b> &lt; 1.5%</p>
+<p><b>Steam % on Cane:</b> &lt; 45%</p>
+<p><b>Imbibition % Fiber:</b> 200-250%</p>
+</div>
+<div class="c"><div class="ct">Ratios ที่แย่ (Red Flag)</div>
+<p><b>Pol % Bagasse / Fiber %:</b> &gt; 0.050 → Milling problem</p>
+<p><b>Molasses / Pol in Cane:</b> &gt; 12% → Boiling problem</p>
+<p><b>Filter Loss / Pol in Cane:</b> &gt; 1.0% → Clarification problem</p>
+<p><b>Undetermined / Pol in Cane:</b> &gt; 3.0% → Inversion</p>
+<p><b>Steam % on Cane:</b> &gt; 55% → Energy waste</p>
+<p><b>Imbibition % Fiber:</b> &lt; 150% → Under-imbibition</p>
+</div>
+</div>
+</div>
+
+<div class="th">
+<h3>📌 กฎ 3 ข้อของ DMR Analysis (PhD Summary)</h3>
+<p><b class="ha">1.</b> <b>Trend beats snapshot</b> — ค่าวันเดียวไม่บอกอะไร ต้องดู 7-day moving average ถ้า trend ลดลงต่อเนื่อง → ปัญหาเชิงระบบ</p>
+<p><b class="hg">2.</b> <b>Follow the Pol</b> — ติดตาม Pol ตั้งแต่อ้อย → น้ำอ้อย → Syrup → Massecuite → Sugar + Molasses ยอดต้องสมดุล ถ้าไม่ = Undetermined Loss</p>
+<p><b class="hb">3.</b> <b>One number tells a story</b> — BHR ต่ำ+Extraction สูง = ปัญหาในโรงงาน, BHR ต่ำ+Extraction ต่ำ = ปัญหาจากหีบ, ทั้งสองต่ำ = อ้อยคุณภาพแย่</p>
+</div>
+</div>
+
 </div><!-- /tab-reportguide -->
 
 <!-- ======== TAB: BENCHMARKS ======== -->
 <div class="tab-page" id="tab-benchmarks">
 <div class="sh" style="border-left-color:var(--c-pink)"><div class="sh-n" style="background:var(--c-pink)"></div><div><h2>เกณฑ์เปรียบเทียบประสิทธิภาพ (Benchmarks)</h2><p>เปรียบเทียบค่าของโรงงานคุณกับมาตรฐานสากล</p></div></div>
+
+<div class="th" style="background:linear-gradient(135deg,rgba(233,30,99,.08),rgba(233,30,99,.02));border-left:4px solid var(--c-pink)">
+<h3>🚦 Traffic Light Benchmark Checker — ป้อนค่าโรงงานของคุณ</h3>
+<p>กรอกค่าจริงจาก DMR แล้วระบบจะบอกว่าอยู่ระดับไหน พร้อมคำแนะนำ:</p>
+<div class="calc">
+<div class="g g3">
+<div><label>Overall Recovery (%)</label><input type="number" id="bm_or" value="86" step="0.1" oninput="calcBenchmark()"></div>
+<div><label>Boiling House Recovery (%)</label><input type="number" id="bm_bhr" value="89" step="0.1" oninput="calcBenchmark()"></div>
+<div><label>Mill Extraction (%)</label><input type="number" id="bm_me" value="96.5" step="0.1" oninput="calcBenchmark()"></div>
+</div>
+<div class="g g3" style="margin-top:10px">
+<div><label>Steam % on Cane</label><input type="number" id="bm_steam" value="48" step="1" oninput="calcBenchmark()"></div>
+<div><label>Pol % Bagasse</label><input type="number" id="bm_polbag" value="1.8" step="0.1" oninput="calcBenchmark()"></div>
+<div><label>Molasses Purity (%)</label><input type="number" id="bm_molpur" value="38" step="1" oninput="calcBenchmark()"></div>
+</div>
+<div class="g g3" style="margin-top:10px">
+<div><label>ICUMSA (IU)</label><input type="number" id="bm_icu" value="800" oninput="calcBenchmark()"></div>
+<div><label>Crystal CV (%)</label><input type="number" id="bm_cv" value="28" oninput="calcBenchmark()"></div>
+<div><label>Crushing Rate (% design)</label><input type="number" id="bm_crush" value="92" step="1" oninput="calcBenchmark()"></div>
+</div>
+
+<div id="bm_results" style="margin-top:20px"></div>
+</div>
+</div>
+
 
 <div class="c"><div class="ct">ตาราง Master Benchmark — ทุกกระบวนการ</div>
 <table class="dt"><thead><tr><th>กระบวนการ</th><th>พารามิเตอร์</th><th style="color:var(--green)">ดีเยี่ยม</th><th style="color:var(--amber)">ดี</th><th style="color:var(--red)">แย่</th><th>Core Relationship</th></tr></thead><tbody>
