@@ -8,43 +8,43 @@
 @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+Thai:wght@300;400;500;600;700;800;900&display=swap');
 
 :root {
-  /* ── Surface System: Light SaaS (Default) ── */
-  --bg: #F8FAFC;
-  --bg-alt: #F1F5F9;
+  /* ── Surface System: Warm Infographic ── */
+  --bg: #FAFBFE;
+  --bg-alt: #F0F4FF;
   --s1: #ffffff;
-  --s2: #F8FAFC;
-  --s3: #F1F5F9;
-  --s4: #E2E8F0;
-  --s5: #CBD5E1;
+  --s2: #F8FAFF;
+  --s3: #EEF2FF;
+  --s4: #E0E7FF;
+  --s5: #C7D2FE;
 
-  /* ── PRIMARY: Deep Ocean Blue ── */
-  --pri: #2563EB;
-  --pri-dark: #1D4ED8;
-  --pri-darker: #1E40AF;
-  --pri-light: rgba(37,99,235,.1);
-  --pri-lighter: rgba(37,99,235,.05);
-  --pri-glow: rgba(37,99,235,.15);
-  --pri-ring: rgba(37,99,235,.25);
-  --pri-shadow: rgba(37,99,235,.2);
+  /* ── PRIMARY: Rich Indigo-Blue ── */
+  --pri: #4F46E5;
+  --pri-dark: #4338CA;
+  --pri-darker: #3730A3;
+  --pri-light: rgba(79,70,229,.1);
+  --pri-lighter: rgba(79,70,229,.05);
+  --pri-glow: rgba(79,70,229,.15);
+  --pri-ring: rgba(79,70,229,.25);
+  --pri-shadow: rgba(79,70,229,.2);
 
-  /* ── SECONDARY: Emerald Green ── */
+  /* ── SECONDARY: Vibrant Emerald ── */
   --sec: #10B981;
   --sec-dark: #059669;
   --sec-light: rgba(16,185,129,.1);
   --sec-lighter: rgba(16,185,129,.05);
 
-  /* ── Category Color System ── */
-  --c-blue:    #3B82F6;  --cb: rgba(59,130,246,.08);  --cbl: rgba(59,130,246,.04);
-  --c-teal:    #14B8A6;  --ct: rgba(20,184,166,.08);  --ctl: rgba(20,184,166,.04);
-  --c-green:   #10B981;  --cg: rgba(16,185,129,.08);  --cgl: rgba(16,185,129,.04);
-  --c-amber:   #F59E0B;  --ca: rgba(245,158,11,.08);  --cal: rgba(245,158,11,.04);
-  --c-red:     #EF4444;  --crd:rgba(239,68,68,.08);   --crl: rgba(239,68,68,.04);
-  --c-purple:  #8B5CF6;  --cp: rgba(139,92,246,.08);  --cpl: rgba(139,92,246,.04);
-  --c-cyan:    #06B6D4;  --cc: rgba(6,182,212,.08);   --ccl: rgba(6,182,212,.04);
-  --c-brown:   #A16207;  --cbr:rgba(161,98,7,.08);    --cbrl:rgba(161,98,7,.04);
-  --c-orange:  #F97316;  --co: rgba(249,115,22,.08);  --col: rgba(249,115,22,.04);
-  --c-pink:    #EC4899;  --cpk:rgba(236,72,153,.08);  --cpkl:rgba(236,72,153,.04);
-  --c-indigo:  #6366F1;  --ci: rgba(99,102,241,.08);  --cil: rgba(99,102,241,.04);
+  /* ── Category Color System: Vivid Infographic ── */
+  --c-blue:    #3B82F6;  --cb: rgba(59,130,246,.10);  --cbl: rgba(59,130,246,.05);
+  --c-teal:    #0D9488;  --ct: rgba(13,148,136,.10);  --ctl: rgba(13,148,136,.05);
+  --c-green:   #059669;  --cg: rgba(5,150,105,.10);   --cgl: rgba(5,150,105,.05);
+  --c-amber:   #D97706;  --ca: rgba(217,119,6,.10);   --cal: rgba(217,119,6,.05);
+  --c-red:     #DC2626;  --crd:rgba(220,38,38,.10);   --crl: rgba(220,38,38,.05);
+  --c-purple:  #7C3AED;  --cp: rgba(124,58,237,.10);  --cpl: rgba(124,58,237,.05);
+  --c-cyan:    #0891B2;  --cc: rgba(8,145,178,.10);   --ccl: rgba(8,145,178,.05);
+  --c-brown:   #92400E;  --cbr:rgba(146,64,14,.10);   --cbrl:rgba(146,64,14,.05);
+  --c-orange:  #EA580C;  --co: rgba(234,88,12,.10);   --col: rgba(234,88,12,.05);
+  --c-pink:    #DB2777;  --cpk:rgba(219,39,119,.10);  --cpkl:rgba(219,39,119,.05);
+  --c-indigo:  #4F46E5;  --ci: rgba(79,70,229,.10);   --cil: rgba(79,70,229,.05);
 
   /* ── Semantic mappings ── */
   --amber: var(--c-amber); --green: var(--c-green); --blue: var(--c-blue);
@@ -58,9 +58,9 @@
   --accent-100: var(--pri-light);
 
   /* ── Text ── */
-  --txt:  #0F172A;
-  --txt2: #475569;
-  --txt3: #94A3B8;
+  --txt:  #1E1B4B;
+  --txt2: #4C4E6D;
+  --txt3: #8B8FA8;
 
   /* ── Borders ── */
   --bdr:  rgba(0,0,0,.06);
@@ -93,6 +93,9 @@ html { scroll-behavior: smooth; }
 body {
   font-family: 'Prompt', 'Inter', 'Noto Sans Thai', system-ui, -apple-system, sans-serif;
   background: var(--bg); color: var(--txt);
+  background-image: radial-gradient(ellipse at 20% 0%, rgba(79,70,229,.04) 0%, transparent 50%),
+                    radial-gradient(ellipse at 80% 100%, rgba(16,185,129,.03) 0%, transparent 50%);
+  background-attachment: fixed;
   line-height: 1.7; overflow-x: hidden; min-height: 100vh;
   font-size: 14px; font-weight: 400;
   -webkit-font-smoothing: antialiased;
@@ -109,13 +112,13 @@ body {
    ═══════════════════════════════════════════ */
 .topbar {
   position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-  background: linear-gradient(135deg, rgba(15,23,42,.92) 0%, rgba(30,41,59,.88) 50%, rgba(37,99,235,.85) 100%);
+  background: linear-gradient(135deg, #1E1B4B 0%, #312E81 40%, #3730A3 100%);
   backdrop-filter: blur(20px) saturate(1.8);
   -webkit-backdrop-filter: blur(20px) saturate(1.8);
   padding: 0 40px; height: 62px;
   display: flex; align-items: center; gap: 18px;
-  box-shadow: 0 1px 3px rgba(0,0,0,.08), 0 4px 20px rgba(0,0,0,.06);
-  border-bottom: 1px solid rgba(255,255,255,.08);
+  box-shadow: 0 2px 12px rgba(30,27,75,.25), 0 4px 24px rgba(79,70,229,.1);
+  border-bottom: 1px solid rgba(167,139,250,.15);
 }
 .topbar h1 {
   font-size: 16px; font-weight: 600; color: rgba(255,255,255,.95);
@@ -123,8 +126,8 @@ body {
   font-family: 'Prompt', 'Inter', sans-serif;
 }
 .topbar h1 span {
-  color: #60A5FA; font-weight: 800;
-  background: linear-gradient(135deg, #60A5FA, #34D399);
+  color: #A78BFA; font-weight: 800;
+  background: linear-gradient(135deg, #A78BFA, #34D399, #22D3EE);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
 }
 .topbar-ref {
@@ -138,14 +141,14 @@ body {
    ═══════════════════════════════════════════ */
 .tabs-wrap {
   position: fixed; top: 62px; left: 0; right: 0; z-index: 190;
-  background: rgba(255,255,255,.85);
+  background: rgba(255,255,255,.92);
   backdrop-filter: blur(16px) saturate(1.5);
   -webkit-backdrop-filter: blur(16px) saturate(1.5);
-  border-bottom: 1px solid rgba(0,0,0,.06);
+  border-bottom: 1px solid rgba(79,70,229,.08);
   overflow-x: auto; overflow-y: hidden;
   white-space: nowrap;
   padding: 0 16px;
-  box-shadow: 0 2px 8px rgba(0,0,0,.03);
+  box-shadow: 0 2px 12px rgba(79,70,229,.04);
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
   scroll-behavior: smooth;
@@ -174,7 +177,7 @@ body {
   color: var(--pri);
   font-weight: 700;
   border-bottom-color: var(--pri);
-  background: linear-gradient(180deg, rgba(37,99,235,.04) 0%, transparent 100%);
+  background: linear-gradient(180deg, rgba(79,70,229,.06) 0%, transparent 100%);
 }
 
 /* ═══════════════════════════════════════════
@@ -200,24 +203,24 @@ body {
    ═══════════════════════════════════════════ */
 .c {
   background: var(--s1);
-  border: 1px solid rgba(0,0,0,.04);
+  border: 1px solid rgba(79,70,229,.06);
   border-radius: var(--r-xl);
   padding: 30px;
-  box-shadow: var(--sh-card);
+  box-shadow: 0 1px 3px rgba(79,70,229,.04), 0 4px 16px rgba(79,70,229,.03);
   position: relative; overflow: hidden;
   transition: all .3s var(--ease);
 }
 .c::before {
   content: ''; position: absolute;
   top: 0; left: 0; right: 0; height: 3px;
-  background: linear-gradient(90deg, #3B82F6, #10B981, #06B6D4);
-  opacity: 0; transition: opacity .3s var(--ease);
+  background: linear-gradient(90deg, #4F46E5, #10B981, #0891B2);
+  opacity: 0.4; transition: opacity .3s var(--ease);
   border-radius: var(--r-xl) var(--r-xl) 0 0;
 }
 .c:hover {
-  box-shadow: var(--sh-card-hover);
-  transform: translateY(-3px);
-  border-color: rgba(37,99,235,.08);
+  box-shadow: 0 4px 12px rgba(79,70,229,.08), 0 12px 28px rgba(79,70,229,.06);
+  transform: translateY(-2px);
+  border-color: rgba(79,70,229,.12);
 }
 .c:hover::before { opacity: 1; }
 
@@ -261,9 +264,9 @@ body {
   display: flex; align-items: center; gap: 22px;
   margin-bottom: 36px; padding: 26px 32px;
   border-radius: var(--r-xl);
-  background: linear-gradient(135deg, rgba(37,99,235,.04) 0%, #ffffff 100%);
-  border: 1px solid rgba(37,99,235,.06);
-  box-shadow: var(--sh-card);
+  background: linear-gradient(135deg, rgba(79,70,229,.06) 0%, rgba(16,185,129,.02) 40%, #ffffff 100%);
+  border: 1px solid rgba(79,70,229,.08);
+  box-shadow: 0 2px 8px rgba(79,70,229,.04), 0 8px 24px rgba(79,70,229,.03);
   border-left: 5px solid var(--pri);
   position: relative; overflow: hidden;
 }
@@ -292,16 +295,16 @@ body {
    THEORY BOXES — Soft Blue/Green Tinted
    ═══════════════════════════════════════════ */
 .th {
-  background: linear-gradient(135deg, rgba(37,99,235,.03) 0%, rgba(16,185,129,.02) 100%);
-  border: 1px solid rgba(37,99,235,.06);
+  background: linear-gradient(135deg, rgba(79,70,229,.04) 0%, rgba(16,185,129,.02) 50%, rgba(255,255,255,.6) 100%);
+  border: 1px solid rgba(79,70,229,.07);
   border-radius: var(--r-xl); padding: 30px;
   margin-bottom: 28px;
   position: relative; overflow: hidden;
 }
 .th::before {
   content: ''; position: absolute; top: 0; left: 0;
-  width: 5px; height: 100%;
-  background: linear-gradient(180deg, var(--pri), var(--sec));
+  width: 4px; height: 100%;
+  background: linear-gradient(180deg, #4F46E5, #10B981, #0891B2);
   border-radius: var(--r-xl) 0 0 var(--r-xl);
 }
 .th h3 {
@@ -319,10 +322,10 @@ body {
    FORMULA BLOCKS
    ═══════════════════════════════════════════ */
 .fm {
-  background: linear-gradient(135deg, rgba(245,158,11,.06) 0%, rgba(249,115,22,.03) 100%);
+  background: linear-gradient(135deg, rgba(217,119,6,.06) 0%, rgba(234,88,12,.03) 100%);
   border-radius: var(--r-lg); padding: 20px 24px; margin: 18px 0;
-  font-family: 'Courier New', monospace;
-  font-size: 14px; color: #B45309;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  font-size: 13.5px; color: #92400E;
   text-align: center;
   border-left: 4px solid var(--c-amber);
   letter-spacing: .5px; box-shadow: var(--sh-xs);
@@ -345,12 +348,12 @@ body {
   box-shadow: var(--sh-sm);
 }
 .dt th {
-  background: linear-gradient(180deg, #F8FAFC, #F1F5F9);
+  background: linear-gradient(180deg, #EEF2FF, #E0E7FF);
   padding: 14px 20px;
-  text-align: left; font-weight: 600; color: var(--txt2);
+  text-align: left; font-weight: 600; color: #3730A3;
   font-size: 11px; text-transform: uppercase;
   letter-spacing: 1px;
-  border-bottom: 2px solid rgba(0,0,0,.06);
+  border-bottom: 2px solid rgba(79,70,229,.08);
   font-family: 'Prompt', 'Inter', sans-serif;
 }
 .dt td {
@@ -359,8 +362,8 @@ body {
   color: var(--txt); vertical-align: top;
   transition: background var(--duration) var(--ease);
 }
-.dt tr:nth-child(even) td { background: rgba(37,99,235,.015); }
-.dt tr:hover td { background: rgba(37,99,235,.04); }
+.dt tr:nth-child(even) td { background: rgba(79,70,229,.02); }
+.dt tr:hover td { background: rgba(79,70,229,.05); }
 .dt tr:last-child td { border-bottom: none; }
 
 /* ═══════════════════════════════════════════
@@ -380,12 +383,12 @@ body {
    INSIGHT BOXES
    ═══════════════════════════════════════════ */
 .ins {
-  background: linear-gradient(135deg, rgba(245,158,11,.04) 0%, rgba(245,158,11,.02) 100%);
-  border-left: 5px solid var(--c-amber);
-  padding: 20px 24px; margin: 22px 0;
-  border-radius: 0 var(--r-lg) var(--r-lg) 0;
-  font-size: 13.5px; line-height: 2;
-  box-shadow: var(--sh-xs);
+  background: linear-gradient(135deg, rgba(217,119,6,.06) 0%, rgba(234,88,12,.03) 100%);
+  border: 1px solid rgba(217,119,6,.1);
+  border-radius: var(--r-lg); padding: 18px 22px;
+  margin: 16px 0; font-size: 13.5px;
+  line-height: 1.8; color: var(--txt);
+  border-left: 4px solid var(--c-amber);
 }
 .ins b { color: #B45309; }
 
@@ -406,17 +409,15 @@ body {
    CALCULATOR — Premium Blue Panel
    ═══════════════════════════════════════════ */
 .calc {
-  background: var(--s1);
-  border: 1px solid rgba(37,99,235,.06);
-  border-radius: var(--r-2xl);
-  padding: 34px; margin-bottom: 30px;
-  box-shadow: var(--sh-card);
-  position: relative; overflow: hidden;
+  border: 2px solid rgba(79,70,229,.08);
+  border-radius: var(--r-xl); padding: 28px;
+  margin: 20px 0; position: relative; overflow: hidden;
+  background: linear-gradient(135deg, rgba(79,70,229,.02) 0%, rgba(255,255,255,.5) 100%);
 }
 .calc::before {
-  content: ''; position: absolute;
-  top: 0; left: 0; right: 0; height: 4px;
-  background: linear-gradient(90deg, #3B82F6, #10B981, #06B6D4);
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, #4F46E5, #10B981, #0891B2);
+  border-radius: var(--r-xl) var(--r-xl) 0 0;
 }
 .calc h3 {
   color: var(--pri); font-size: 17px;
@@ -426,17 +427,13 @@ body {
 
 /* PRIMARY BUTTON — Modern Gradient */
 .btn-calc {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 14px 36px;
-  background: linear-gradient(135deg, #2563EB 0%, #3B82F6 50%, #1D4ED8 100%);
-  color: #fff; border: none; border-radius: var(--r-md);
-  font-size: 14px; font-weight: 700;
-  cursor: pointer; font-family: 'Prompt', 'Inter', sans-serif;
-  margin: 20px 0;
+  background: linear-gradient(135deg, #4F46E5, #6366F1);
+  color: #fff; border: none;
+  padding: 12px 32px; border-radius: var(--r-md);
+  font-size: 14px; font-weight: 700; cursor: pointer;
   transition: all .25s var(--ease);
-  box-shadow: 0 4px 14px rgba(37,99,235,.25), 0 1px 3px rgba(0,0,0,.08);
-  letter-spacing: .3px;
-  text-transform: uppercase;
+  box-shadow: 0 2px 8px rgba(79,70,229,.25);
+  font-family: 'Prompt', 'Inter', sans-serif;
 }
 .btn-calc:hover {
   transform: translateY(-2px);
@@ -520,26 +517,31 @@ body {
    SUB-TABS — Modern Pill Style
    ═══════════════════════════════════════════ */
 .stabs {
-  display: flex; gap: 4px; margin-bottom: 30px;
-  flex-wrap: wrap; padding: 5px;
-  background: var(--s3); border-radius: var(--r-lg);
-  border: 1px solid rgba(0,0,0,.03);
+  display: flex; flex-wrap: wrap; gap: 6px;
+  padding: 14px 16px; margin-bottom: 28px;
+  background: linear-gradient(135deg, rgba(79,70,229,.03), rgba(16,185,129,.02));
+  border-radius: var(--r-xl);
+  border: 1px solid rgba(79,70,229,.06);
 }
 .stab {
-  padding: 10px 20px; border-radius: var(--r-sm);
-  font-size: 13px; font-weight: 500;
-  cursor: pointer; background: transparent;
-  color: var(--txt3); border: 1px solid transparent;
-  transition: all var(--duration) var(--ease);
-  font-family: 'Prompt', 'Inter', sans-serif;
+  padding: 8px 18px; border-radius: 50px;
+  font-size: 12.5px; font-weight: 500;
+  border: 1px solid rgba(79,70,229,.1);
+  background: rgba(255,255,255,.7);
+  color: var(--txt2); cursor: pointer;
+  transition: all .25s var(--ease);
+  white-space: nowrap;
 }
 .stab:hover {
-  color: var(--txt); background: rgba(255,255,255,.7);
+  background: rgba(79,70,229,.06);
+  border-color: rgba(79,70,229,.2);
+  color: var(--pri);
 }
 .stab.active {
-  background: #fff; color: var(--pri);
-  font-weight: 700; border-color: rgba(37,99,235,.08);
-  box-shadow: 0 2px 8px rgba(37,99,235,.08);
+  background: linear-gradient(135deg, var(--pri), #6366F1);
+  color: #fff; font-weight: 700;
+  border-color: transparent;
+  box-shadow: 0 2px 8px rgba(79,70,229,.25);
 }
 .spage { display: none; }
 .spage.active { display: block; }
@@ -846,22 +848,22 @@ body {
    DARK THEME OVERRIDES
    ═══════════════════════════════════════════ */
 [data-theme="dark"] {
-  --bg: #0B0F14;
-  --bg-alt: #0F1319;
-  --s1: #141A24;
-  --s2: #1A2130;
-  --s3: #1E2738;
-  --s4: #2A3548;
-  --s5: #374357;
+  --bg: #0F172A;
+  --bg-alt: #131C31;
+  --s1: #1E293B;
+  --s2: #1E293B;
+  --s3: #253349;
+  --s4: #334155;
+  --s5: #475569;
 
-  --pri: #60A5FA;
-  --pri-dark: #3B82F6;
-  --pri-darker: #2563EB;
-  --pri-light: rgba(96,165,250,.15);
-  --pri-lighter: rgba(96,165,250,.08);
-  --pri-glow: rgba(96,165,250,.2);
-  --pri-ring: rgba(96,165,250,.35);
-  --pri-shadow: rgba(96,165,250,.25);
+  --pri: #818CF8;
+  --pri-dark: #6366F1;
+  --pri-darker: #4F46E5;
+  --pri-light: rgba(129,140,248,.15);
+  --pri-lighter: rgba(129,140,248,.08);
+  --pri-glow: rgba(129,140,248,.2);
+  --pri-ring: rgba(129,140,248,.35);
+  --pri-shadow: rgba(129,140,248,.25);
 
   --sec: #34D399;
   --sec-dark: #10B981;
@@ -890,68 +892,75 @@ body {
   --bdr:  rgba(255,255,255,.08);
   --bdr2: rgba(255,255,255,.04);
 
-  --sh-xs:  0 1px 2px rgba(0,0,0,.3);
-  --sh-sm:  0 1px 3px rgba(0,0,0,.3), 0 2px 6px rgba(0,0,0,.2);
-  --sh-md:  0 4px 8px rgba(0,0,0,.3), 0 2px 4px rgba(0,0,0,.2);
-  --sh-lg:  0 8px 16px rgba(0,0,0,.3), 0 4px 8px rgba(0,0,0,.2);
-  --sh-xl:  0 16px 32px rgba(0,0,0,.4), 0 8px 16px rgba(0,0,0,.2);
-  --sh-card:       0 1px 2px rgba(0,0,0,.3), 0 4px 12px rgba(0,0,0,.2), 0 12px 28px rgba(0,0,0,.15);
-  --sh-card-hover: 0 2px 4px rgba(0,0,0,.3), 0 8px 20px rgba(0,0,0,.3), 0 20px 40px rgba(0,0,0,.2);
+  --sh-xs:  0 1px 2px rgba(0,0,0,.4);
+  --sh-sm:  0 1px 3px rgba(0,0,0,.3), 0 2px 8px rgba(0,0,0,.2);
+  --sh-md:  0 4px 8px rgba(0,0,0,.35), 0 2px 4px rgba(0,0,0,.25);
+  --sh-lg:  0 8px 20px rgba(0,0,0,.35), 0 4px 8px rgba(0,0,0,.25);
+  --sh-xl:  0 16px 40px rgba(0,0,0,.4), 0 8px 20px rgba(0,0,0,.25);
+  --sh-card:       0 1px 3px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.25), 0 0 0 1px rgba(129,140,248,.05);
+  --sh-card-hover: 0 2px 6px rgba(0,0,0,.35), 0 8px 24px rgba(0,0,0,.3), 0 0 24px rgba(129,140,248,.06);
 }
 
 /* ── Dark: Components ── */
 [data-theme="dark"] .topbar {
-  background: linear-gradient(135deg, rgba(11,15,20,.95) 0%, rgba(20,26,36,.9) 50%, rgba(30,41,59,.85) 100%) !important;
-  border-bottom-color: rgba(96,165,250,.12) !important;
+  background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #1E1B4B 100%) !important;
+  border-bottom-color: rgba(129,140,248,.15) !important;
+  box-shadow: 0 2px 16px rgba(0,0,0,.4), 0 0 1px rgba(129,140,248,.1) !important;
 }
 [data-theme="dark"] .topbar h1 span {
-  background: linear-gradient(135deg, #60A5FA, #34D399) !important;
+  background: linear-gradient(135deg, #A78BFA, #34D399, #22D3EE) !important;
   -webkit-background-clip: text !important; -webkit-text-fill-color: transparent !important;
 }
+[data-theme="dark"] body {
+  background-image: radial-gradient(ellipse at 20% 0%, rgba(129,140,248,.05) 0%, transparent 50%),
+                    radial-gradient(ellipse at 80% 100%, rgba(52,211,153,.03) 0%, transparent 50%) !important;
+}
 [data-theme="dark"] .tabs-wrap {
-  background: rgba(20,26,36,.9) !important;
-  border-bottom-color: rgba(255,255,255,.06) !important;
+  background: rgba(15,23,42,.95) !important;
+  border-bottom-color: rgba(129,140,248,.08) !important;
   backdrop-filter: blur(16px) !important;
 }
 [data-theme="dark"] .tab-btn.active {
-  background: linear-gradient(180deg, rgba(96,165,250,.08) 0%, transparent 100%) !important;
+  background: linear-gradient(180deg, rgba(129,140,248,.1) 0%, transparent 100%) !important;
 }
 [data-theme="dark"] .c::before {
-  background: linear-gradient(90deg, #60A5FA, #34D399, #22D3EE) !important;
+  background: linear-gradient(90deg, #818CF8, #34D399, #22D3EE) !important;
 }
 [data-theme="dark"] .c:hover {
-  border-color: rgba(96,165,250,.15) !important;
-  box-shadow: var(--sh-card-hover), 0 0 20px rgba(96,165,250,.06) !important;
+  border-color: rgba(129,140,248,.18) !important;
+  box-shadow: var(--sh-card-hover), 0 0 24px rgba(129,140,248,.06) !important;
 }
 [data-theme="dark"] .sh {
-  background: linear-gradient(135deg, rgba(96,165,250,.04) 0%, var(--s1) 100%) !important;
-  border-color: rgba(96,165,250,.08) !important;
+  background: linear-gradient(135deg, rgba(129,140,248,.06) 0%, var(--s1) 60%, rgba(52,211,153,.02) 100%) !important;
+  border-color: rgba(129,140,248,.1) !important;
 }
 [data-theme="dark"] .th {
-  background: linear-gradient(135deg, rgba(96,165,250,.04) 0%, rgba(52,211,153,.02) 100%) !important;
-  border-color: rgba(96,165,250,.06) !important;
+  background: linear-gradient(135deg, rgba(129,140,248,.05) 0%, rgba(52,211,153,.02) 50%, rgba(30,41,59,.5) 100%) !important;
+  border-color: rgba(129,140,248,.08) !important;
 }
 [data-theme="dark"] .th::before {
-  background: linear-gradient(180deg, #60A5FA, #34D399) !important;
+  background: linear-gradient(180deg, #818CF8, #34D399, #22D3EE) !important;
 }
 [data-theme="dark"] .fm {
-  background: linear-gradient(135deg, rgba(251,191,36,.08) 0%, rgba(251,191,36,.03) 100%) !important;
-  color: #FBBF24 !important;
+  background: linear-gradient(135deg, rgba(251,191,36,.08) 0%, rgba(251,191,36,.02) 100%) !important;
+  color: #FCD34D !important;
+  border-left-color: #FBBF24 !important;
 }
 [data-theme="dark"] .dt th {
-  background: linear-gradient(180deg, #1E2738, #1A2130) !important;
-  border-bottom-color: rgba(255,255,255,.06) !important;
+  background: linear-gradient(180deg, #253349, #1E293B) !important;
+  border-bottom-color: rgba(129,140,248,.1) !important;
+  color: #A5B4FC !important;
 }
-[data-theme="dark"] .dt tr:nth-child(even) td { background: rgba(255,255,255,.02) !important; }
-[data-theme="dark"] .dt tr:hover td { background: rgba(96,165,250,.05) !important; }
+[data-theme="dark"] .dt tr:nth-child(even) td { background: rgba(129,140,248,.03) !important; }
+[data-theme="dark"] .dt tr:hover td { background: rgba(129,140,248,.07) !important; }
 [data-theme="dark"] .bg-g { background: rgba(52,211,153,.15) !important; color: #34D399 !important; border-color: rgba(52,211,153,.25) !important; }
 [data-theme="dark"] .bg-w { background: rgba(251,191,36,.15) !important; color: #FBBF24 !important; border-color: rgba(251,191,36,.25) !important; }
 [data-theme="dark"] .bg-b { background: rgba(248,113,113,.15) !important; color: #F87171 !important; border-color: rgba(248,113,113,.25) !important; }
 [data-theme="dark"] .ins { background: linear-gradient(135deg, rgba(251,191,36,.06) 0%, rgba(251,191,36,.02) 100%) !important; }
 [data-theme="dark"] .ins b { color: #FBBF24 !important; }
 [data-theme="dark"] .br-t { background: rgba(255,255,255,.06) !important; }
-[data-theme="dark"] .calc { border-color: rgba(96,165,250,.08) !important; }
-[data-theme="dark"] .calc::before { background: linear-gradient(90deg, #60A5FA, #34D399, #22D3EE) !important; }
+[data-theme="dark"] .calc { border-color: rgba(129,140,248,.1) !important; }
+[data-theme="dark"] .calc::before { background: linear-gradient(90deg, #818CF8, #34D399, #22D3EE) !important; }
 [data-theme="dark"] .btn-calc {
   background: linear-gradient(135deg, #2563EB 0%, #3B82F6 100%) !important;
   box-shadow: 0 4px 14px rgba(37,99,235,.4), 0 2px 4px rgba(0,0,0,.3) !important;
@@ -967,8 +976,8 @@ body {
   background: linear-gradient(135deg, rgba(96,165,250,.08) 0%, rgba(52,211,153,.04) 100%) !important;
   border-color: rgba(96,165,250,.1) !important;
 }
-[data-theme="dark"] .stabs { background: var(--s3) !important; }
-[data-theme="dark"] .stab:hover { background: rgba(255,255,255,.06) !important; }
+[data-theme="dark"] .stabs { background: rgba(30,41,59,.8) !important; border-color: rgba(129,140,248,.06) !important; }
+[data-theme="dark"] .stab:hover { background: rgba(129,140,248,.08) !important; }
 [data-theme="dark"] .stab.active {
   background: rgba(96,165,250,.1) !important; color: #60A5FA !important;
   border-color: rgba(96,165,250,.2) !important;
@@ -977,12 +986,12 @@ body {
   background: linear-gradient(180deg, #1A2130 0%, #141A24 100%) !important;
   border-color: rgba(255,255,255,.06) !important;
 }
-[data-theme="dark"] .flow-step::before { background: linear-gradient(90deg, #60A5FA, #34D399) !important; }
+[data-theme="dark"] .flow-step::before { background: linear-gradient(90deg, #818CF8, #34D399) !important; }
 [data-theme="dark"] .flow-step:hover {
   border-color: rgba(96,165,250,.25) !important;
   box-shadow: var(--sh-card-hover), 0 0 25px rgba(96,165,250,.06) !important;
 }
-[data-theme="dark"] .flow-step .fs-title { color: #60A5FA !important; }
+[data-theme="dark"] .flow-step .fs-title { color: #A5B4FC !important; }
 [data-theme="dark"] .flow-step .fs-machine {
   color: #34D399 !important; background: rgba(52,211,153,.1) !important;
   border-color: rgba(52,211,153,.2) !important;
@@ -991,16 +1000,16 @@ body {
 [data-theme="dark"] .flow-step .fs-params b { color: #F1F5F9 !important; }
 [data-theme="dark"] .flow-step .fs-warn { color: #FCA5A5 !important; background: rgba(248,113,113,.08) !important; border-left-color: #F87171 !important; }
 [data-theme="dark"] .flow-step .fs-tip { color: #6EE7B7 !important; background: rgba(52,211,153,.08) !important; border-left-color: #34D399 !important; }
-[data-theme="dark"] .flow-arrow { color: #60A5FA !important; }
+[data-theme="dark"] .flow-arrow { color: #818CF8 !important; }
 [data-theme="dark"] .flow-note { background: linear-gradient(135deg, rgba(167,139,250,.08), rgba(167,139,250,.03)) !important; }
 [data-theme="dark"] .info-gauge.good { background: rgba(52,211,153,.12) !important; color: #34D399 !important; border-color: rgba(52,211,153,.2) !important; }
 [data-theme="dark"] .info-gauge.warn { background: rgba(251,191,36,.12) !important; color: #FBBF24 !important; border-color: rgba(251,191,36,.2) !important; }
 [data-theme="dark"] .info-gauge.bad  { background: rgba(248,113,113,.12) !important; color: #F87171 !important; border-color: rgba(248,113,113,.2) !important; }
 [data-theme="dark"] .big-num.gold { color: #FBBF24 !important; }
 [data-theme="dark"] .big-num.green { color: #34D399 !important; }
-[data-theme="dark"] .ee2-kpi-card.green::before { background: linear-gradient(90deg, #34D399, #2DD4BF) !important; }
+[data-theme="dark"] .ee2-kpi-card.green::before { background: linear-gradient(90deg, #34D399, #6EE7B7) !important; }
 [data-theme="dark"] .ee2-kpi-card.amber::before { background: linear-gradient(90deg, #FBBF24, #FB923C) !important; }
-[data-theme="dark"] .ee2-kpi-card.blue::before  { background: linear-gradient(90deg, #60A5FA, #818CF8) !important; }
+[data-theme="dark"] .ee2-kpi-card.blue::before  { background: linear-gradient(90deg, #818CF8, #A5B4FC) !important; }
 [data-theme="dark"] .ee2-kpi-card.red::before   { background: linear-gradient(90deg, #F87171, #F472B6) !important; }
 [data-theme="dark"] .footer {
   border-top-color: rgba(255,255,255,.06) !important;
@@ -1008,11 +1017,11 @@ body {
 }
 [data-theme="dark"] ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.15) !important; }
 [data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,.25) !important; }
-[data-theme="dark"] .ha { color: #FBBF24 !important; }
+[data-theme="dark"] .ha { color: #FCD34D !important; }
 [data-theme="dark"] .hg { color: #34D399 !important; }
-[data-theme="dark"] .hb { color: #60A5FA !important; }
+[data-theme="dark"] .hb { color: #93C5FD !important; }
 [data-theme="dark"] .hr { color: #F87171 !important; }
-[data-theme="dark"] .hp { color: #A78BFA !important; }
+[data-theme="dark"] .hp { color: #C4B5FD !important; }
 [data-theme="dark"] .hc { color: #22D3EE !important; }
 [data-theme="dark"] .ho { color: #FB923C !important; }
 [data-theme="dark"] .theme-switch { background: rgba(255,255,255,.15) !important; border-color: rgba(255,255,255,.1) !important; }
@@ -2817,8 +2826,8 @@ function calcRevImpact(){
   d.style.display='block';
   d.innerHTML='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px">'+
     '<div class="c"><div class="ct">อ้อยรวม (ตัน/ฤดู)</div><div class="cv ha">'+Math.round(totalCane).toLocaleString()+'</div></div>'+
-    '<div class="c"><div class="ct">น้ำตาลเดิม (ตัน)</div><div class="cv">'+Math.round(sugar1).toLocaleString()+'</div></div>'+
-    '<div class="c"><div class="ct">น้ำตาลใหม่ (ตัน)</div><div class="cv hg">'+Math.round(sugar2).toLocaleString()+'</div></div>'+
+    '<div class="c"><div class="ct">น้ำตาลที่ Recovery ปัจจุบัน</div><div class="cv">'+Math.round(sugar1).toLocaleString()+'</div><div class="cn">ผลผลิตน้ำตาล (ตัน) ที่ Recovery '+or1+'%</div></div>'+
+    '<div class="c"><div class="ct">น้ำตาลที่ Recovery ใหม่</div><div class="cv hg">'+Math.round(sugar2).toLocaleString()+'</div><div class="cn">ผลผลิตน้ำตาล (ตัน) ที่ Recovery '+or2+'%</div></div>'+
     '<div class="c"><div class="ct">น้ำตาลที่ได้เพิ่ม (ตัน)</div><div class="cv" style="color:'+(diff>0?'var(--green)':'var(--red)')+'">'+Math.round(diff).toLocaleString()+'</div></div>'+
     '</div>'+
     '<div class="c" style="margin-top:14px;border-left:4px solid '+(money>0?'var(--green)':'var(--red)')+'"><div class="ct">💰 ผลกระทบต่อรายได้ต่อฤดู</div>'+
@@ -3355,9 +3364,13 @@ function calcBenchmark(){
 <div class="th" style="background:linear-gradient(135deg,rgba(239,68,68,.06),rgba(245,158,11,.06));border-color:rgba(239,68,68,.15)">
 <h3 style="color:var(--red)">💰 Revenue Impact — ทำไมทุก 1% ของ Recovery ถึงสำคัญ</h3>
 <p>ในอุตสาหกรรมน้ำตาล ทุก 1% ที่เพิ่มหรือลดมีมูลค่ามหาศาล เครื่องมือด้านล่างจะช่วยให้เห็นภาพ "เงิน" ที่ซ่อนอยู่ในตัวเลขทางเทคนิค</p>
+<div class="ins" style="border-left-color:var(--c-blue)"><b style="color:var(--c-blue)">📌 Revenue Impact vs E2E Calculator — ต่างกันอย่างไร?</b><br>
+<b class="ha">Revenue Impact (หน้านี้):</b> เครื่องมือ What-If อย่างง่าย — แค่เปลี่ยน Recovery% เพื่อดูผลกระทบต่อรายได้ เหมาะสำหรับ <b>ผู้บริหาร/ผู้จัดการ</b> ที่ต้องการเห็นภาพรวมทางการเงิน<br>
+<b class="hg">E2E Calculator (แท็บ "คำนวณ E2E"):</b> Mass Balance เต็มรูปแบบ — ติดตามน้ำตาลทุกจุดตั้งแต่อ้อยเข้า → น้ำอ้อย → Syrup → น้ำตาล + วิเคราะห์ Loss แยกทุกจุด + เปรียบเทียบ Target + แนะนำจุดปรับปรุง เหมาะสำหรับ <b>วิศวกรกระบวนการ</b></div>
 </div>
 <div class="calc" style="border-color:rgba(245,158,11,.3)">
 <h3 style="color:var(--amber)">🏭 Revenue Impact Calculator</h3>
+<p style="font-size:13px;color:var(--txt2);margin:8px 0 16px;line-height:1.7">เปรียบเทียบ <b>ผลผลิตน้ำตาล</b> ระหว่าง Overall Recovery ปัจจุบัน กับ Recovery หลังปรับปรุง เพื่อดูว่าจะได้น้ำตาลเพิ่มกี่ตันและมูลค่าเท่าไหร่</p>
 <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
 <div class="cr"><label>อัตราหีบ (ตัน/วัน):</label><input type="number" id="rev_tcd" value="8000" step="100"></div>
 <div class="cr"><label>วันหีบ/ฤดู:</label><input type="number" id="rev_days" value="120" step="5"></div>
@@ -6755,7 +6768,95 @@ Brix: <b>85-90%</b><br>
 </div>
 <div class="ins" style="margin-top:12px"><b>References:</b> USDA FAS "Sugar: World Markets and Trade" (published semi-annually) | ISO Quarterly Market Outlook | F.O. Licht International Sugar & Sweetener Report</div>
 </div>
+</div><!-- /sp-sug-market -->
 
+<!-- PhD: Sugar Quality Engineering -->
+<div class="spage" id="sp-sug-phd">
+<div class="th" style="background:linear-gradient(135deg,rgba(121,85,72,.12),rgba(121,85,72,.03));border-left:4px solid var(--c-brown)">
+<h3>🎓 PhD Module: Sugar Quality Engineering & Defect Root Cause Analysis</h3>
+<p><i>"The quality of sugar is determined not in the sugar end, but in every preceding station. The final product merely reveals cumulative process failures." — Peter Rein, Ch.18</i></p>
+</div>
+
+<div class="th"><h3>📊 ICUMSA Color System — PhD Deep Dive</h3>
+<p>ICUMSA (International Commission for Uniform Methods of Sugar Analysis) กำหนดมาตรฐานสีเป็น <b>IU (ICUMSA Units)</b> วัดที่ 420nm ค่ายิ่งต่ำ = น้ำตาลยิ่งขาว</p>
+<table class="dt"><thead><tr><th>เกรด</th><th>ICUMSA (IU)</th><th>ลักษณะ</th><th>ราคา Premium</th><th>ตลาดหลัก</th></tr></thead><tbody>
+<tr style="background:rgba(76,175,80,.08)"><td><b class="hg">Refined White</b></td><td>&lt;45</td><td>ขาวใส ไม่มีสี</td><td>+$80-120/ton</td><td>EU, Japan, Middle East</td></tr>
+<tr style="background:rgba(33,150,243,.08)"><td><b class="hb">Plantation White</b></td><td>45-150</td><td>ขาวนวล</td><td>+$40-60/ton</td><td>Direct consumption Asia</td></tr>
+<tr><td><b class="ha">VHP Raw</b></td><td>600-1200</td><td>สีน้ำตาลอ่อน</td><td>Base price</td><td>โรงรีไฟน์ทั่วโลก</td></tr>
+<tr><td><b class="hw">DCR Raw</b></td><td>1200-3000</td><td>สีน้ำตาลเข้ม</td><td>-$20-40/ton</td><td>บริโภคตรง (limited)</td></tr>
+<tr><td><b>Muscovado</b></td><td>3000-10000+</td><td>สีเข้มมาก</td><td>Premium niche</td><td>Organic/Specialty</td></tr>
+</tbody></table>
+<div class="ins"><b>💡 PhD Insight:</b> การลดสี 100 IU → เพิ่มราคาได้ ~$10-15/ton ดังนั้นโรงงาน 10,000 TCD ที่ลด ICUMSA จาก 1000→700 = <b>~$4.5M revenue/season</b></div>
+</div>
+
+<div class="th"><h3>🔬 Sugar Defect Root Cause Decision Tree</h3>
+<p>เมื่อน้ำตาลไม่ผ่านมาตรฐาน ต้องวิเคราะห์สาเหตุอย่างเป็นระบบ:</p>
+<table class="dt"><thead><tr><th>ปัญหา (Defect)</th><th>สาเหตุที่ 1</th><th>สาเหตุที่ 2</th><th>สาเหตุที่ 3</th><th>แก้ไข</th></tr></thead><tbody>
+<tr><td><b class="ha">สีเข้มเกิน</b><br>(High Color)</td><td>Caramelization จาก pH ต่ำ+อุณหภูมิสูง</td><td>Melanoidins จาก Amino acid + reducing sugar</td><td>Iron contamination จากอุปกรณ์</td><td>ควบคุม pH>6.8 ใน Evap, ลด Residence time, ตรวจ Fe content</td></tr>
+<tr><td><b class="ha">ความชื้นสูง</b><br>(High Moisture)</td><td>Centrifugal ปั่นไม่แห้ง — screen ตัน</td><td>Dryer อุณหภูมิต่ำ/เวลาสั้น</td><td>Crystal ไม่สม่ำเสมอ (CV สูง)</td><td>ตรวจ screen, เพิ่ม drying time, ปรับ Boiling scheme</td></tr>
+<tr><td><b class="ha">Turbidity สูง</b><br>(Hazy Solution)</td><td>Starch จากอ้อย (&gt;200 ppm)</td><td>Dextran จาก Leuconostoc bacteria</td><td>Wax/Fat ไม่ถูกกำจัด</td><td>เพิ่ม α-amylase, ลดเวลารอหีบ, ปรับ Clarification</td></tr>
+<tr><td><b class="ha">Crystal ไม่สม่ำเสมอ</b><br>(Poor CV)</td><td>Seeding ไม่ดี — grain ไม่สม่ำเสมอ</td><td>Supersaturation swing เกินไป</td><td>Circulation ไม่ดี ใน Pan</td><td>ใช้ True Seeding (CV&lt;20%), คุม SS 1.05-1.15, ตรวจ Calandria</td></tr>
+<tr><td><b class="ha">Ash สูง</b><br>(&gt;0.04%)</td><td>K₂O จากอ้อยคุณภาพต่ำ</td><td>Clarification กำจัด NS ไม่หมด</td><td>Washing ใน Centrifugal ไม่พอ</td><td>ปรับ Lime dosing, เพิ่ม Wash water, ควบคุม Cane quality</td></tr>
+</tbody></table>
+</div>
+
+<div class="th"><h3>📈 Quality Impact Chain — จาก Field สู่ Customer</h3>
+<p>สิ่งที่เกิดขึ้นในทุกขั้นตอนส่งผลต่อคุณภาพน้ำตาลสุดท้าย:</p>
+<div class="fm">
+Cane Quality → [Trash% ↑ → Color ↑ + Ash ↑]<br>
+Milling → [Extraction ↑ → NS ในน้ำอ้อย ↑ → Color ↑]<br>
+Clarification → [pH Control ดี → Color ↓, NS Removal ↑]<br>
+Evaporation → [T°C ↑ + Residence Time ↑ → Caramelization → Color ↑↑]<br>
+Crystallization → [CV ดี → Washing efficient → Color ↓, Moisture ↓]<br>
+Centrifugal → [Wash Water พอดี → Color ↓ BUT Yield ↓ → ต้อง Optimize]<br>
+Drying → [T°C + Time → Moisture ↓ → Shelf life ↑]
+</div>
+</div>
+
+<div class="th"><h3>🧮 Sugar Quality Calculator</h3>
+<p>คำนวณ Sugar Quality Score (SQS) — composite index สำหรับประเมินคุณภาพรวม</p>
+<div class="calc">
+<div class="g g3">
+<div><label>ICUMSA Color (IU)</label><input type="number" id="sq_icumsa" value="800" oninput="calcSQS()"></div>
+<div><label>Moisture (%)</label><input type="number" id="sq_moist" value="0.06" step="0.01" oninput="calcSQS()"></div>
+<div><label>Pol (% by pol)</label><input type="number" id="sq_pol" value="99.6" step="0.1" oninput="calcSQS()"></div>
+</div>
+<div class="g g3" style="margin-top:10px">
+<div><label>Ash (%)</label><input type="number" id="sq_ash" value="0.03" step="0.01" oninput="calcSQS()"></div>
+<div><label>CV (%)</label><input type="number" id="sq_cv" value="25" oninput="calcSQS()"></div>
+<div><label>M.A. (mm)</label><input type="number" id="sq_ma" value="0.8" step="0.1" oninput="calcSQS()"></div>
+</div>
+<div style="text-align:center;margin:16px 0"><button onclick="calcSQS()" style="background:linear-gradient(135deg,#92400E,#A16207);color:#fff;border:none;padding:12px 32px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(146,64,14,.25)">🧮 คำนวณ Sugar Quality Score</button></div>
+<div class="g g3" style="margin-top:15px">
+<div style="background:rgba(121,85,72,.08);border-radius:14px;padding:18px;text-align:center">
+<div class="cres-l">Sugar Quality Score</div><div class="cres-v" id="sq_score" style="font-size:32px;color:var(--c-brown)">—</div><div class="cres-l">/100</div>
+</div>
+<div style="background:rgba(76,175,80,.08);border-radius:14px;padding:18px;text-align:center">
+<div class="cres-l">เกรด</div><div class="cres-v" id="sq_grade" style="font-size:28px">—</div>
+</div>
+<div style="background:rgba(33,150,243,.08);border-radius:14px;padding:18px;text-align:center">
+<div class="cres-l">Price Premium</div><div class="cres-v" id="sq_premium" style="font-size:24px">—</div><div class="cres-l">$/ton vs VHP</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="th"><h3>🏪 Storage Science — ปัจจัยที่ทำลายคุณภาพน้ำตาลระหว่างเก็บ</h3>
+<table class="dt"><thead><tr><th>ปัจจัย</th><th>กลไก</th><th>ผลกระทบ</th><th>ป้องกัน</th></tr></thead><tbody>
+<tr><td><b>ความชื้นสัมพัทธ์</b></td><td>RH &gt; 65% → น้ำตาลดูดความชื้น → ละลายผิว</td><td>Caking, Microbial growth, Color increase</td><td>คุม RH &lt; 60%, ระบาย air</td></tr>
+<tr><td><b>อุณหภูมิ</b></td><td>T &gt; 35°C → Maillard reaction เร่งขึ้น</td><td>Color +50-100 IU/เดือน</td><td>คุม T &lt; 30°C, insulate roof</td></tr>
+<tr><td><b>Reducing Sugars</b></td><td>Glucose+Fructose + amino acids → Melanoidins</td><td>Browning, caking, off-flavor</td><td>RS &lt; 0.04% for White Sugar</td></tr>
+<tr><td><b>Microorganisms</b></td><td>Moisture &gt; 0.1% → Yeasts, molds grow</td><td>Off-odor, visible mold on surface</td><td>Dry to &lt; 0.05% moisture</td></tr>
+</tbody></table>
+<div class="ins"><b>📌 PhD Rule of Thumb:</b> น้ำตาลเก็บได้นาน ≤2 ปี ถ้า: Moisture &lt;0.06%, Pol &gt;99.6%, ICUMSA &lt;1000, RH &lt;60%, T &lt;30°C</div>
+</div>
+
+<div class="th">
+<h3>📌 กฎ 3 ข้อของ Sugar Quality (PhD Summary)</h3>
+<p><b class="ha">1.</b> <b>Color is cumulative</b> — สีเกิดจากทุกขั้นตอน ตั้งแต่ไร่ถึงคลัง ต้องควบคุมทั้ง chain ไม่ใช่แค่ปลายทาง</p>
+<p><b class="hg">2.</b> <b>CV determines everything downstream</b> — Crystal ที่สม่ำเสมอ (CV&lt;20%) → ปั่นง่าย → ล้างสีได้ดี → แห้งเร็ว → เก็บได้นาน</p>
+<p><b class="hb">3.</b> <b>Premium pays for itself</b> — การลงทุนปรับปรุงคุณภาพ (ลด ICUMSA 300 IU) คืนทุนใน 1 season สำหรับโรงงาน &gt;5,000 TCD</p>
+</div>
 </div>
 </div>
 
@@ -6893,94 +6994,6 @@ Brix: <b>85-90%</b><br>
 </div>
 </div>
 
-
-<!-- PhD: Sugar Quality Engineering -->
-<div class="spage" id="sp-sug-phd">
-<div class="th" style="background:linear-gradient(135deg,rgba(121,85,72,.12),rgba(121,85,72,.03));border-left:4px solid var(--c-brown)">
-<h3>🎓 PhD Module: Sugar Quality Engineering & Defect Root Cause Analysis</h3>
-<p><i>"The quality of sugar is determined not in the sugar end, but in every preceding station. The final product merely reveals cumulative process failures." — Peter Rein, Ch.18</i></p>
-</div>
-
-<div class="th"><h3>📊 ICUMSA Color System — PhD Deep Dive</h3>
-<p>ICUMSA (International Commission for Uniform Methods of Sugar Analysis) กำหนดมาตรฐานสีเป็น <b>IU (ICUMSA Units)</b> วัดที่ 420nm ค่ายิ่งต่ำ = น้ำตาลยิ่งขาว</p>
-<table class="dt"><thead><tr><th>เกรด</th><th>ICUMSA (IU)</th><th>ลักษณะ</th><th>ราคา Premium</th><th>ตลาดหลัก</th></tr></thead><tbody>
-<tr style="background:rgba(76,175,80,.08)"><td><b class="hg">Refined White</b></td><td>&lt;45</td><td>ขาวใส ไม่มีสี</td><td>+$80-120/ton</td><td>EU, Japan, Middle East</td></tr>
-<tr style="background:rgba(33,150,243,.08)"><td><b class="hb">Plantation White</b></td><td>45-150</td><td>ขาวนวล</td><td>+$40-60/ton</td><td>Direct consumption Asia</td></tr>
-<tr><td><b class="ha">VHP Raw</b></td><td>600-1200</td><td>สีน้ำตาลอ่อน</td><td>Base price</td><td>โรงรีไฟน์ทั่วโลก</td></tr>
-<tr><td><b class="hw">DCR Raw</b></td><td>1200-3000</td><td>สีน้ำตาลเข้ม</td><td>-$20-40/ton</td><td>บริโภคตรง (limited)</td></tr>
-<tr><td><b>Muscovado</b></td><td>3000-10000+</td><td>สีเข้มมาก</td><td>Premium niche</td><td>Organic/Specialty</td></tr>
-</tbody></table>
-<div class="ins"><b>💡 PhD Insight:</b> การลดสี 100 IU → เพิ่มราคาได้ ~$10-15/ton ดังนั้นโรงงาน 10,000 TCD ที่ลด ICUMSA จาก 1000→700 = <b>~$4.5M revenue/season</b></div>
-</div>
-
-<div class="th"><h3>🔬 Sugar Defect Root Cause Decision Tree</h3>
-<p>เมื่อน้ำตาลไม่ผ่านมาตรฐาน ต้องวิเคราะห์สาเหตุอย่างเป็นระบบ:</p>
-<table class="dt"><thead><tr><th>ปัญหา (Defect)</th><th>สาเหตุที่ 1</th><th>สาเหตุที่ 2</th><th>สาเหตุที่ 3</th><th>แก้ไข</th></tr></thead><tbody>
-<tr><td><b class="ha">สีเข้มเกิน</b><br>(High Color)</td><td>Caramelization จาก pH ต่ำ+อุณหภูมิสูง</td><td>Melanoidins จาก Amino acid + reducing sugar</td><td>Iron contamination จากอุปกรณ์</td><td>ควบคุม pH>6.8 ใน Evap, ลด Residence time, ตรวจ Fe content</td></tr>
-<tr><td><b class="ha">ความชื้นสูง</b><br>(High Moisture)</td><td>Centrifugal ปั่นไม่แห้ง — screen ตัน</td><td>Dryer อุณหภูมิต่ำ/เวลาสั้น</td><td>Crystal ไม่สม่ำเสมอ (CV สูง)</td><td>ตรวจ screen, เพิ่ม drying time, ปรับ Boiling scheme</td></tr>
-<tr><td><b class="ha">Turbidity สูง</b><br>(Hazy Solution)</td><td>Starch จากอ้อย (&gt;200 ppm)</td><td>Dextran จาก Leuconostoc bacteria</td><td>Wax/Fat ไม่ถูกกำจัด</td><td>เพิ่ม α-amylase, ลดเวลารอหีบ, ปรับ Clarification</td></tr>
-<tr><td><b class="ha">Crystal ไม่สม่ำเสมอ</b><br>(Poor CV)</td><td>Seeding ไม่ดี — grain ไม่สม่ำเสมอ</td><td>Supersaturation swing เกินไป</td><td>Circulation ไม่ดี ใน Pan</td><td>ใช้ True Seeding (CV&lt;20%), คุม SS 1.05-1.15, ตรวจ Calandria</td></tr>
-<tr><td><b class="ha">Ash สูง</b><br>(&gt;0.04%)</td><td>K₂O จากอ้อยคุณภาพต่ำ</td><td>Clarification กำจัด NS ไม่หมด</td><td>Washing ใน Centrifugal ไม่พอ</td><td>ปรับ Lime dosing, เพิ่ม Wash water, ควบคุม Cane quality</td></tr>
-</tbody></table>
-</div>
-
-<div class="th"><h3>📈 Quality Impact Chain — จาก Field สู่ Customer</h3>
-<p>สิ่งที่เกิดขึ้นในทุกขั้นตอนส่งผลต่อคุณภาพน้ำตาลสุดท้าย:</p>
-<div class="fm">
-Cane Quality → [Trash% ↑ → Color ↑ + Ash ↑]<br>
-Milling → [Extraction ↑ → NS ในน้ำอ้อย ↑ → Color ↑]<br>
-Clarification → [pH Control ดี → Color ↓, NS Removal ↑]<br>
-Evaporation → [T°C ↑ + Residence Time ↑ → Caramelization → Color ↑↑]<br>
-Crystallization → [CV ดี → Washing efficient → Color ↓, Moisture ↓]<br>
-Centrifugal → [Wash Water พอดี → Color ↓ BUT Yield ↓ → ต้อง Optimize]<br>
-Drying → [T°C + Time → Moisture ↓ → Shelf life ↑]
-</div>
-</div>
-
-<div class="th"><h3>🧮 Sugar Quality Calculator</h3>
-<p>คำนวณ Sugar Quality Score (SQS) — composite index สำหรับประเมินคุณภาพรวม</p>
-<div class="calc">
-<div class="g g3">
-<div><label>ICUMSA Color (IU)</label><input type="number" id="sq_icumsa" value="800" oninput="calcSQS()"></div>
-<div><label>Moisture (%)</label><input type="number" id="sq_moist" value="0.06" step="0.01" oninput="calcSQS()"></div>
-<div><label>Pol (% by pol)</label><input type="number" id="sq_pol" value="99.6" step="0.1" oninput="calcSQS()"></div>
-</div>
-<div class="g g3" style="margin-top:10px">
-<div><label>Ash (%)</label><input type="number" id="sq_ash" value="0.03" step="0.01" oninput="calcSQS()"></div>
-<div><label>CV (%)</label><input type="number" id="sq_cv" value="25" oninput="calcSQS()"></div>
-<div><label>M.A. (mm)</label><input type="number" id="sq_ma" value="0.8" step="0.1" oninput="calcSQS()"></div>
-</div>
-<div class="g g3" style="margin-top:15px">
-<div style="background:rgba(121,85,72,.08);border-radius:14px;padding:18px;text-align:center">
-<div class="cres-l">Sugar Quality Score</div><div class="cres-v" id="sq_score" style="font-size:32px;color:var(--c-brown)">—</div><div class="cres-l">/100</div>
-</div>
-<div style="background:rgba(76,175,80,.08);border-radius:14px;padding:18px;text-align:center">
-<div class="cres-l">เกรด</div><div class="cres-v" id="sq_grade" style="font-size:28px">—</div>
-</div>
-<div style="background:rgba(33,150,243,.08);border-radius:14px;padding:18px;text-align:center">
-<div class="cres-l">Price Premium</div><div class="cres-v" id="sq_premium" style="font-size:24px">—</div><div class="cres-l">$/ton vs VHP</div>
-</div>
-</div>
-</div>
-</div>
-
-<div class="th"><h3>🏪 Storage Science — ปัจจัยที่ทำลายคุณภาพน้ำตาลระหว่างเก็บ</h3>
-<table class="dt"><thead><tr><th>ปัจจัย</th><th>กลไก</th><th>ผลกระทบ</th><th>ป้องกัน</th></tr></thead><tbody>
-<tr><td><b>ความชื้นสัมพัทธ์</b></td><td>RH &gt; 65% → น้ำตาลดูดความชื้น → ละลายผิว</td><td>Caking, Microbial growth, Color increase</td><td>คุม RH &lt; 60%, ระบาย air</td></tr>
-<tr><td><b>อุณหภูมิ</b></td><td>T &gt; 35°C → Maillard reaction เร่งขึ้น</td><td>Color +50-100 IU/เดือน</td><td>คุม T &lt; 30°C, insulate roof</td></tr>
-<tr><td><b>Reducing Sugars</b></td><td>Glucose+Fructose + amino acids → Melanoidins</td><td>Browning, caking, off-flavor</td><td>RS &lt; 0.04% for White Sugar</td></tr>
-<tr><td><b>Microorganisms</b></td><td>Moisture &gt; 0.1% → Yeasts, molds grow</td><td>Off-odor, visible mold on surface</td><td>Dry to &lt; 0.05% moisture</td></tr>
-</tbody></table>
-<div class="ins"><b>📌 PhD Rule of Thumb:</b> น้ำตาลเก็บได้นาน ≤2 ปี ถ้า: Moisture &lt;0.06%, Pol &gt;99.6%, ICUMSA &lt;1000, RH &lt;60%, T &lt;30°C</div>
-</div>
-
-<div class="th">
-<h3>📌 กฎ 3 ข้อของ Sugar Quality (PhD Summary)</h3>
-<p><b class="ha">1.</b> <b>Color is cumulative</b> — สีเกิดจากทุกขั้นตอน ตั้งแต่ไร่ถึงคลัง ต้องควบคุมทั้ง chain ไม่ใช่แค่ปลายทาง</p>
-<p><b class="hg">2.</b> <b>CV determines everything downstream</b> — Crystal ที่สม่ำเสมอ (CV&lt;20%) → ปั่นง่าย → ล้างสีได้ดี → แห้งเร็ว → เก็บได้นาน</p>
-<p><b class="hb">3.</b> <b>Premium pays for itself</b> — การลงทุนปรับปรุงคุณภาพ (ลด ICUMSA 300 IU) คืนทุนใน 1 season สำหรับโรงงาน &gt;5,000 TCD</p>
-</div>
-</div>
 
 <!-- ======== TAB: STEAM ======== -->
 <div class="tab-page" id="tab-steam">
@@ -7147,6 +7160,7 @@ Drying → [T°C + Time → Moisture ↓ → Shelf life ↑]
 <div><label>Bagasse % Cane</label><input type="number" id="cg_bag" value="28" oninput="calcCogen()"></div>
 <div><label>Factory Power Need (kWh/tc)</label><input type="number" id="cg_need" value="30" oninput="calcCogen()"></div>
 </div>
+<div style="text-align:center;margin:16px 0"><button onclick="calcCogen()" style="background:linear-gradient(135deg,#EA580C,#F97316);color:#fff;border:none;padding:12px 32px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(234,88,12,.25)">⚡ คำนวณ Cogeneration Economics</button></div>
 <div class="g g2" style="margin-top:15px">
 <div class="c" style="text-align:center"><div class="ct">Total Generation</div>
 <div class="cres-v hg" id="cg_total" style="font-size:32px">—</div><div class="cres-l">kWh/tc</div></div>
@@ -8373,6 +8387,7 @@ Drying → [T°C + Time → Moisture ↓ → Shelf life ↑]
 <div><label>Crystal CV (%)</label><input type="number" id="bm_cv" value="28" oninput="calcBenchmark()"></div>
 <div><label>Crushing Rate (% design)</label><input type="number" id="bm_crush" value="92" step="1" oninput="calcBenchmark()"></div>
 </div>
+<div style="text-align:center;margin:16px 0"><button onclick="calcBenchmark()" style="background:linear-gradient(135deg,#DB2777,#EC4899);color:#fff;border:none;padding:12px 32px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(219,39,119,.25)">🚦 ตรวจสอบ Benchmark</button></div>
 
 <div id="bm_results" style="margin-top:20px"></div>
 </div>
