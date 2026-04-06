@@ -1349,26 +1349,32 @@ window.addEventListener('scroll',function(){
   if(btn){if(window.scrollY>400){btn.classList.add('visible');}else{btn.classList.remove('visible');}}
 });
 function fmt(n){if(isNaN(n)||n===null)return'—';var s=Math.abs(n)<0.01&&n!==0?n.toFixed(2):parseFloat(n.toFixed(2));return Number(s).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:2});}
+function resetAllSubTabs(){
+  // Reset ALL sub-tabs in ALL tab-pages back to first
+  document.querySelectorAll('.tab-page').forEach(function(tp){
+    var sp=tp.querySelectorAll('.spage');
+    var sb=tp.querySelectorAll('.stab');
+    if(sp.length>0){
+      sp.forEach(function(s){s.classList.remove('active');});
+      sb.forEach(function(s){s.classList.remove('active');});
+      sp[0].classList.add('active');
+      if(sb.length>0) sb[0].classList.add('active');
+    }
+  });
+}
 function openTab(id){
-  // Hide all tab pages (both tab-page and tp class systems)
+  // Reset all sub-tabs first
+  resetAllSubTabs();
+  // Hide all tab pages
   document.querySelectorAll('.tab-page').forEach(function(p){ p.classList.remove('active'); p.style.display='none'; });
   document.querySelectorAll('.tp').forEach(function(p){ p.style.display='none'; });
   document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
 
-  // Try tab-XX ID first, then direct ID
+  // Show target tab
   var el = document.getElementById('tab-'+id) || document.getElementById(id);
   if(el){
-    if(el.classList.contains('tab-page')) { el.classList.add('active'); el.style.display=''; }
-    else { el.style.display=''; }
-    // Reset sub-tabs: show first sub-page, activate first stab button
-    var spages = el.querySelectorAll('.spage');
-    var stabs = el.querySelectorAll('.stab');
-    if(spages.length > 0){
-      spages.forEach(function(sp){ sp.classList.remove('active'); });
-      stabs.forEach(function(sb){ sb.classList.remove('active'); });
-      spages[0].classList.add('active');
-      if(stabs.length > 0) stabs[0].classList.add('active');
-    }
+    el.classList.add('active');
+    el.style.display='block';
   }
 
   // Activate the clicked button
@@ -1377,22 +1383,14 @@ function openTab(id){
   window.scrollTo(0,0);
 }
 function goTab(id){
+  resetAllSubTabs();
   document.querySelectorAll('.tab-page').forEach(function(p){ p.classList.remove('active'); p.style.display='none'; });
   document.querySelectorAll('.tp').forEach(function(p){ p.style.display='none'; });
   document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
   var el = document.getElementById('tab-'+id) || document.getElementById(id);
   if(el){
-    if(el.classList.contains('tab-page')) { el.classList.add('active'); el.style.display=''; }
-    else { el.style.display=''; }
-    // Reset sub-tabs: show first sub-page, activate first stab button
-    var spages = el.querySelectorAll('.spage');
-    var stabs = el.querySelectorAll('.stab');
-    if(spages.length > 0){
-      spages.forEach(function(sp){ sp.classList.remove('active'); });
-      stabs.forEach(function(sb){ sb.classList.remove('active'); });
-      spages[0].classList.add('active');
-      if(stabs.length > 0) stabs[0].classList.add('active');
-    }
+    el.classList.add('active');
+    el.style.display='block';
   }
   var btns=document.querySelectorAll('.tab-btn');
   var tabNames={cane:'คุณภาพอ้อย',milling:'ลูกหีบ',clarification:'การทำใส',evaporation:'หม้อต้ม',crystallization:'หม้อเคี่ยว',centrifugal:'หม้อปั่น',sugar:'น้ำตาล'};
