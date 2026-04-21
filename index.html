@@ -8,79 +8,79 @@
 @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+Thai:wght@300;400;500;600;700;800;900&display=swap');
 
 :root {
-  /* ── Surface System: Warm Infographic ── */
-  --bg: #FAFBFE;
-  --bg-alt: #F0F4FF;
+  /* ── Surface System: Clean & Airy ── */
+  --bg: #F8FAFC;
+  --bg-alt: #F1F5F9;
   --s1: #ffffff;
-  --s2: #F8FAFF;
-  --s3: #EEF2FF;
-  --s4: #E0E7FF;
-  --s5: #C7D2FE;
+  --s2: #F8FAFC;
+  --s3: #F1F5F9;
+  --s4: #E2E8F0;
+  --s5: #CBD5E1;
 
-  /* ── PRIMARY: Rich Indigo-Blue ── */
-  --pri: #4F46E5;
-  --pri-dark: #4338CA;
-  --pri-darker: #3730A3;
-  --pri-light: rgba(79,70,229,.1);
-  --pri-lighter: rgba(79,70,229,.05);
-  --pri-glow: rgba(79,70,229,.15);
-  --pri-ring: rgba(79,70,229,.25);
-  --pri-shadow: rgba(79,70,229,.2);
+  /* ── PRIMARY: Modern Blue ── */
+  --pri: #2563EB;
+  --pri-dark: #1D4ED8;
+  --pri-darker: #1E40AF;
+  --pri-light: rgba(37,99,235,.1);
+  --pri-lighter: rgba(37,99,235,.05);
+  --pri-glow: rgba(37,99,235,.12);
+  --pri-ring: rgba(37,99,235,.2);
+  --pri-shadow: rgba(37,99,235,.15);
 
-  /* ── SECONDARY: Vibrant Emerald ── */
-  --sec: #10B981;
-  --sec-dark: #059669;
-  --sec-light: rgba(16,185,129,.1);
-  --sec-lighter: rgba(16,185,129,.05);
+  /* ── SECONDARY: Fresh Teal ── */
+  --sec: #0D9488;
+  --sec-dark: #0F766E;
+  --sec-light: rgba(13,148,136,.1);
+  --sec-lighter: rgba(13,148,136,.05);
 
-  /* ── Category Color System: Vivid Infographic ── */
-  --c-blue:    #3B82F6;  --cb: rgba(59,130,246,.10);  --cbl: rgba(59,130,246,.05);
-  --c-teal:    #0D9488;  --ct: rgba(13,148,136,.10);  --ctl: rgba(13,148,136,.05);
-  --c-green:   #059669;  --cg: rgba(5,150,105,.10);   --cgl: rgba(5,150,105,.05);
-  --c-amber:   #D97706;  --ca: rgba(217,119,6,.10);   --cal: rgba(217,119,6,.05);
-  --c-red:     #DC2626;  --crd:rgba(220,38,38,.10);   --crl: rgba(220,38,38,.05);
-  --c-purple:  #7C3AED;  --cp: rgba(124,58,237,.10);  --cpl: rgba(124,58,237,.05);
-  --c-cyan:    #0891B2;  --cc: rgba(8,145,178,.10);   --ccl: rgba(8,145,178,.05);
-  --c-brown:   #92400E;  --cbr:rgba(146,64,14,.10);   --cbrl:rgba(146,64,14,.05);
-  --c-orange:  #EA580C;  --co: rgba(234,88,12,.10);   --col: rgba(234,88,12,.05);
-  --c-pink:    #DB2777;  --cpk:rgba(219,39,119,.10);  --cpkl:rgba(219,39,119,.05);
-  --c-indigo:  #4F46E5;  --ci: rgba(79,70,229,.10);   --cil: rgba(79,70,229,.05);
+  /* ── Category Color System ── */
+  --c-blue:    #3B82F6;  --cb: rgba(59,130,246,.08);  --cbl: rgba(59,130,246,.04);
+  --c-teal:    #0D9488;  --ct: rgba(13,148,136,.08);  --ctl: rgba(13,148,136,.04);
+  --c-green:   #16A34A;  --cg: rgba(22,163,74,.08);   --cgl: rgba(22,163,74,.04);
+  --c-amber:   #D97706;  --ca: rgba(217,119,6,.08);   --cal: rgba(217,119,6,.04);
+  --c-red:     #DC2626;  --crd:rgba(220,38,38,.08);   --crl: rgba(220,38,38,.04);
+  --c-purple:  #7C3AED;  --cp: rgba(124,58,237,.08);  --cpl: rgba(124,58,237,.04);
+  --c-cyan:    #0891B2;  --cc: rgba(8,145,178,.08);   --ccl: rgba(8,145,178,.04);
+  --c-brown:   #92400E;  --cbr:rgba(146,64,14,.08);   --cbrl:rgba(146,64,14,.04);
+  --c-orange:  #EA580C;  --co: rgba(234,88,12,.08);   --col: rgba(234,88,12,.04);
+  --c-pink:    #DB2777;  --cpk:rgba(219,39,119,.08);  --cpkl:rgba(219,39,119,.04);
+  --c-indigo:  #4F46E5;  --ci: rgba(79,70,229,.08);   --cil: rgba(79,70,229,.04);
 
-  /* ── Semantic mappings ── */
+  /* ── Semantic ── */
   --amber: var(--c-amber); --green: var(--c-green); --blue: var(--c-blue);
   --red: var(--c-red); --purple: var(--c-purple); --cyan: var(--c-cyan);
   --pink: var(--c-pink); --orange: var(--c-orange);
-  --amber-bg: rgba(245,158,11,.06); --green-bg: rgba(16,185,129,.06); --blue-bg: rgba(59,130,246,.06);
+  --amber-bg: rgba(245,158,11,.06); --green-bg: rgba(22,163,74,.06); --blue-bg: rgba(59,130,246,.06);
   --red-bg: rgba(239,68,68,.06); --purple-bg: rgba(139,92,246,.06); --cyan-bg: rgba(6,182,212,.06);
   --accent: var(--pri);
   --accent-light: var(--pri-lighter);
   --accent-50: var(--pri-lighter);
   --accent-100: var(--pri-light);
 
-  /* ── Text ── */
-  --txt:  #1E1B4B;
-  --txt2: #4C4E6D;
-  --txt3: #8B8FA8;
+  /* ── Text: High Contrast & Readable ── */
+  --txt:  #0F172A;
+  --txt2: #475569;
+  --txt3: #94A3B8;
 
   /* ── Borders ── */
   --bdr:  rgba(0,0,0,.06);
   --bdr2: rgba(0,0,0,.03);
 
-  /* ── Shadows: Premium Soft ── */
-  --sh-xs:  0 1px 2px rgba(0,0,0,.04);
+  /* ── Shadows: Layered Depth ── */
+  --sh-xs:  0 1px 2px rgba(0,0,0,.05);
   --sh-sm:  0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
-  --sh-md:  0 4px 6px -1px rgba(0,0,0,.07), 0 2px 4px -2px rgba(0,0,0,.05);
-  --sh-lg:  0 10px 15px -3px rgba(0,0,0,.08), 0 4px 6px -4px rgba(0,0,0,.04);
-  --sh-xl:  0 20px 25px -5px rgba(0,0,0,.08), 0 8px 10px -6px rgba(0,0,0,.04);
-  --sh-card:       0 0 0 1px rgba(0,0,0,.03),
-                   0 1px 3px rgba(0,0,0,.04),
-                   0 6px 16px rgba(0,0,0,.04);
-  --sh-card-hover: 0 0 0 1px rgba(37,99,235,.06),
-                   0 4px 12px rgba(0,0,0,.06),
-                   0 16px 32px rgba(0,0,0,.06);
+  --sh-md:  0 4px 6px -1px rgba(0,0,0,.06), 0 2px 4px -2px rgba(0,0,0,.04);
+  --sh-lg:  0 10px 15px -3px rgba(0,0,0,.07), 0 4px 6px -4px rgba(0,0,0,.03);
+  --sh-xl:  0 20px 25px -5px rgba(0,0,0,.07), 0 8px 10px -6px rgba(0,0,0,.03);
+  --sh-card:       0 0 0 1px rgba(0,0,0,.04),
+                   0 2px 4px rgba(0,0,0,.03),
+                   0 8px 20px rgba(0,0,0,.04);
+  --sh-card-hover: 0 0 0 1px rgba(37,99,235,.08),
+                   0 4px 12px rgba(37,99,235,.06),
+                   0 20px 40px rgba(0,0,0,.06);
 
-  /* ── Border Radius: Premium Rounded ── */
-  --r-xs: 8px; --r-sm: 10px; --r-md: 14px; --r-lg: 18px; --r-xl: 22px; --r-2xl: 28px;
+  /* ── Border Radius ── */
+  --r-xs: 6px; --r-sm: 8px; --r-md: 12px; --r-lg: 16px; --r-xl: 20px; --r-2xl: 24px;
 
   /* ── Timing ── */
   --ease: cubic-bezier(.22,1,.36,1);
@@ -91,10 +91,11 @@
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 html { scroll-behavior: smooth; }
 body {
-  font-family: 'Prompt', 'Inter', 'Noto Sans Thai', system-ui, -apple-system, sans-serif;
+  font-family: 'Inter', 'Prompt', 'Noto Sans Thai', system-ui, -apple-system, sans-serif;
   background: var(--bg); color: var(--txt);
-  background-image: radial-gradient(ellipse at 20% 0%, rgba(79,70,229,.04) 0%, transparent 50%),
-                    radial-gradient(ellipse at 80% 100%, rgba(16,185,129,.03) 0%, transparent 50%);
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(37,99,235,.06) 0%, transparent 100%),
+    radial-gradient(ellipse 60% 40% at 100% 100%, rgba(13,148,136,.04) 0%, transparent 100%);
   background-attachment: fixed;
   line-height: 1.7; overflow-x: hidden; min-height: 100vh;
   font-size: 14px; font-weight: 400;
@@ -112,13 +113,13 @@ body {
    ═══════════════════════════════════════════ */
 .topbar {
   position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-  background: linear-gradient(135deg, #1E1B4B 0%, #312E81 40%, #3730A3 100%);
-  backdrop-filter: blur(20px) saturate(1.8);
-  -webkit-backdrop-filter: blur(20px) saturate(1.8);
-  padding: 0 40px; height: 62px;
+  background: linear-gradient(135deg, #0F172A 0%, #1E293B 60%, #0F172A 100%);
+  backdrop-filter: blur(24px) saturate(1.5);
+  -webkit-backdrop-filter: blur(24px) saturate(1.5);
+  padding: 0 40px; height: 56px;
   display: flex; align-items: center; gap: 18px;
-  box-shadow: 0 2px 12px rgba(30,27,75,.25), 0 4px 24px rgba(79,70,229,.1);
-  border-bottom: 1px solid rgba(167,139,250,.15);
+  box-shadow: 0 1px 0 rgba(255,255,255,.04), 0 4px 20px rgba(0,0,0,.3);
+  border-bottom: 1px solid rgba(255,255,255,.06);
 }
 .topbar h1 {
   font-size: 16px; font-weight: 600; color: rgba(255,255,255,.95);
@@ -140,52 +141,54 @@ body {
    TAB BAR — Glassmorphism Clean
    ═══════════════════════════════════════════ */
 .tabs-wrap {
-  position: fixed; top: 62px; left: 0; right: 0; z-index: 190;
-  background: rgba(255,255,255,.92);
-  backdrop-filter: blur(16px) saturate(1.5);
-  -webkit-backdrop-filter: blur(16px) saturate(1.5);
-  border-bottom: 1px solid rgba(79,70,229,.08);
+  position: fixed; top: 56px; left: 0; right: 0; z-index: 190;
+  background: rgba(255,255,255,.85);
+  backdrop-filter: blur(20px) saturate(1.8);
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  border-bottom: 1px solid rgba(0,0,0,.06);
   overflow-x: auto; overflow-y: hidden;
   white-space: nowrap;
-  padding: 0 16px;
-  box-shadow: 0 2px 12px rgba(79,70,229,.04);
+  padding: 0 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.04);
   -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
+  scrollbar-width: none;
   scroll-behavior: smooth;
   display: flex;
-  gap: 2px;
+  gap: 0;
 }
+.tabs-wrap::-webkit-scrollbar { display: none; }
 .tabs-wrap::-webkit-scrollbar { width: 3px; }
 .tabs-wrap::-webkit-scrollbar-thumb { background: rgba(0,0,0,.1); border-radius: 3px; }
 
 .tab-btn {
   display: inline-flex; align-items: center; gap: 6px;
-  padding: 12px 16px; font-size: 12.5px; font-weight: 500;
+  padding: 14px 18px; font-size: 12.5px; font-weight: 500;
   color: var(--txt3); cursor: pointer;
   border: none; background: none;
-  border-bottom: 3px solid transparent;
-  transition: all var(--duration) var(--ease);
-  font-family: 'Prompt', 'Inter', sans-serif; position: relative;
+  border-bottom: 2px solid transparent;
+  transition: all .15s ease;
+  font-family: 'Inter', 'Prompt', sans-serif; position: relative;
   white-space: nowrap;
   flex-shrink: 0;
+  letter-spacing: -.1px;
 }
 .tab-btn:hover {
-  color: var(--txt2);
-  background: rgba(37,99,235,.03);
+  color: var(--txt);
+  background: rgba(0,0,0,.02);
 }
 .tab-btn.active {
   color: var(--pri);
-  font-weight: 700;
+  font-weight: 600;
   border-bottom-color: var(--pri);
-  background: linear-gradient(180deg, rgba(79,70,229,.06) 0%, transparent 100%);
+  background: transparent;
 }
 
 /* ═══════════════════════════════════════════
    MAIN CONTENT
    ═══════════════════════════════════════════ */
 .main-wrap {
-  margin-top: 120px; padding: 36px 44px;
-  max-width: 1440px; margin-left: auto; margin-right: auto;
+  margin-top: 112px; padding: 32px 40px;
+  max-width: 1400px; margin-left: auto; margin-right: auto;
 }
 .tab-page { display: none; }
 .tab-page.active { display: block; }
@@ -203,48 +206,48 @@ body {
    ═══════════════════════════════════════════ */
 .c {
   background: var(--s1);
-  border: 1px solid rgba(79,70,229,.06);
-  border-radius: var(--r-xl);
-  padding: 30px;
-  box-shadow: 0 1px 3px rgba(79,70,229,.04), 0 4px 16px rgba(79,70,229,.03);
+  border: 1px solid rgba(0,0,0,.06);
+  border-radius: var(--r-lg);
+  padding: 24px;
+  box-shadow: var(--sh-card);
   position: relative; overflow: hidden;
-  transition: all .3s var(--ease);
+  transition: all .25s var(--ease);
 }
 .c::before {
   content: ''; position: absolute;
-  top: 0; left: 0; right: 0; height: 3px;
-  background: linear-gradient(90deg, #4F46E5, #10B981, #0891B2);
-  opacity: 0.4; transition: opacity .3s var(--ease);
-  border-radius: var(--r-xl) var(--r-xl) 0 0;
+  top: 0; left: 0; width: 4px; height: 100%;
+  background: linear-gradient(180deg, var(--pri), var(--sec));
+  opacity: 0; transition: opacity .25s var(--ease);
+  border-radius: var(--r-lg) 0 0 var(--r-lg);
 }
 .c:hover {
-  box-shadow: 0 4px 12px rgba(79,70,229,.08), 0 12px 28px rgba(79,70,229,.06);
-  transform: translateY(-2px);
-  border-color: rgba(79,70,229,.12);
+  box-shadow: var(--sh-card-hover);
+  transform: translateY(-1px);
+  border-color: rgba(37,99,235,.1);
 }
 .c:hover::before { opacity: 1; }
 
 /* Card Title */
 .ct {
   font-size: 11px; color: var(--txt3);
-  text-transform: uppercase; letter-spacing: 1.5px;
-  font-weight: 600; margin-bottom: 20px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid rgba(0,0,0,.04);
+  text-transform: uppercase; letter-spacing: 1px;
+  font-weight: 600; margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(0,0,0,.06);
   display: flex; align-items: center; gap: 8px;
   background: none !important;
-  margin: 0 0 20px 0 !important;
-  padding: 0 0 16px 0 !important;
+  margin: 0 0 16px 0 !important;
+  padding: 0 0 12px 0 !important;
   border-radius: 0 !important;
   color: var(--txt3) !important;
-  font-family: 'Prompt', 'Inter', sans-serif;
+  font-family: 'Inter', 'Prompt', sans-serif;
 }
 
-/* Card Value — BIG & BOLD */
+/* Card Value */
 .cv {
-  font-size: 38px; font-weight: 800;
+  font-size: 32px; font-weight: 700;
   line-height: 1.1; color: var(--txt);
-  letter-spacing: -1.5px;
+  letter-spacing: -1px;
   font-feature-settings: 'tnum' 1;
 }
 .cu {
@@ -261,33 +264,33 @@ body {
    SECTION HEADERS — Premium Gradient Banner
    ═══════════════════════════════════════════ */
 .sh {
-  display: flex; align-items: center; gap: 22px;
-  margin-bottom: 36px; padding: 26px 32px;
-  border-radius: var(--r-xl);
-  background: linear-gradient(135deg, rgba(79,70,229,.06) 0%, rgba(16,185,129,.02) 40%, #ffffff 100%);
-  border: 1px solid rgba(79,70,229,.08);
-  box-shadow: 0 2px 8px rgba(79,70,229,.04), 0 8px 24px rgba(79,70,229,.03);
-  border-left: 5px solid var(--pri);
+  display: flex; align-items: center; gap: 18px;
+  margin-bottom: 32px; padding: 20px 24px;
+  border-radius: var(--r-lg);
+  background: var(--s1);
+  border: 1px solid rgba(0,0,0,.06);
+  box-shadow: var(--sh-sm);
+  border-left: 4px solid var(--pri);
   position: relative; overflow: hidden;
 }
 .sh-n {
-  width: 56px; height: 56px;
-  border-radius: var(--r-lg);
+  width: 44px; height: 44px;
+  border-radius: var(--r-md);
   display: flex; align-items: center; justify-content: center;
-  font-size: 18px; font-weight: 800; flex-shrink: 0;
+  font-size: 16px; font-weight: 800; flex-shrink: 0;
   color: #fff;
-  box-shadow: 0 4px 14px rgba(0,0,0,.12);
+  box-shadow: 0 2px 8px rgba(0,0,0,.1);
 }
 .sh h2 {
-  font-size: 23px; font-weight: 800;
-  color: var(--txt); letter-spacing: -.5px;
+  font-size: 20px; font-weight: 700;
+  color: var(--txt); letter-spacing: -.3px;
   background: none; -webkit-background-clip: unset;
   -webkit-text-fill-color: unset;
-  font-family: 'Prompt', 'Inter', sans-serif;
+  font-family: 'Inter', 'Prompt', sans-serif;
 }
 .sh p {
-  font-size: 13.5px; color: var(--txt2);
-  margin-top: 4px; font-weight: 400;
+  font-size: 13px; color: var(--txt2);
+  margin-top: 2px; font-weight: 400;
   -webkit-text-fill-color: unset;
 }
 
@@ -295,40 +298,40 @@ body {
    THEORY BOXES — Soft Blue/Green Tinted
    ═══════════════════════════════════════════ */
 .th {
-  background: linear-gradient(135deg, rgba(79,70,229,.04) 0%, rgba(16,185,129,.02) 50%, rgba(255,255,255,.6) 100%);
-  border: 1px solid rgba(79,70,229,.07);
-  border-radius: var(--r-xl); padding: 30px;
-  margin-bottom: 28px;
+  background: var(--s2);
+  border: 1px solid rgba(0,0,0,.05);
+  border-radius: var(--r-lg); padding: 24px;
+  margin-bottom: 24px;
   position: relative; overflow: hidden;
 }
 .th::before {
   content: ''; position: absolute; top: 0; left: 0;
-  width: 4px; height: 100%;
-  background: linear-gradient(180deg, #4F46E5, #10B981, #0891B2);
-  border-radius: var(--r-xl) 0 0 var(--r-xl);
+  width: 3px; height: 100%;
+  background: var(--pri);
+  border-radius: var(--r-lg) 0 0 var(--r-lg);
 }
 .th h3 {
-  color: var(--pri); font-size: 16px;
-  margin-bottom: 16px; padding-left: 14px;
-  font-weight: 700; letter-spacing: -.1px;
-  font-family: 'Prompt', 'Inter', sans-serif;
+  color: var(--pri); font-size: 15px;
+  margin-bottom: 12px; padding-left: 12px;
+  font-weight: 600; letter-spacing: -.1px;
+  font-family: 'Inter', 'Prompt', sans-serif;
 }
 .th p {
-  font-size: 14px; line-height: 2;
-  margin-bottom: 12px; color: var(--txt);
+  font-size: 13.5px; line-height: 1.9;
+  margin-bottom: 10px; color: var(--txt);
 }
 
 /* ═══════════════════════════════════════════
    FORMULA BLOCKS
    ═══════════════════════════════════════════ */
 .fm {
-  background: linear-gradient(135deg, rgba(217,119,6,.06) 0%, rgba(234,88,12,.03) 100%);
-  border-radius: var(--r-lg); padding: 20px 24px; margin: 18px 0;
+  background: rgba(245,158,11,.05);
+  border-radius: var(--r-sm); padding: 16px 20px; margin: 14px 0;
   font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
-  font-size: 13.5px; color: #92400E;
+  font-size: 13px; color: #92400E;
   text-align: center;
-  border-left: 4px solid var(--c-amber);
-  letter-spacing: .5px; box-shadow: var(--sh-xs);
+  border-left: 3px solid var(--c-amber);
+  letter-spacing: .3px;
 }
 .fm small {
   display: block; font-size: 11.5px; color: var(--txt2);
@@ -343,27 +346,27 @@ body {
 .dt {
   width: 100%; border-collapse: separate; border-spacing: 0;
   font-size: 13px; margin-top: 12px; overflow: hidden;
-  border-radius: var(--r-lg);
+  border-radius: var(--r-md);
   border: 1px solid rgba(0,0,0,.06);
-  box-shadow: var(--sh-sm);
+  box-shadow: none;
 }
 .dt th {
-  background: linear-gradient(180deg, #EEF2FF, #E0E7FF);
-  padding: 14px 20px;
-  text-align: left; font-weight: 600; color: #3730A3;
+  background: var(--s3);
+  padding: 12px 16px;
+  text-align: left; font-weight: 600; color: var(--txt);
   font-size: 11px; text-transform: uppercase;
-  letter-spacing: 1px;
-  border-bottom: 2px solid rgba(79,70,229,.08);
-  font-family: 'Prompt', 'Inter', sans-serif;
+  letter-spacing: .8px;
+  border-bottom: 1px solid rgba(0,0,0,.06);
+  font-family: 'Inter', 'Prompt', sans-serif;
 }
 .dt td {
-  padding: 14px 20px;
-  border-bottom: 1px solid rgba(0,0,0,.03);
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(0,0,0,.04);
   color: var(--txt); vertical-align: top;
-  transition: background var(--duration) var(--ease);
+  transition: background .15s ease;
 }
-.dt tr:nth-child(even) td { background: rgba(79,70,229,.02); }
-.dt tr:hover td { background: rgba(79,70,229,.05); }
+.dt tr:nth-child(even) td { background: rgba(0,0,0,.015); }
+.dt tr:hover td { background: rgba(37,99,235,.04); }
 .dt tr:last-child td { border-bottom: none; }
 
 /* ═══════════════════════════════════════════
@@ -383,12 +386,12 @@ body {
    INSIGHT BOXES
    ═══════════════════════════════════════════ */
 .ins {
-  background: linear-gradient(135deg, rgba(217,119,6,.06) 0%, rgba(234,88,12,.03) 100%);
-  border: 1px solid rgba(217,119,6,.1);
-  border-radius: var(--r-lg); padding: 18px 22px;
-  margin: 16px 0; font-size: 13.5px;
+  background: rgba(245,158,11,.04);
+  border: 1px solid rgba(217,119,6,.08);
+  border-radius: var(--r-sm); padding: 14px 18px;
+  margin: 12px 0; font-size: 13px;
   line-height: 1.8; color: var(--txt);
-  border-left: 4px solid var(--c-amber);
+  border-left: 3px solid var(--c-amber);
 }
 .ins b { color: #B45309; }
 
@@ -409,36 +412,37 @@ body {
    CALCULATOR — Premium Blue Panel
    ═══════════════════════════════════════════ */
 .calc {
-  border: 2px solid rgba(79,70,229,.08);
-  border-radius: var(--r-xl); padding: 28px;
+  border: 1px solid rgba(0,0,0,.06);
+  border-radius: var(--r-lg); padding: 24px;
   margin: 20px 0; position: relative; overflow: hidden;
-  background: linear-gradient(135deg, rgba(79,70,229,.02) 0%, rgba(255,255,255,.5) 100%);
+  background: var(--s1);
+  box-shadow: var(--sh-sm);
 }
 .calc::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-  background: linear-gradient(90deg, #4F46E5, #10B981, #0891B2);
-  border-radius: var(--r-xl) var(--r-xl) 0 0;
+  content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
+  background: var(--pri);
+  border-radius: var(--r-lg) 0 0 var(--r-lg);
 }
 .calc h3 {
-  color: var(--pri); font-size: 17px;
-  margin-bottom: 22px; font-weight: 700;
-  font-family: 'Prompt', 'Inter', sans-serif;
+  color: var(--txt); font-size: 16px;
+  margin-bottom: 20px; font-weight: 600;
+  font-family: 'Inter', 'Prompt', sans-serif;
 }
 
-/* PRIMARY BUTTON — Modern Gradient */
+/* PRIMARY BUTTON */
 .btn-calc {
-  background: linear-gradient(135deg, #4F46E5, #6366F1);
+  background: var(--pri);
   color: #fff; border: none;
-  padding: 12px 32px; border-radius: var(--r-md);
-  font-size: 14px; font-weight: 700; cursor: pointer;
-  transition: all .25s var(--ease);
-  box-shadow: 0 2px 8px rgba(79,70,229,.25);
-  font-family: 'Prompt', 'Inter', sans-serif;
+  padding: 10px 24px; border-radius: var(--r-sm);
+  font-size: 13.5px; font-weight: 600; cursor: pointer;
+  transition: all .15s ease;
+  box-shadow: 0 1px 3px rgba(37,99,235,.2);
+  font-family: 'Inter', 'Prompt', sans-serif;
 }
 .btn-calc:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(37,99,235,.35), 0 4px 8px rgba(0,0,0,.08);
-  filter: brightness(1.05);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37,99,235,.25);
+  background: var(--pri-dark);
 }
 .btn-calc:active { transform: translateY(0); }
 
@@ -452,39 +456,39 @@ body {
   min-width: 240px; font-weight: 500;
 }
 
-/* Modern Inputs with blue focus */
+/* Inputs */
 .cr input, .cr select {
-  background: var(--s3);
-  border: 1.5px solid rgba(0,0,0,.06);
-  border-radius: var(--r-sm);
-  padding: 12px 16px;
-  color: var(--txt); font-size: 13.5px;
+  background: var(--s1);
+  border: 1px solid rgba(0,0,0,.12);
+  border-radius: var(--r-xs);
+  padding: 10px 14px;
+  color: var(--txt); font-size: 13px;
   font-family: inherit; width: 160px;
-  transition: all var(--duration) var(--ease);
+  transition: all .15s ease;
   font-weight: 500;
 }
-.cr input:hover, .cr select:hover { background: var(--s4); border-color: rgba(0,0,0,.1); }
+.cr input:hover, .cr select:hover { border-color: rgba(0,0,0,.2); }
 .cr input:focus, .cr select:focus {
   outline: none; background: #fff;
   border-color: var(--pri);
-  box-shadow: 0 0 0 3px var(--pri-ring);
+  box-shadow: 0 0 0 2px rgba(37,99,235,.12);
 }
 
 /* Calculator Results */
 .cres {
-  background: linear-gradient(135deg, rgba(37,99,235,.06) 0%, rgba(16,185,129,.03) 100%);
-  border-radius: var(--r-lg);
-  padding: 22px 26px; margin-top: 20px;
-  border: 1px solid rgba(37,99,235,.08);
+  background: var(--s3);
+  border-radius: var(--r-md);
+  padding: 20px 24px; margin-top: 16px;
+  border: 1px solid rgba(0,0,0,.04);
 }
 .cres-v {
-  font-size: 32px; font-weight: 800;
+  font-size: 28px; font-weight: 700;
   color: var(--pri); letter-spacing: -.5px;
   font-feature-settings: 'tnum' 1;
 }
 .cres-l {
-  font-size: 10.5px; color: var(--txt3);
-  text-transform: uppercase; letter-spacing: 1.5px;
+  font-size: 10px; color: var(--txt3);
+  text-transform: uppercase; letter-spacing: 1px;
   font-weight: 600;
 }
 
@@ -518,30 +522,29 @@ body {
    ═══════════════════════════════════════════ */
 .stabs {
   display: flex; flex-wrap: wrap; gap: 6px;
-  padding: 14px 16px; margin-bottom: 28px;
-  background: linear-gradient(135deg, rgba(79,70,229,.03), rgba(16,185,129,.02));
-  border-radius: var(--r-xl);
-  border: 1px solid rgba(79,70,229,.06);
+  padding: 8px; margin-bottom: 24px;
+  background: var(--s3);
+  border-radius: var(--r-md);
+  border: none;
 }
 .stab {
-  padding: 8px 18px; border-radius: 50px;
+  padding: 8px 16px; border-radius: var(--r-sm);
   font-size: 12.5px; font-weight: 500;
-  border: 1px solid rgba(79,70,229,.1);
-  background: rgba(255,255,255,.7);
-  color: var(--txt2); cursor: pointer;
-  transition: all .25s var(--ease);
+  border: none;
+  background: transparent;
+  color: var(--txt3); cursor: pointer;
+  transition: all .15s ease;
   white-space: nowrap;
 }
 .stab:hover {
-  background: rgba(79,70,229,.06);
-  border-color: rgba(79,70,229,.2);
-  color: var(--pri);
+  background: rgba(0,0,0,.04);
+  color: var(--txt);
 }
 .stab.active {
-  background: linear-gradient(135deg, var(--pri), #6366F1);
-  color: #fff; font-weight: 700;
-  border-color: transparent;
-  box-shadow: 0 2px 8px rgba(79,70,229,.25);
+  background: var(--s1);
+  color: var(--txt); font-weight: 600;
+  border: none;
+  box-shadow: 0 1px 3px rgba(0,0,0,.08);
 }
 .spage { display: none; }
 .spage.active { display: block; }
@@ -636,24 +639,25 @@ body {
   overflow-x: auto; padding: 8px 0;
 }
 .flow-step {
-  flex: 0 0 auto; min-width: 240px; max-width: 290px;
-  background: linear-gradient(180deg, #ffffff 0%, #F8FAFC 100%);
-  border: 1.5px solid rgba(0,0,0,.05);
-  border-radius: var(--r-2xl); padding: 26px;
-  transition: all .35s var(--ease);
-  box-shadow: var(--sh-card);
+  flex: 0 0 auto; min-width: 220px; max-width: 270px;
+  background: var(--s1);
+  border: 1px solid rgba(0,0,0,.06);
+  border-radius: var(--r-lg); padding: 22px;
+  transition: all .2s ease;
+  box-shadow: var(--sh-sm);
   position: relative; overflow: hidden;
 }
 .flow-step::before {
   content: ''; position: absolute;
-  top: 0; left: 0; right: 0; height: 3px;
-  background: linear-gradient(90deg, #3B82F6, #10B981);
-  opacity: 0; transition: opacity .3s;
+  top: 0; left: 0; width: 3px; height: 100%;
+  background: var(--pri);
+  opacity: 0; transition: opacity .2s;
+  border-radius: var(--r-lg) 0 0 var(--r-lg);
 }
 .flow-step:hover {
-  border-color: rgba(37,99,235,.2);
-  box-shadow: var(--sh-card-hover), 0 0 25px rgba(37,99,235,.05);
-  transform: translateY(-5px);
+  border-color: rgba(37,99,235,.15);
+  box-shadow: var(--sh-md);
+  transform: translateY(-2px);
 }
 .flow-step:hover::before { opacity: 1; }
 .flow-step .fs-icon { font-size: 36px; margin-bottom: 14px; filter: drop-shadow(0 2px 4px rgba(0,0,0,.08)); }
@@ -725,11 +729,11 @@ body {
    FOOTER
    ═══════════════════════════════════════════ */
 .footer {
-  text-align: center; margin-top: 72px;
-  padding: 40px 32px;
+  text-align: center; margin-top: 64px;
+  padding: 32px 24px;
   border-top: 1px solid rgba(0,0,0,.06);
-  color: var(--txt3); font-size: 13.5px;
-  background: linear-gradient(180deg, #fff, rgba(37,99,235,.02));
+  color: var(--txt3); font-size: 12.5px;
+  background: transparent;
 }
 
 /* ═══ PRINT ═══ */
@@ -755,9 +759,9 @@ body {
   .topbar { padding: 0 16px; height: 52px; }
   .topbar h1 { font-size: 12px; }
   .topbar-ref { display: none; }
-  .tabs-wrap { padding: 0 6px; top: 52px; }
+  .tabs-wrap { padding: 0 6px; top: 52px; scrollbar-width: none; }
   .tab-btn { padding: 12px 10px; font-size: 11.5px; white-space: nowrap; flex-shrink: 0; }
-  .main-wrap { margin-top: 100px; padding: 16px 12px; }
+  .main-wrap { margin-top: 96px; padding: 16px 12px; }
 
   .sh { padding: 18px 20px; gap: 14px; border-left-width: 4px; }
   .sh-n { width: 42px; height: 42px; font-size: 14px; }
@@ -903,32 +907,70 @@ body {
 
 /* ── Dark: Components ── */
 [data-theme="dark"] .topbar {
-  background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #1E1B4B 100%) !important;
-  border-bottom-color: rgba(129,140,248,.15) !important;
-  box-shadow: 0 2px 16px rgba(0,0,0,.4), 0 0 1px rgba(129,140,248,.1) !important;
+  background: linear-gradient(135deg, #020617 0%, #0F172A 60%, #020617 100%) !important;
+  border-bottom-color: rgba(255,255,255,.06) !important;
+  box-shadow: 0 1px 0 rgba(255,255,255,.03), 0 4px 20px rgba(0,0,0,.5) !important;
 }
 [data-theme="dark"] .topbar h1 span {
   background: linear-gradient(135deg, #A78BFA, #34D399, #22D3EE) !important;
   -webkit-background-clip: text !important; -webkit-text-fill-color: transparent !important;
 }
 [data-theme="dark"] body {
-  background-image: radial-gradient(ellipse at 20% 0%, rgba(129,140,248,.05) 0%, transparent 50%),
-                    radial-gradient(ellipse at 80% 100%, rgba(52,211,153,.03) 0%, transparent 50%) !important;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(129,140,248,.06) 0%, transparent 100%),
+    radial-gradient(ellipse 60% 40% at 100% 100%, rgba(52,211,153,.03) 0%, transparent 100%) !important;
+}
+[data-theme="dark"] .stabs {
+  background: rgba(255,255,255,.04) !important;
+}
+[data-theme="dark"] .stab {
+  color: var(--txt3) !important;
+}
+[data-theme="dark"] .stab.active {
+  background: rgba(255,255,255,.08) !important;
+  color: var(--txt) !important;
+}
+[data-theme="dark"] .stab:hover {
+  background: rgba(255,255,255,.06) !important;
+  color: var(--txt2) !important;
+}
+[data-theme="dark"] .dt th {
+  background: rgba(255,255,255,.04) !important;
+  color: var(--txt2) !important;
+  border-bottom-color: rgba(255,255,255,.06) !important;
+}
+[data-theme="dark"] .dt td {
+  border-bottom-color: rgba(255,255,255,.04) !important;
+}
+[data-theme="dark"] .dt tr:nth-child(even) td { background: rgba(255,255,255,.015) !important; }
+[data-theme="dark"] .dt tr:hover td { background: rgba(129,140,248,.06) !important; }
+[data-theme="dark"] .cres {
+  background: rgba(255,255,255,.04) !important;
+  border-color: rgba(255,255,255,.06) !important;
+}
+[data-theme="dark"] .cr input, [data-theme="dark"] .cr select {
+  background: rgba(255,255,255,.06) !important;
+  border-color: rgba(255,255,255,.1) !important;
+}
+[data-theme="dark"] .cr input:focus, [data-theme="dark"] .cr select:focus {
+  background: rgba(255,255,255,.08) !important;
+  border-color: var(--pri) !important;
+  box-shadow: 0 0 0 2px rgba(129,140,248,.15) !important;
 }
 [data-theme="dark"] .tabs-wrap {
-  background: rgba(15,23,42,.95) !important;
-  border-bottom-color: rgba(129,140,248,.08) !important;
-  backdrop-filter: blur(16px) !important;
+  background: rgba(15,23,42,.9) !important;
+  border-bottom-color: rgba(255,255,255,.06) !important;
+  backdrop-filter: blur(20px) !important;
 }
 [data-theme="dark"] .tab-btn.active {
-  background: linear-gradient(180deg, rgba(129,140,248,.1) 0%, transparent 100%) !important;
+  background: transparent !important;
 }
 [data-theme="dark"] .c::before {
-  background: linear-gradient(90deg, #818CF8, #34D399, #22D3EE) !important;
+  background: linear-gradient(180deg, #818CF8, #34D399) !important;
 }
 [data-theme="dark"] .c:hover {
-  border-color: rgba(129,140,248,.18) !important;
-  box-shadow: var(--sh-card-hover), 0 0 24px rgba(129,140,248,.06) !important;
+  border-color: rgba(129,140,248,.15) !important;
+  box-shadow: var(--sh-card-hover) !important;
 }
 [data-theme="dark"] .sh {
   background: linear-gradient(135deg, rgba(129,140,248,.06) 0%, var(--s1) 60%, rgba(52,211,153,.02) 100%) !important;
@@ -1595,6 +1637,30 @@ function bagCalc(){
   var dryFib=fib/(1-moist);
   bi+='<div style="margin-top:4px;padding:8px;border-radius:6px;background:var(--blue-bg);border-left:3px solid var(--blue)">📊 Fiber%Bagasse (dry basis) = '+fmt(dryFib*100)+'% | Brix%Bagasse ≈ '+fmt((1-moist-fib)*100)+'% | ถ้า Moisture ลด 2% → GCV เพิ่ม ~'+fmt(((18600*(1-(moist-0.02))-2257*(moist-0.02))/1000)-gcv)+' MJ/kg → Steam เพิ่ม ~'+fmt(bagasse*0.02*2.5)+' t/d</div>';
   document.getElementById('bag_ex').innerHTML='Bagasse '+fmt(bagasse)+' t/d × GCV '+fmt(gcv)+' MJ/kg | <b style="color:var(--red)">น้ำตาลหาย '+fmt(sucLost)+' t/d = '+fmt(moneyLost/1e6)+' ล้าน฿/วัน</b> | ถ้า Pol ลดจาก '+fmt(pol*100)+'% เป็น 1.6% → <span style="color:var(--green)">ลด Loss '+fmt((pol-0.016)*bagasse)+' t/d = '+fmt((pol-0.016)*bagasse*price/1e6)+' ล้าน฿/วัน</span>'+bi;
+}
+// Calc: Bagasse Quality (Sugar Quality tab — uses bag2_ IDs)
+function bagCalc2(){
+  const tcd=+document.getElementById('bag2_tcd').value, pc=+document.getElementById('bag2_pc').value/100;
+  const moist=+document.getElementById('bag2_moist').value/100, pol=+document.getElementById('bag2_pol').value/100;
+  const fib=+document.getElementById('bag2_fib').value/100, price=+document.getElementById('bag2_price').value;
+  const bagasse=tcd*pc;
+  const gcv=(18600*(1-moist)-2257*moist)/1000;
+  const sucLost=bagasse*pol;
+  const moneyLost=sucLost*price;
+  document.getElementById('bag2_r1').textContent=fmt(bagasse);
+  document.getElementById('bag2_r2').textContent=fmt(gcv);
+  document.getElementById('bag2_r3').textContent=fmt(sucLost);
+  document.getElementById('bag2_r4').textContent=fmt(moneyLost);
+  var bi='';
+  if(moist<=0.48) bi='<div style="margin-top:8px;padding:8px;border-radius:6px;background:var(--green-bg);border-left:3px solid var(--green)">✅ <b>Moisture '+fmt(moist*100)+'% ดีมาก!</b> (≤48%) — GCV สูง Boiler ทำงานดี</div>';
+  else if(moist<=0.52) bi='<div style="margin-top:8px;padding:8px;border-radius:6px;background:rgba(245,158,11,.1);border-left:3px solid var(--amber)">⚠ <b>Moisture '+fmt(moist*100)+'%</b> (48-52%) — ปกติ แต่ถ้าลดได้จะเพิ่ม GCV</div>';
+  else bi='<div style="margin-top:8px;padding:8px;border-radius:6px;background:var(--red-bg);border-left:3px solid var(--red)">🔴 <b>Moisture '+fmt(moist*100)+'% สูงมาก!</b> (>52%) — GCV ต่ำ Boiler เผาไม่หมด</div>';
+  if(pol>0.02) bi+='<div style="margin-top:4px;padding:8px;border-radius:6px;background:var(--red-bg);border-left:3px solid var(--red)">⚠ Pol%Bagasse '+fmt(pol*100)+'% สูง (>2.0%) → สูญเสีย '+fmt(sucLost)+' t/d = <b>'+fmt(moneyLost/1e6)+' ล้าน฿/วัน</b></div>';
+  else if(pol>0.016) bi+='<div style="margin-top:4px;padding:8px;border-radius:6px;background:rgba(245,158,11,.1);border-left:3px solid var(--amber)">⚠ Pol%Bagasse '+fmt(pol*100)+'% (1.6-2.0%) — ยังลดได้อีก</div>';
+  else bi+='<div style="margin-top:4px;padding:8px;border-radius:6px;background:var(--green-bg);border-left:3px solid var(--green)">✅ Pol%Bagasse '+fmt(pol*100)+'% ดีมาก (≤1.6%)</div>';
+  var dryFib=fib/(1-moist);
+  bi+='<div style="margin-top:4px;padding:8px;border-radius:6px;background:var(--blue-bg);border-left:3px solid var(--blue)">📊 Fiber (dry) = '+fmt(dryFib*100)+'% | ถ้า Moisture ลด 2% → GCV เพิ่ม ~'+fmt(((18600*(1-(moist-0.02))-2257*(moist-0.02))/1000)-gcv)+' MJ/kg</div>';
+  document.getElementById('bag2_ex').innerHTML='Bagasse '+fmt(bagasse)+' t/d × GCV '+fmt(gcv)+' MJ/kg | <b style="color:var(--red)">น้ำตาลหาย '+fmt(sucLost)+' t/d = '+fmt(moneyLost/1e6)+' ล้าน฿/วัน</b>'+bi;
 }
 // Calc: Mill Control Optimization
 function millCtrl(){
@@ -6171,19 +6237,19 @@ Brix: <b>85-90%</b><br>
 
 <h4 class="ho" style="margin-top:30px;font-size:13px;border-top:2px solid var(--bdr);padding-top:16px">2. Bagasse Quality & Moisture Calculator</h4>
 <p style="font-size:12px;color:var(--txt2);margin-bottom:10px">คำนวณคุณภาพชานอ้อย: ความชื้น, Pol%Bagasse, GCV (ค่าความร้อน) — สำคัญมากสำหรับ Boiler efficiency</p>
-<div style="margin:12px 0"><button onclick="bagCalc()" style="background:linear-gradient(135deg,var(--orange),#ea580c);color:#fff;border:none;padding:10px 28px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 15px rgba(251,146,60,.3)">🔢 คำนวณ Bagasse Quality</button></div>
-<div class="cr"><label>อัตราหีบอ้อย (TCD):</label><input type="number" id="bag_tcd" value="8000" step="100"></div>
-<div class="cr"><label>Bagasse % Cane:</label><input type="number" id="bag_pc" value="28" step="0.5"></div>
-<div class="cr"><label>Bagasse Moisture (%):</label><input type="number" id="bag_moist" value="50" step="0.5"></div>
-<div class="cr"><label>Pol % Bagasse:</label><input type="number" id="bag_pol" value="1.8" step="0.1"></div>
-<div class="cr"><label>Fiber % Bagasse:</label><input type="number" id="bag_fib" value="46" step="0.5"></div>
-<div class="cr"><label>ราคาน้ำตาล (฿/ตัน):</label><input type="number" id="bag_price" value="16000" step="500"></div>
+<div style="margin:12px 0"><button onclick="bagCalc2()" style="background:linear-gradient(135deg,var(--orange),#ea580c);color:#fff;border:none;padding:10px 28px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 15px rgba(251,146,60,.3)">🔢 คำนวณ Bagasse Quality</button></div>
+<div class="cr"><label>อัตราหีบอ้อย (TCD):</label><input type="number" id="bag2_tcd" value="8000" step="100"></div>
+<div class="cr"><label>Bagasse % Cane:</label><input type="number" id="bag2_pc" value="28" step="0.5"></div>
+<div class="cr"><label>Bagasse Moisture (%):</label><input type="number" id="bag2_moist" value="50" step="0.5"></div>
+<div class="cr"><label>Pol % Bagasse:</label><input type="number" id="bag2_pol" value="1.8" step="0.1"></div>
+<div class="cr"><label>Fiber % Bagasse:</label><input type="number" id="bag2_fib" value="46" step="0.5"></div>
+<div class="cr"><label>ราคาน้ำตาล (฿/ตัน):</label><input type="number" id="bag2_price" value="16000" step="500"></div>
 <div class="cres"><div style="display:flex;gap:18px;flex-wrap:wrap">
-<div><div class="cres-l">Bagasse ผลิตได้</div><div class="cres-v" id="bag_r1">—</div><div class="cres-l">t/d</div></div>
-<div><div class="cres-l">GCV (Gross Calorific Value)</div><div class="cres-v" id="bag_r2" style="color:var(--amber)">—</div><div class="cres-l">MJ/kg</div></div>
-<div><div class="cres-l">น้ำตาลสูญเสียใน Bagasse</div><div class="cres-v" id="bag_r3" style="color:var(--red)">—</div><div class="cres-l">t/d</div></div>
-<div><div class="cres-l">มูลค่าสูญเสีย</div><div class="cres-v" id="bag_r4" style="color:var(--red)">—</div><div class="cres-l">฿/วัน</div></div>
-</div><div id="bag_ex" style="font-size:12px;color:var(--txt2);margin-top:10px"></div></div>
+<div><div class="cres-l">Bagasse ผลิตได้</div><div class="cres-v" id="bag2_r1">—</div><div class="cres-l">t/d</div></div>
+<div><div class="cres-l">GCV (Gross Calorific Value)</div><div class="cres-v" id="bag2_r2" style="color:var(--amber)">—</div><div class="cres-l">MJ/kg</div></div>
+<div><div class="cres-l">น้ำตาลสูญเสียใน Bagasse</div><div class="cres-v" id="bag2_r3" style="color:var(--red)">—</div><div class="cres-l">t/d</div></div>
+<div><div class="cres-l">มูลค่าสูญเสีย</div><div class="cres-v" id="bag2_r4" style="color:var(--red)">—</div><div class="cres-l">฿/วัน</div></div>
+</div><div id="bag2_ex" style="font-size:12px;color:var(--txt2);margin-top:10px"></div></div>
 
 </div>
 </div>
